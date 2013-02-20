@@ -1,0 +1,163 @@
+\documentclass[11pt]{article}
+\usepackage[top=1in, bottom=1in,right=1in,left=1in]{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm} %pour les newtheorem
+\usepackage{epstopdf}
+\usepackage{xspace}
+\usepackage{tcolorbox}
+\usepackage{relsize}
+\usepackage[numbers]{natbib}
+\usepackage[colorinlistoftodos]{todonotes}
+
+%\usepackage{subfig} %Subfigures
+\usepackage{subcaption} %Subfigures
+
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{ifthen}
+\usepackage{relsize}
+\usetikzlibrary{positioning}
+\usetikzlibrary{matrix}
+\usetikzlibrary{calc}
+\usetikzlibrary{shapes}
+\usetikzlibrary{arrows}
+\usetikzlibrary{fit}
+\usetikzlibrary{decorations}
+\usetikzlibrary{snakes}
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{backbackground}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{backbackground,background,main,foreground}
+
+\usepackage[noend,ruled,vlined]{algorithm2e}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+
+\newcommand{\ourprog}{\texttt{IncaRNAtion}\xspace} 
+
+%\usepackage[applemac]{inputenc} %for the encoding 
+
+
+\newcommand{\RNAmutants}{\texttt{RNAmutants}\xspace}
+\newcommand{\RNApyro}{\texttt{RNApyro}\xspace}
+\newcommand{\RNAinverse}{\texttt{RNAinverse}\xspace}
+\newcommand{\RNASSD}{\texttt{RNA-SSD}\xspace}
+\newcommand{\INFORNA}{\texttt{INFO-RNA}\xspace}
+\newcommand{\NUPACK}{\texttt{NUPACK}\xspace}
+\newcommand{\RNAiFOLD}{\texttt{RNAiFOLD}\xspace}
+\newcommand{\frankenstein}{\texttt{Frnakenstein}\xspace}
+\newcommand{\RNAexinv}{\texttt{RNAexinv}\xspace}
+\newcommand{\rnaDesign}{\texttt{rnaDesign}\xspace}
+\newcommand{\RNAensign}{\texttt{RNA-ensign}\xspace}
+\newcommand{\GCContent}{\Gb\Cb-content\xspace}
+\newcommand{\SFold}{\texttt{SFold}\xspace}
+
+\newcommand{\red}[1]{{\color{red}#1}}
+\newcommand{\farna}{\texttt{FARNA}\xspace}
+\newcommand{\mcfoldmcsym}{\texttt{MC-Pipeline}\xspace}
+\newcommand{\mcfold}{\texttt{MC-Fold}\xspace}
+\newcommand{\mcsym}{\texttt{MC-Sym}\xspace}
+\newcommand{\nast}{\texttt{NAST}\xspace}
+\newcommand{\ifoldrna}{\texttt{iFoldRNA}\xspace}
+\newcommand{\rnafold}{\texttt{RNAfold}\xspace}
+\newcommand{\rnasubopt}{\texttt{RNAsubopt}\xspace}
+\newcommand{\rnawolf}{\texttt{RNAwolf}\xspace}
+\newcommand{\rnastructure}{\texttt{RNAstructure}\xspace}
+\newcommand{\contrafold}{\texttt{contrafold}\xspace}
+\newcommand{\unafold}{\texttt{unafold}\xspace}
+\newcommand{\rnadd}{\texttt{RNA2D3D}\xspace}
+\newcommand{\assemble}{\texttt{assemble}\xspace}
+\newcommand{\fred}{\texttt{FR3D}\xspace}
+\newcommand{\rnajunction}{\texttt{RNAjunction}\xspace}
+\newcommand{\rnamotif}{\texttt{RNAmotif}\xspace}
+\newcommand{\treefolder}{\texttt{TreeFolder}\xspace}
+\newcommand{\barnacle}{\texttt{BARNACLE}\xspace}
+\newcommand{\contextfold}{\texttt{contextfold}\xspace}
+
+\newcommand{\RNASTRAND}{{\sf RNA STRAND}\xspace}
+
+%\newcommand{\citep}{\cite}
+\newcommand{\Z}[2]{\mathcal{Z}{\substack{(#1)\\ [#2]}}}
+\newcommand{\Y}[3]{\mathcal{Y}_{\substack{(#1)\\ [#3]}}^{#2}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\Kron}{\delta}
+\newcommand{\ub}{\bullet}
+
+\newcommand{\Ab}{{\sf{A}}\xspace}
+\newcommand{\Cb}{{\sf{C}}\xspace}
+\newcommand{\Gb}{{\sf{G}}\xspace}
+\newcommand{\Ub}{{\sf{U}}\xspace}
+
+\newcommand{\gc}{{\#\text{{\sf gc}}}}
+\newcommand{\PE}[1]{E(#1)}
+\newcommand{\EI}{\text{EI}}
+\newcommand{\ES}{\text{{\sf Es}}}
+\newcommand{\ISO}{\text{ISO}}
+\newcommand{\Prob}{\text{P}}
+\newcommand{\Target}{\text{\sf S}}
+\newcommand{\CNBP}[1]{\gamma(#1)}
+
+\newcommand{\CFramed}[2][gray]{\begin{tcolorbox}[colframe=#1,title=To be included only if space allows\ldots,colback=white]#1\end{tcolorbox}}
+\renewcommand{\CFramed}[2][gray]{}
+
+\title{A weighted sampling algorithm for the design of RNA sequences with targeted secondary structure and nucleotides distribution}
+\author{Vladimir Reinharz$^1$, Yann Ponty$^{2,*}$, J\'er\^{o}me Waldisp\"{u}hl$^{1,*}$}
+\date{$^1$ School of Computer Science, McGill University, Montreal, Canada, $^2$ Laboratoire d'informatique, \'Ecole Polytechnique, Palaiseau, France.\\ \small $^*$Corresponding authors: \texttt{jeromew@cs.mcgill.ca}, \texttt{yann.ponty@lix.polytechnique.fr}}
+
+
+%Last thing before BEGIN DOC for links to appear in pdf
+
+%  \usepackage{hyperref}
+%  \hypersetup{colorlinks}
+%              citecolor=black,
+%              filecolor=black%
+%              linkcolor=black%
+%              urlcolor=black%
+%              pdftex}
+
+\begin{document}
+\maketitle
+%\section{}
+%\subsection{}
+\begin{abstract}
+\noindent
+\textbf{Motivations:} The design of RNA sequences folding into predefined secondary structures is a milestone for many synthetic biology and gene therapy studies. Most of the current software use similar local search strategies (i.e. a random seed is progressively adapted to acquire the desired folding propertues) and more importantly do not allow the user to control explicitly the nucleotide distribution such as the \GCContent in their sequences. However, the latter is an important criteria for large-scale applications as it could presumably be used to design sequences with better transcription rates and/or structural plasticity.\\
+\noindent
+\textbf{Results:}
+In this paper, we introduce \ourprog, a novel algorithm to design RNA sequences folding into target secondary structures with a predefined nucleotide distribution.  \ourprog uses a global sampling approach and weighted sampling techniques. We show that our approach is fast (i.e. running time comparable or better than local search methods), seed-less (we remove the bias of the seed in local search heuristics), and successfully generates high-quality sequences (i.e. thermodynamically stable) for any \GCContent. To complete this study, we develop an hybrid method combining our global sampling approach with local search strategies. Remarkably, our glocal methodology overcomes both local and global approaches  for sampling sequences with a specific GC content and target structure.\\
+\noindent
+\textbf{Key words:} RNA, secondary structure, design, weighted sampling, GC-content.
+\end{abstract}
+
+\newpage
+
+\input{introduction_ISMB.tex}
+
+\input{methods_ISMB.tex}
+
+\input{results_ISMB.tex}
+
+\input{conclusion_ISMB.tex}
+
+\input{acknowledgments_ISMB.tex}
+
+\newpage
+
+\bibliographystyle{plainnat}
+\bibliography{RNApyro}
+
+\newpage
+
+\input{supplementary_ISMB.tex}
+
+\end{document}  
