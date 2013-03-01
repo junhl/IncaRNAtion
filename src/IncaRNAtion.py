@@ -46,7 +46,25 @@ except ImportError:
 
 sys.setrecursionlimit(10000)
 
-BASES = ['A','C','G','U']
+IUPACBASES = {
+  'A':['A'],
+  'C':['C'],
+  'G':['G'],
+  'U':['U'],
+  'N':['A','C','G','U'],
+  'R':['A','G'],
+  'Y':['C','U'],
+  'S':['G','C'],
+  'W':['A','U'],
+  'K':['G','U'],
+  'M':['A','C'],
+  'B':['C','G','U'],
+  'D':['A','G','U'],
+  'H':['A','C','U'],
+  'V':['A','C','G']
+  }
+BASES = []
+
 BOLTZMANN = 0.0019872041
 global T
 T = 310.15
@@ -54,7 +72,7 @@ T = 310.15
 #Just generate all possible combination with maxint
 global STACKING_ENERGY
 STACKING_ENERGY = {k:sys.maxint for k in itertools.product(
-                  BASES, repeat=4)}
+                  IUPACBASES['N'], repeat=4)}
 #Adjust with turner04
 #The order of the nucleotides is from 5' -> 3'
 STACKING_ENERGY.update({('A', 'A', 'U', 'U'):-0.9,
@@ -413,7 +431,7 @@ def forward(profile,ref_seq,struct,(i,j),(a,b),alpha):
   else:
     k = struct[i]
     if k==-1:
-      for a2 in BASES:
+      for a2 in BASES[i]:
         pro = profile[i][a2]
         f = forward(profile,ref_seq,struct,
                     (i+1,j),
@@ -421,8 +439,8 @@ def forward(profile,ref_seq,struct,(i,j),(a,b),alpha):
                     alpha)
         result +=  pro*f
     elif i < k <= j: #If k > j we return 0
-      for a2 in BASES:
-        for b2 in BASES:
+      for a2 in BASES[i]:
+        for b2 in BASES[k]:
           pro = profile[i][a2]*profile[k][b2]
           #if not stacked outside (or border, then no stack possible)
           if i==0 or j==len(struct)-1 or not (j==k and struct[i-1]==j+1):
@@ -466,7 +484,7 @@ def backward(profile,ref_seq,struct,(i,j),(a,b),alpha):
   else:
     k = struct[i]
     if k==-1:
-      for a2 in BASES:
+      for a2 in BASES[i]:
         pro = profile[i][a2]
         back = backward(profile,ref_seq,struct,
                         (i-1,j),
@@ -475,8 +493,8 @@ def backward(profile,ref_seq,struct,(i,j),(a,b),alpha):
         result += pro*back
     #BP to the left
     elif k<i:
-      for a2 in BASES:
-        for b2 in BASES:
+      for a2 in BASES[k]:
+        for b2 in BASES[i]:
           pro = profile[k][a2]*profile[i][b2]
           back = backward(profile,ref_seq,struct,
                        (k-1,j),
@@ -493,8 +511,8 @@ def backward(profile,ref_seq,struct,(i,j),(a,b),alpha):
           result += pro*back*forw*iso
     #BP to the right
     elif k>=j:
-      for a2 in BASES:
-        for b2 in BASES:
+      for a2 in BASES[i]:
+        for b2 in BASES[k]:
           pro = profile[i][a2]*profile[k][b2]
           #No stack
           if not (j==k and struct[i+1]==j-1):
@@ -552,14 +570,14 @@ def product_given_i(profile,ref_seq,struct,i,a,alpha):
     pro = profile[i][a]
     result += pro*backward(profile,ref_seq,struct,(i-1,i+1),(a,a),alpha)
   elif k < i:
-    for c in BASES:
+    for c in BASES[k]:
       pro = profile[k][c]*profile[i][a]
       f = forward(profile,ref_seq,struct,(k+1,i-1),(c,a),alpha) 
       b = backward(profile,ref_seq,struct,(k-1,i+1),(c,a),alpha)
       iso = isostericity(ref_seq,(k,i),(c,a),alpha)
       result += pro*f*b*iso
   else:
-    for c in BASES:
+    for c in BASES[k]:
       pro = profile[i][a]*profile[k][c]
       f = forward(profile,ref_seq,struct,(i+1,k-1),(a,c),alpha) 
       b = backward(profile,ref_seq,struct,(i-1,k+1),(a,c),alpha)
@@ -590,7 +608,7 @@ def backtrack(profile,ref_seq,struct,(i,j),(a,b),alpha):
     k = struct[i]
     if k==-1:
       l_samples = []
-      for a2 in BASES:
+      for a2 in BASES[i]:
         pro = profile[i][a2]
         f = forward(profile,ref_seq,struct,
                     (i+1,j),
@@ -603,8 +621,8 @@ def backtrack(profile,ref_seq,struct,(i,j),(a,b),alpha):
       
     elif i < k <= j: #If k > j we return 0
       l_samples = []
-      for a2 in BASES:
-        for b2 in BASES:
+      for a2 in BASES[i]:
+        for b2 in BASES[k]:
           pro = profile[i][a2]*profile[k][b2]
           #if not stacked outside (or border, then no stack possible)
           if i==0 or j==len(struct)-1 or not (j==k and struct[i-1]==j+1):
@@ -672,7 +690,7 @@ def testSingleSequence(profile,ref_seq,struct,alpha):
   print "  Forward: \t",forward(profile,ref_seq,struct,(0,n-1),('A','G'),alpha)
   i = n-1
   res = 0
-  for j in BASES:
+  for j in BASES[i]:
     res += profile[i][j]*backward(profile,ref_seq,struct,(i-1,i+1),(j,j),alpha)
   print "  Backward of nuc %s:\t" % i, res
 
@@ -739,9 +757,12 @@ def all_probabilities(profile,ref_seq, stuct, alpha):
   results = []
   for i in range(n):
     results.append([])
-    for a in BASES:
-      results[-1].append(
-        probability_given_i(profile,ref_seq,struct,i,a,alpha))
+    for a in IUPACBASES['N']:
+      if a not in BASES[i]:
+        results[-1].append(0)
+      else:
+        results[-1].append(
+          probability_given_i(profile,ref_seq,struct,i,a,alpha))
   return results
 
 def display_all_probabilities(results):
@@ -846,13 +867,11 @@ def diversity_seq(l_sequence,struct):
 def help():
   print """
   Required:
-    -p <file_path> 
-      A file containing the MSE and Secondary structure
     -d <file_path> 
-      A data file with  RNA profile (i.e. every lines contains
-       nucleotides probability in order: 'ACGU')
+      A file containing the MSE and Secondary structure
     -a <float> 
       The value of alpha, between 0 and 1.
+      1 takes only into account the secondary structure, 0 only the MSE
 
   Optional:
     -m <int> 
@@ -874,11 +893,16 @@ def help():
       the weight of 'C' and on the next the list of sampled GC content
     -t <float>
       The temperature (default 310.5K)
+    -u <IUPAC sequence>
+      An IUPAC sequence to constrain the outputed sequences
+    -p <file_path> 
+      A data file with  starting RNA profile (i.e. every lines contains
+       nucleotides probability in order: 'ACGU')
 
   e.g.
-    python RNAPyroProfile -p prof.txt -d data.txt -a 0.5 -m 20
-    python RNAPyroProfile -p prof.txt -d data.txt -a 0.5 -m 20 -b 5 -no_profile
-    python RNAPyroProfile -d data.txt -a 0.5 -m 20 -no_profile -s_gc 0.5 100
+    python IncaRNAtion -d data.txt -a 0.5 -m 20
+    python IncaRNAtion -d data.txt -a 1 -m 20 -no_profile -s_gc 0.5 100
+    python IncaRNAtion -d data.txt -a 0.5 -m 20 -b 5 -no_profile
     """
 
 if __name__ == "__main__":
@@ -899,14 +923,12 @@ if __name__ == "__main__":
     if not cmd.startswith('-'):
       i += 1
     else:
-      #Profile
       if cmd == '-d':  
         file_name = opts[i+1]
         i += 2
         if not os.path.isfile(file_name):
           help()
           sys.exit(1)
-      #Data (MSA + sec struct)
       elif cmd == '-p':
         profile_path = opts[i+1]
         i += 2
@@ -927,8 +949,8 @@ if __name__ == "__main__":
           sys.exit(1)
       #Max BP penality (def inf.)
       elif cmd == '-m':
-        i += 2
         z = opts[i+1]
+        i += 2
         try:
           z = float(z)
           if z >= 0:
@@ -1005,6 +1027,9 @@ if __name__ == "__main__":
       elif cmd == '-gc_data':
         file_gc_data = opts[i+1]
         i += 2
+      elif cmd == '-u':
+        iupac = opts[i+1]
+        i+=2 
       else:
         print "Unrecognized arg"
         help()
@@ -1019,6 +1044,25 @@ if __name__ == "__main__":
     sys.exit(1)
 
   n = len(struct)
+
+  #iupac
+  try:
+    if len(iupac) != n:
+      print "IUPAC code too short"
+      help()
+      sys.exit(1)
+    for x in iupac.upper():
+      try:
+        BASES.append(IUPACBASES[x])
+      except KeyError:
+        print "Unrecognized IUPAC symbol"
+        help()
+        sys.exit(1)
+  except NameError:
+    for _ in range(n):
+      BASES.append(IUPACBASES['N'])
+
+
 
   try:
     profile = parse_profile(profile_path)
