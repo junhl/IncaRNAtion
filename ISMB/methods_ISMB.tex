@@ -6,7 +6,7 @@
 
 We introduce a probabilistic model for the design of RNA sequences with a specific \GCContent and folding into a predefined secondary structure.
 For the sake of simplicity, we choose to base this proof-of-concept implementation on a simplified free-energy function $\ES(\cdot)$, which only considers the contributions of 
-stacked canonical base-pairs. We show how a modification of the dynamic programming scheme used in the \RNAmutants allows for the sampling of good and diverse design candidates, in linear time and space complexities.
+stacked canonical base-pairs. We show how a modification of the dynamic programming scheme used in \RNAmutants allows for the sampling of good and diverse design candidates, in linear time and space complexities.
 
 
 %To that purpose, a Boltzmann weighted distribution is used, based on a pseudo-energy function $\PE{\cdot}$ which includes contributions for both the free-energy and its putative isostericity towards a multiple sequence alignment. In this model, the probability that the nucleotide at a given position needs to be mutated (i.e. corresponds to a sequencing error) can be computed using a variant of the \emph{Inside-Outside algorithm}~\cite{Lari1990}.
@@ -96,7 +96,7 @@ The recursion consists in four terms, depending on the base-pairing status and c
 \label{eq:Z_rec}
 \end{equation}
 
-Despite its apparent quadratic complexity, the recurrence described in Subsection~\ref{sec:pf} can be computed in linear $\Theta(|\Target|)$ time and space, owing to the fact that, on any recursive call, the position $j$ is entirely determined by $i$. 
+Despite its apparent quadratic complexity, the recurrence described in Subsection~\ref{sec:pf} can be computed in linear $\Theta(|\Target|)$ time and space, owing to the fact that, on any recursive call, the position $k$ is entirely determined by $i$. 
 
 \begin{theorem}Starting from the complete region $[0,n-1]$, Equation~\eqref{eq:Z_rec} can be computed in $\Theta(|\Target|)$ time and space complexity.
 \end{theorem}
@@ -184,6 +184,6 @@ Consequently, for any targeted \GCContent $gc\in[0\%,100\%]$, there exists a uni
 
 \subsection{Postprocessing unpaired regions: A local/global (glocal) hybrid approach}
 \label{subsec:glocal_method}
-Due to our simplified our energy model, unpaired regions are not subject to design constraints other than the \GCContent, leading to modest probabilities for refolded design candidates to match the targeted structure. To improve these performances and test the complementarity  of our global sampling approach with previous contributions based on local search, we used the \RNAinverse software to redesign unpaired regions. We specified a constraint mask to prevent stacking base-pairs from being modified and, whenever necessary, reetablished their content content a posteriori as \RNAinverse has been witnessed to take some liberties with constraints masks. As shown in Table~\ref{table:impact_on_gc} (Supplementary material), this postprocessing does not drastically alter the \GCContent, so the glocal approach reasonably addresses the contrained \GCContent design problem.
+Due to our simplified energy model, unpaired regions are not subject to design constraints other than the \GCContent, leading to modest probabilities for refolded design candidates to match the targeted structure. To improve these performances and test the complementarity  of our global sampling approach with previous contributions based on local search, we used the \RNAinverse software to redesign unpaired regions. We specified a constraint mask to prevent stacking base-pairs from being modified and, whenever necessary, reestablished their content a posteriori as \RNAinverse has been witnessed to take some liberties with constraints masks. As shown in Table~\ref{table:impact_on_gc} (Supplementary material), this postprocessing does not drastically alter the \GCContent, so the glocal approach reasonably addresses the contrained \GCContent design problem.
 
 
