@@ -1,0 +1,144 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt,hyperref,draft]{article} % use larger type; default would be 10pt
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+% \geometry{margin=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{amsmath} % for much better looking tables
+\usepackage{xspace}
+\usepackage{amssymb} % for much better looking tables
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{ntheorem} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+\usepackage{framed}
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+\newcommand{\Answer}[1]{\noindent\textsf{\textbf{Response: }}{\sf#1}\\}
+\newcommand{\Comment}[1]{\noindent\textsf{\textbf{Comment: }}{\it#1}\\[.5em]}
+
+%%% END Article customizations
+
+\input{macros}
+
+%%% The "real" document content comes below...
+
+\title{A weighted sampling algorithm for the design of RNA sequences with targeted secondary structure and nucleotides distribution}
+\author{Vladimir Reinharz$^1$, Yann Ponty$^{2,*}$, J\'er\^{o}me Waldisp\"{u}hl$^{1,*}$}
+\date{$^1$ School of Computer Science, McGill University, Montreal, Canada, $^2$ Laboratoire d'informatique, \'Ecole Polytechnique, Palaiseau, France.\\ \small $^*$Corresponding authors: \texttt{jeromew@cs.mcgill.ca}, \texttt{yann.ponty@lix.polytechnique.fr}}
+
+%\date{} % Activate to display a given date or no date (if empty),
+         % otherwise the current date is printed 
+
+\begin{document}
+\maketitle
+
+First of all, the authors wish to express their gratitude to the reviewers for their encouraging comments and constructive criticisms, which we tried to address in this revised version of our manuscript.
+
+
+\section{Detailed responses}
+
+\subsection{Reviewer \#1}
+
+\Comment{The benchmark only compares to RNAinverse which is outperformed by most methods you name in your introduction. Thus, a real benchmarking would have to compare to other methods as well. For most, source code packages are available.}
+\Answer{We systematically benchmarked {\tt IncaRNAtion} against most of the existing available tools, including NUPack~\cite{Zadeh:2011fk}, FRNAkenstein~\cite{Lyngso:2012vn},  RNA-SSD~\cite{Aguirre-Hernandez:2007kx}, Info-RNA~\cite{Busch:2006uq} and RNAexInv~\cite{Avihoo:2011fk}.
+While the page limitations associated with a conference submission do not allow for a an exhaustive discussion, we now report in the revised manuscript some of the most striking results. TODO (Comment results)
+}
+
+\Comment{Since you have shown that RNAinverse biases the GC-content to 50-70, the GC-content increase/decrease for lower/higher IncaRNAtion values, resp., when successivly applying RNAinverse (Supp 5.2) is to be expected.}
+\Answer{Absolutely. However, the point of this section was not to put the stress on this issue, but rather to show that our glocal approach, starting with a global sampling followed by a postprocessing of unpaired regions using \RNAinverse, does not {\em drift} too much towards regions of high \GCContent{}s. We rephrased the text of this section to make this conclusion appear more clearly, and changed the layout of Table 2 to make the shift in \GC more explicit.}
+
+\Comment{Is there a way to apply sequence constraints within IncaRNAtion? This is something most end user will want.
+}
+\Answer{We added this feature to our implementation, which now accepts a constraint mask consisting in a sequence of IUPAC symbols (e.g. 'N' for unconstrained position, or G for Guanine-only). We also briefly mention this feature in the definition of our probabilistic model.}
+
+\Comment{What is the time consumption/complexity of the GC-weight parameter $x_{gc}$ identification within Sec. 2.2.3? And are these values length-/structure-independent or do they have to be computed for each structure individually?}
+\Answer{TODO (Yann)}
+
+\Comment{Is the method available?}
+\Answer{TODO (Jerome)}
+
+\subsection{Reviewer \#2}
+
+\Comment{1) The $x^{\gc(s)}$ in equation (1) seems to me a novel contributing term that is of high importance. Perhaps its introduction should be highlighted more in the text.}
+\Answer{TODO (Yann)}
+
+\Comment{2) Concerning Table 2 in the Supplementary data, the way it is written (IncaRNAtion + RNAinverse) it looks like "glocal" search heuristic whereas in the table it seems local. Perhaps there is a small typo ambiguity that can be resolved.}
+\Answer{Reviewer \#1 also pointed out some inconsistency/unclarity in our previous formulation. The second column indeed showed the final \GCContent of the glocal approach, following the postprocessing of sequences with a local-search approach. While such a postprocessing tends to reestablish \GCContent{}s that are  closer to 50\% \GC, this shift remains reasonable (at most ~6\% \GC). Furthermore, this shift is very predictable and offers the user the possibility to \emph{overshoot} for a more extreme \GCContent with the global approach, knowing that the postprocessing step will tend to average it.}
+
+\Comment{3-4) Typos\ldots}
+\Answer{We fixed those typos.}
+
+\subsection{Reviewer \#3}
+
+\Comment{(1) There are many points where you iterate over "all sequences of length $|S|$" or all of those which can fold into $S$; it is not always clear. Why not introduce $F(s)$ for the folding space of a sequence, and $F^{-1}(S)$ for the inverse folding space of a structure, and simply use $F^{-1}(S)$ where this is what you mean?}
+\Answer{While we agree that this proposition would lead to a compact and well-defined mathematical definition of the problem, we prefer a implicit definition of the compatibility of a sequence to a given structure. Namely, we always allow every possible sequence of a length $|S|$ to be a member of the inverse folding space, and assign to it some  energy penalty (typically $+\infty$, or $\beta$) if it violates some constraints (restriction on allowed base-pairs, position-specific constraints...). The inverse folding space sequences is therefore implicitly defined as the set of sequences having finite energy, and our algorithm is arguably more prone to generalization, e.g. to capture non-canonical base-pairs which are increasingly considered by the field of RNA bioinformatics.
+}
+
+\Comment{(2) You make the computation of $Z$ look like yet another set of DP recurrences, and as a consequence, you need a proof to show that it is linear in $n$. Surely, the reader wonders at that point how you can iterate over $(i,j)$ and compute an $(n,n)$ table in less than quadratic time. This mis-led understanding is created by the Nussinovic style of the recurrences.
+ What you actually compute is a sparse, tree-shaped segment of that $(i,j)$-table.
+ Why not represent the given structure as a tree of Empty, Singleton, Pair and Bifurcation nodes, such as 
+\begin{align*}
+  S<\texttt{.},B<P<\texttt{(},S<\texttt{.},E>,\texttt{)},P<\texttt{(},Em,\texttt{)}>>> \text{ for {\tt .(.)()}}  ? 
+\end{align*}
+ (You do not even need to explicitly represent the dots and brackets at the leaves.)\\
+ Then, computation of $Z$ becomes just structural recursion on the tree,
+     $Z(a,b, t) =$ defined by case analysis on t, such that, for example,
+     $Z(a,b,P<'(',r,')'>)$ calls on $Z(a',b' r)$ for all $a'$ and $b'$.
+And the result of the computation is just the tree annotated with the $Z_{ab}$ values. 
+This way it is more transparent what is going on, and it is obvious that space and time are linear in $n$, because the size of the tree is in $O(n)$.}
+\Answer{Great suggestion. TODO!}
+
+\Comment{(3) Figure 1 is also a bit misleading. Make it clear that the stochastic choice is NOT made over the three cases depicted. The case is always fixed for given $i$, just the bases are chosen.}
+\Answer{Absolutely. We changed this figure, which now explicitly distinguishes between the three different cases (different left-hand side diagrams), and also features the base emission probabilities.}
+
+\Comment{(4) Section 2.2.3 is titled "Rejecting unsuitable candidates". It explains that candidates tend to be quite suitable, but somewhere, you should actually tell who is rejected and when ... }
+\Answer{TODO}
+
+\Comment{(5) recurring: "free-nucleotides in loops" -- isn't that the same, being "free" and in a loop? And: drop the hyphen.}
+\Answer{TODO}
+
+
+\bibliographystyle{amsplain}
+\bibliography{RNApyro}
+\end{document}

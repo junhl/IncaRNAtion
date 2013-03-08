@@ -32,11 +32,13 @@ We use a simplified free-energy model which only includes additive contributions
 \begin{align*}
   \ES(s,S) = \sum_{\substack{(i,j)\to (i',j')\in S\\ \text{stacking pairs}}}\ES^{\beta}_{s_is_j\to s_{i'}s_{j'}} 
 \end{align*}
-where $\ES^{\beta}_{ab\to a'b'}$ is set to $0$ if $ab=\varnothing$ (no base-pair to stack onto), the tabulated free-energy of stacking pairs $(ab)/(a'b')$ in the Turner model if available, or $\beta\in[0,\infty]$ for non-Watson-Crick/Wobble pairs (i.e. not in $\{\Gb\Ub,\Ub\Gb,\Cb\Gb,\Gb\Cb, \Ab\Ub\text{ or }\Ub\Ab\}$). This latter parameter allows one to choose whether to simply penalize invalid base pairs ($\beta>0$), or forbid them altogether ($\beta = +\infty$).
+where $\ES^{\beta}_{ab\to a'b'}$ is set to $0$ if $ab=\varnothing$ (no base-pair to stack onto), the tabulated free-energy of stacking pairs $(ab)/(a'b')$ in the Turner model if available, or $\beta\in[0,\infty]$ for non-Watson-Crick/Wobble pairs (i.e. not in $\{\Gb\Ub,\Ub\Gb,\Cb\Gb,\Gb\Cb, \Ab\Ub\text{ or }\Ub\Ab\}$). This latter parameter allows one to choose whether to simply penalize invalid base pairs ($\beta>0$), or forbid them altogether ($\beta = +\infty$). 
+Position-specific sequence constraints can also be enforced at this level (details omitted for the sake of clarity) by assigning to $\ES$ a $+\infty$ penalty (leading to a null probability) to the presence, at a given position, of a base that is incompatible with a user-specified constraint mask.
+
 
 \subsubsection{\GCContent weighted pseudo-Boltzmann ensemble and distribution}
 
-In order to counterbalance the documented tendency of sampling methods to generate \Gb\Cb-rich sequences~\cite{Levin:2012kx}, we introduce a parameter $x\in\mathbb{R}^+$, whose value will influence the \GCContent of generated sequences. Let $\Target$ be a targeted secondary structure, then let us define the pseudo-Boltzmann factor $\B_{x}(s,S)$ of a sequence $s$ such that
+In order to counterbalance the documented tendency of sampling methods to generate \Gb\Cb-rich sequences~\cite{Levin:2012kx}, we introduce a parameter $x\in\mathbb{R}^+$, whose value will influence the \GCContent of generated sequences. Let $\Target$ be a targeted secondary structure, then the pseudo-Boltzmann factor of a sequence $s$ is $\B_{x}(s,S)$  such that
 \begin{equation}
 \B_{x, \Target}(s) = e^{\frac{-\ES(s,\Target)}{RT}}\cdot x^{\gc(s)}
 \label{def:genBoltz}
@@ -49,13 +51,10 @@ Summing the pseudo-Boltzmann factor over all possible sequences of a given lengt
 
 \subsection{Sampling the pseudo-Boltzmann ensemble}
 
-Let us now describe a linear-time algorithm to sample sequences at random in the pseudo-Boltzmann distribution. This algorithm follows the general principles of the recursive approach to random generation~\cite{Wilf1977}, pioneered in the context of RNA by the \SFold algorithm~\cite{Ding2003}. The algorithm starts by precomputing the partition function restricted to each valid interval, and then performs a series of recursive stochastic backtracks, using precomputed values to decide on the probability of each alternative.
+Let us now describe a linear-time algorithm to sample sequences at random in the pseudo-Boltzmann distribution. This algorithm follows the general principles of the recursive approach to random generation~\cite{Wilf1977}, pioneered in the context of RNA by the \SFold algorithm~\cite{Ding2003}. The algorithm starts by precomputing the partition function restricted to each valid interval, and then performs a series of recursive stochastic backtracks, using precomputed values to decide on the probability of each alternative. 
 
 \subsubsection{Precomputing the pseudo-partition function}\label{sec:pf}
-\begin{figure}
-\resizebox{\textwidth}{!}{\input{FigStochasticBacktrack.pgf}}
-\caption{Three main cases in the stochastic backtrack procedure over an interval $[i,j]$: Either position $i$ is left unpaired (top), a base-pair $(i,j)$ is formed, stacking onto $(i+1,j-1)$ (middle), or $i$ is paired somewhere else, defining two regions on which subsequent recursive calls are needed (bottom). Positions indicated in red are assigned during this stage of the backtrack.\label{fig:stochastic}}
-\end{figure}
+
 
 
 Firstly, a dynamic programming algorithm computes $\mathcal{Z}\substack{(i,j)\\ [a,b]}$ the pseudo-partition function restricted to an interval $[i,j]$, assuming its (previously chosen) flanking nucleotides are $a$ and $b$ respectively. 
@@ -115,9 +114,14 @@ The case of an empty sequence does not cause a recursive call and must not be ve
 Since, in any interval $[i,j]$ satisfying the property, the ending position $j$ is completely determined by $i$, then there exists at most $\Theta(|\Target|)$ intervals that need to be evaluated, and we conclude on the overall complexity with the remark that $a$, $b$, $a'$ and $b'$ vary over bounded ranges and only contribute to a constant factor in the complexity.
 \end{proof}
 
+\begin{figure}
+\resizebox{\textwidth}{!}{\input{FigStochasticBacktrack.pgf}}
+\caption{Stochastic backtrack procedure over an interval $[i,j]$: Either position $i$ is left unpaired (top), a base-pair $(i,j)$ is formed, stacking onto $(i+1,j-1)$ (middle), or $i$ is paired somewhere else, defining two regions on which subsequent recursive calls are needed (bottom). Positions indicated in red are assigned during this stage of the backtrack.\label{fig:stochastic}}
+\end{figure}
+\subsubsection{Stochastic backtrack}
+Once the pseudo-partition functions have been memorized, a stochastic backtrack starts from the complete interval $[0,|\Target|-1]$ and, at each step, chooses a suitable assignment for one or several positions, using probabilities derived from the precomputation, as illustrated by Figure~\ref{fig:stochastic}. One or several recursive calls over the remaining regions are then performed, as described in Algorithm~\ref{alg:back}. On each recursive call, the algorithm assigns at least one nucleotide to a -- previously unassigned -- position. Moreover, the number of executions of each loops is bounded by a constant. Consequently, the complexity of Algorithm~\ref{alg:back} is in $\Theta(|\Target|)$ time and space. 
 
-\subsubsection{\GCContent Stochastic backtrack}
-Once the pseudo-partition functions have been memorized, a stochastic backtrack starts from the complete interval $[0,|\Target|-1]$ and, at each step, chooses a suitable assignment for one or several positions, using probabilities derived from the precomputation. One or several recursive calls over regions that are left unassigned are then performed, as described by Algorithm~\ref{alg:back}, and illustrated by Figure~\ref{fig:stochastic}.
+
 \begin{algorithm}[t]
 \DontPrintSemicolon
 	\SetAlgoLined
@@ -127,20 +131,20 @@ Once the pseudo-partition functions have been memorized, a stochastic backtrack 
  \lIf(\tcp*[f]{Empty sequence}){$j<i$}{\Return{$\varepsilon$}}
 	\Else{
   k $\leftarrow S_i$\;
-	\If(\tcp*[f]{Unpaired}){$(k = -1)$}{
+	\If(\tcp*[f]{Unpaired base}){$(k = -1)$}{
 		\For{$a'\in\B$}{
 			rand $\leftarrow$ rand $- x^{\gc(a')}\cdot \Z{i+1,j}{a',b}$\;
-			\lIf{$\text{rand}<0$}\Return{$a'.\Backtrack\left(i+1,j,a',b,\Target\right)$}\;
+			\lIf{$\text{\rm rand}<0$}\Return{$a'.\Backtrack\left(i+1,j,a',b,\Target\right)$}\;
 		}
 	}
 	\lElse{
-		\If(\tcp*[f]{Stacking pairs}){$(k=j) \land (S_{i-1}=j+1)$}{
+		\If(\tcp*[f]{Stacking base pair}){$(k=j) \land (S_{i-1}=j+1)$}{
 			\For{$(a',b')\in\B\times\B$}{
 				rand $\leftarrow$ rand $-
 			 	x^{\gc(a'.b')}
 			 	\cdot e^{\frac{-\ES^{\beta}_{ab \to a'b'}}{RT}}
 			 	\cdot \Z{i+1,j-1}{a',b'}	$\;
-				\lIf{$\text{rand}<0$}{
+				\lIf{$\text{\rm rand}<0$}{
 					\Return{$a'.\Backtrack\left(i+1,j-1,a',b',\Target\right). b'$}\;		
 				}
 			}
@@ -153,7 +157,7 @@ Once the pseudo-partition functions have been memorized, a stochastic backtrack 
 					\cdot e^{\frac{-\ES^{\beta}_{\varnothing\to a'b'}}{RT}}
   	    	\cdot\Z{i+1,k-1}{a',b'}
 	    	  \cdot\Z{k+1,j}{b',b}$\;	
- 					\If{$\text{rand}<0$}{
+ 					\If{{\rm rand} $<0$}{
 						\Return{$a'
 						.\Backtrack\left(i+1,k-1,a',b',\Target\right)
 						.b'
@@ -168,17 +172,21 @@ Once the pseudo-partition functions have been memorized, a stochastic backtrack 
 \caption{\protect\Backtrack$\left(i,j,a,b,\Target\right)$\label{alg:back}}
 \end{algorithm}
 
-Since, on each recursive call, the algorithm assigns at least one nucleotide to a -- previously unassigned -- position, and that the number of executions of the loops are bounded by a constant, then the complexity of the algorithm grows linearly on the targeted length. 
+
+\subsubsection{Self-adaptive sampling strategy and overall complexity}
+
+Our goal is to produce a set of sequences whose \GCContent matches a prescribed value $gc$.
+An absolute tolerance $\kappa$ may be allowed, so that the \GCContent of any valid sequence must fall in  
+$[gc-\kappa,gc+\kappa]$. Since sequences of arbitrary \GCContent may be generated by Algorithm~\ref{alg:back}, we use a rejection-based approach~\cite{Bodini2010}, previously adapted by the authors in a similar context~\cite{Waldispuhl2011}. In our context, this gives an algorithm which generates $k$ valid sequences in expected time $\Theta(k\cdot n\sqrt{n})$ when $\kappa=0$ (resp. $\Theta(k\cdot n)$ when $\kappa$ is a positive constant) memory $\Theta(k\cdot n)$.
+Although a complete analysis can be found in an earlier contribution~\cite{Waldispuhl2011}, let us briefly outline the strategy and arguments used to analyze the complexity.
+
+This approach simply generates sets of sequences by repeatedly running the stochastic backtrack algorithm. The average \GCContent induced by the current value of the $x$ parameter, can then be adequately estimated from the sample, or computed exactly using recent algorithmic advances~\cite{Ponty2011}. The set of sequences is filtered to only retain valid sequences. The value of the parameter $x$ is then adapted to match the average \GCContent (induced by the value of $x$) with the targeted one.
+It can be shown that the expected \GCContent is a continuous and strictly increasing monotonic function of $x$, whose limits are $0$ when $x=0$ and $n$ when $x\to +\infty$. Consequently, for any targeted \GCContent $gc\in[0\%,100\%]$, there exists a unique value $x_{gc}$ such that generated sequences feature, on the average, the right \GCContent.
+In practice, a simple binary search~\cite{Waldispuhl2011} is used in our implementation, and typically converges after very few iterations. However the optimal value for $x$ can also be derived analytically using an interpolation after $\Theta(n)$ evaluations of $\Z{i,j}{a,b}$ for different candidate values of $x$, as previously noted~\cite{Waldispuhl2011} and implemented using the Fast-Fourier Transform~\cite{Senter2012}.
 
 
-\subsubsection{Rejecting unsuitable candidates}
-
-Note that, although the parameter $x$ is introduced to match the expected \GCContent with the targeted one, nothing prevents Algorithm~\ref{alg:back} to generate sequences of arbitrary \GCContent. Therefore, we use a rejection-based approach~\cite{Bodini2010} previously used by the authors in a similar context~\cite{Waldispuhl2011}.
-
-It was established~\cite{Waldispuhl2011} that, for each value of $x$, there exists constants $\mu_x$ and $\sigma_x$ such that the \GCContent distribution observed in sequences sampled with respect to the above distribution converges asymptotically towards a normal law having expectation in $\mu\cdot n\cdot(1+o(1))$ and standard deviation in $\sigma\cdot\sqrt{n}\cdot(1+o(1))$.
-Furthermore, it can easily be shown that the expected \GCContent is a continuous and strictly increasing monotonic  function of $x$, whose limits are $0$ when $x=0$ and $n$ when $x\to +\infty$. 
-
-Consequently, for any targeted \GCContent $gc\in[0\%,100\%]$, there exists a unique value $x_{gc}$ such that generated sequences feature, on the average, the right \GCContent. Such a value can be determined using any numerical recipe, and a simple bisection procedure, further described in earlier work~\cite{Waldispuhl2011}, is used in our implementation. Furthermore, the concentration of the distribution, asserted by its limited standard deviation, implies a growth in $\Theta(\sqrt{n})$ (resp. $\Theta(1)$, i.e. constant) for the expected number of attempts before generating a sequence having the exact targeted \GCContent  (resp. within $[gc-\kappa,gc+\kappa]$, where $\kappa\in\Theta(1/\sqrt n)$).
+Regarding the complexity, it was previously established~\cite{Waldispuhl2011} that, for each value of $x$, there exists constants $\mu_x$ and $\sigma_x$ such that the distribution of \GCContent asymptotically converges towards a normal law having expectation in $\mu\cdot n\cdot(1+o(1))$ and standard deviation in $\sigma\cdot\sqrt{n}\cdot(1+o(1))$.
+Furthermore, the concentration of the distribution, asserted by its limited standard deviation, implies a growth in $\Theta(\sqrt{n})$ (resp. $\Theta(1)$, i.e. constant) for the expected number of attempts required to generate a valid sequence when $\kappa=0$ (resp. $\kappa\in\Omega(1/\sqrt n)$).
 
 
 

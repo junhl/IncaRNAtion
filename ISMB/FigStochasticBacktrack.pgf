@@ -5,9 +5,9 @@
   \newcommand{\HSep}{500pt}
   \newcommand{\VSepUp}{130pt}
   \newcommand{\VSepDown}{-130pt}
-  \newcommand{\LabSepA}{57pt}
-  \newcommand{\LabSepB}{74pt}
-  \newcommand{\LabSepC}{69pt}
+  \newcommand{\LabSepA}{58pt}
+  \newcommand{\LabSepB}{75pt}
+  \newcommand{\LabSepC}{72pt}
 
   \tikzstyle{base}=[circle,draw,thick,inner sep=0,minimum width=15pt,fill=white]
   \tikzstyle{basesmall}=[circle,draw,thick,inner sep=0,minimum width=10pt,fill=white]
@@ -23,8 +23,9 @@ line after snake=0pt,
   \tikzstyle{arr}=[line width=1.3pt,->,snake=snake, segment aspect=.0,%
 line after snake=10pt, 
         segment length=20pt, segment amplitude=3pt]
-  \tikzstyle{prob}=[fill=none,below=5pt,font=\relsize{+2}]
-  \tikzstyle{caption}=[draw=black, font=\relsize{+2},anchor=north west,xshift=-70pt]
+  \tikzstyle{prob}=[fill=none,above=5pt,font=\relsize{+2}]
+  \tikzstyle{caption}=[%fill=gray!20,draw=gray!60,thick,inner sep=4pt,rounded corners=6pt,
+font=\relsize{+2},anchor=north west,xshift=-70pt]
 
 
 
@@ -164,7 +165,7 @@ line after snake=10pt,
   \end{pgfonlayer}{background}
 \end{scope}
 
-\node[above= \LabSepC of a-1, caption] {Case 3: Position $i$ is paired to some $k$ without stacking pair ($k\neq j$ or not nesting base-pair)};
+\node[above= \LabSepC of a-1, caption] {Case 3: Position $i$ is paired to some $k$ without stacking on another pair ($k\neq j$ or not nesting base-pair)};
 
 \begin{scope}[xshift=\HSep,yshift=\VSepDown]
   \node[base] (a-1) at (0,0) {\color{red}$a'$};
