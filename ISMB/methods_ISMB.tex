@@ -23,27 +23,27 @@ stacked canonical base-pairs. We show how a modification of the dynamic programm
 %\subsubsection{Energy contribution}
 \subsection{Definitions}
 
-A targeted secondary structure $\Target$ is abstracted as a non-crossing arc-annotated sequence,  where 
+A targeted secondary structure $\Target$ is given as a non-crossing arc-annotated sequence,  where 
 $\Target_i$ stands for the base-pairing position of position $i$ in $\Target$ if any (and, reciprocally, $\Target_{\Target_i}=i$), or $-1$ otherwise. 
-Let us denote by $\gc(s)$ the number of occurrences of \Gb and \Cb in an RNA sequence $s$.
+In addition, we denote by $\gc(s)$ the number of occurrences of \Gb and \Cb in an RNA sequence $s$.
 
 \subsubsection{Simplified energy model}
-The free-energy contribution in our pseudo-energy model corresponds to an additive stacking-pairs model, using individual values from the Turner 2004 model (retrieved from the NNDB~\cite{Turner2010}). Given a candidate sequence $s$ for a secondary structure $S$, the free-energy of $S$ on $s$ is given by
+We use a simplified free-energy model which only includes additive contributions from stacking base-pairs. Using individual values from the Turner 2004 model (retrieved from the NNDB~\cite{Turner2010}). Given a candidate sequence $s$ for a secondary structure $S$, the free-energy of $S$ on $s$ is given by
 \begin{align*}
   \ES(s,S) = \sum_{\substack{(i,j)\to (i',j')\in S\\ \text{stacking pairs}}}\ES^{\beta}_{s_is_j\to s_{i'}s_{j'}} 
 \end{align*}
-where $\ES^{\beta}_{ab\to a'b'}$ is set to $0$ if $ab=\varnothing$ (no base-pair to stack onto), the tabulated free-energy of stacking pairs $(ab)/(a'b')$ in the Turner model if available, or $\beta\in[0,\infty]$ for non-Watson-Crick/Wobble pairs (i.e. not in $\{\Gb\Ub,\Ub\Gb,\Cb\Gb,\Gb\Cb, \Ab\Ub\text{ or }\Ub\Ab\}$). This latter parameter allows one to choose whether to simply penalize invalid base pairs ($\beta>0$), or forbid them altogether ($\beta = \infty$).
+where $\ES^{\beta}_{ab\to a'b'}$ is set to $0$ if $ab=\varnothing$ (no base-pair to stack onto), the tabulated free-energy of stacking pairs $(ab)/(a'b')$ in the Turner model if available, or $\beta\in[0,\infty]$ for non-Watson-Crick/Wobble pairs (i.e. not in $\{\Gb\Ub,\Ub\Gb,\Cb\Gb,\Gb\Cb, \Ab\Ub\text{ or }\Ub\Ab\}$). This latter parameter allows one to choose whether to simply penalize invalid base pairs ($\beta>0$), or forbid them altogether ($\beta = +\infty$).
 
 \subsubsection{\GCContent weighted pseudo-Boltzmann ensemble and distribution}
 
-In order to counterbalance the documented tendency of sampling methods to generate \Gb\Cb-rich sequences~\cite{Levin:2012kx}, let us introduce a parameter $x\in\mathbb{R}^+$, whose value will influence the \GCContent of generated sequences. Let $\Target$ be a targeted secondary structure, then let us define the pseudo-Boltzmann factor $\B_{x}(s,S)$ of a sequence $s$ such that
+In order to counterbalance the documented tendency of sampling methods to generate \Gb\Cb-rich sequences~\cite{Levin:2012kx}, we introduce a parameter $x\in\mathbb{R}^+$, whose value will influence the \GCContent of generated sequences. Let $\Target$ be a targeted secondary structure, then let us define the pseudo-Boltzmann factor $\B_{x}(s,S)$ of a sequence $s$ such that
 \begin{equation}
 \B_{x, \Target}(s) = e^{\frac{-\ES(s,\Target)}{RT}}\cdot x^{\gc(s)}
 \label{def:genBoltz}
 \end{equation}
 where $R$ is the Boltzmann constant and $T$ the temperature in Kelvin.
 
-Summing the pseudo-Boltzmann factor over all possible sequences of a given length $|\Target|$ gives the pseudo-partition function $\mathcal{Z}_{x,\Target}$, from which one defines the pseudo-Boltzmann probability $\Prob_{x,\Target}(s)$ of each sequence $s$, respectively such that 
+Summing the pseudo-Boltzmann factor over all possible sequences of a given length $|\Target|$, one obtains the pseudo-partition function $\mathcal{Z}_{x,\Target}$, from which one defines the pseudo-Boltzmann probability $\Prob_{x,\Target}(s)$ of each sequence $s$, respectively such that 
 \begin{align}\mathcal{Z}_{x,\Target} &= \sum_{\substack{|s|=|\Target|}}\B_{x,\Target}(s)& \text{and}&&
 \Prob_{x,\Target}(s) &= \frac{\B_{x,\Target}(s)}{\mathcal{Z}_{x,\Target}}.\label{def:distribution}\end{align}
 
@@ -59,7 +59,7 @@ Let us now describe a linear-time algorithm to sample sequences at random in the
 
 
 Firstly, a dynamic programming algorithm computes $\mathcal{Z}\substack{(i,j)\\ [a,b]}$ the pseudo-partition function restricted to an interval $[i,j]$, assuming its (previously chosen) flanking nucleotides are $a$ and $b$ respectively. 
-Since the only sequence over an empty interval is the empty sequence, having energy $0$, one has
+Remark that the empty interval only supports the empty structure, having energy $0$, so one has
 \begin{equation}
 	\forall i \in [0,n-1]:\, \Z{i+1,i}{a,b}=1.
 	\label{eq:Z_in}
@@ -73,13 +73,13 @@ The recursion consists in four terms, depending on the base-pairing status and c
   		\displaystyle
       \sum_{a'\in \B}  
       x^{\gc(a')}
-      \cdot\Z{i+1,j}{a',b} &\begin{array}{@{}l@{}}\text{If }\Target_{i}=-1\\ \text{\relsize{-1}Position $i$ unpaired,}\end{array}\\
+      \cdot\Z{i+1,j}{a',b} &\begin{array}{@{}l@{}}\text{If }\Target_{i}=-1,\\ \text{\relsize{-1}[Position $i$ unpaired]}\end{array}\\
       \displaystyle
       \sum_{a',b'\in \B^2}
 			 x^{\gc(a'.b')}
 			 \cdot e^{\frac{-\ES^{\beta}_{ab \to a'b'}}{RT}}
 			 \cdot \Z{i+1,j-1}{a',b'}&
-\begin{array}{@{}l@{}}\text{Elif }\Target_i=j \land \Target_{i-1}=j+1\\ \text{\relsize{-1}$(i,j)$ stacking pair onto $(i$-$1,j$+$1)$,}\end{array}
+\begin{array}{@{}l@{}}\text{Elif }\Target_i=j \land \Target_{i-1}=j+1,\\ \text{\relsize{-1}[$(i,j)$ stacking pair onto $(i$-$1,j$+$1)$]}\end{array}
 			 \\
 			 \displaystyle
       \sum_{a',b'\in \B^2}
@@ -87,8 +87,8 @@ The recursion consists in four terms, depending on the base-pairing status and c
 			\cdot e^{\frac{-\ES^{\beta}_{\varnothing\to a'b'}}{RT}}
       \cdot\Z{i+1,k-1}{a',b'}
       \cdot\Z{k+1,j}{b',b} & 
-\begin{array}{@{}l@{}}\text{Elif }\Target_i=k \land i < k \leq j\\
-\text{\relsize{-1}Junction/bulge $\Rightarrow$ split, no stack,}
+\begin{array}{@{}l@{}}\text{Elif }\Target_i=k \land i < k \leq j,\\
+\text{\relsize{-1}[Junction/bulge $\Rightarrow$ split, no stack]}
 \end{array}
 \\
       0 &\text{Otherwise.}
@@ -116,7 +116,7 @@ Since, in any interval $[i,j]$ satisfying the property, the ending position $j$ 
 \end{proof}
 
 
-\subsubsection{Stochastic backtrack}
+\subsubsection{\GCContent Stochastic backtrack}
 Once the pseudo-partition functions have been memorized, a stochastic backtrack starts from the complete interval $[0,|\Target|-1]$ and, at each step, chooses a suitable assignment for one or several positions, using probabilities derived from the precomputation. One or several recursive calls over regions that are left unassigned are then performed, as described by Algorithm~\ref{alg:back}, and illustrated by Figure~\ref{fig:stochastic}.
 \begin{algorithm}[t]
 \DontPrintSemicolon
@@ -184,6 +184,6 @@ Consequently, for any targeted \GCContent $gc\in[0\%,100\%]$, there exists a uni
 
 \subsection{Postprocessing unpaired regions: A local/global (glocal) hybrid approach}
 \label{subsec:glocal_method}
-Due to our simplified energy model, unpaired regions are not subject to design constraints other than the \GCContent, leading to modest probabilities for refolded design candidates to match the targeted structure. To improve these performances and test the complementarity  of our global sampling approach with previous contributions based on local search, we used the \RNAinverse software to redesign unpaired regions. We specified a constraint mask to prevent stacking base-pairs from being modified and, whenever necessary, reestablished their content a posteriori as \RNAinverse has been witnessed to take some liberties with constraints masks. As shown in Table~\ref{table:impact_on_gc} (Supplementary material), this postprocessing does not drastically alter the \GCContent, so the glocal approach reasonably addresses the contrained \GCContent design problem.
+Due to our simplified energy model, unpaired regions are not subject to design constraints other than the \GCContent, leading to modest probabilities for refolded design candidates to match the targeted structure. To improve these performances and test the complementarity  of our global sampling approach with previous contributions based on local search, we used the \RNAinverse software to redesign unpaired regions. We specified a constraint mask to prevent stacking base-pairs from being modified and, whenever necessary, reestablished their content {\em a posteriori}, as \RNAinverse has been witnessed to take some liberties with constraints masks. As shown in Table~\ref{table:impact_on_gc} (Supplementary material), this postprocessing does not drastically alter the \GCContent, so the glocal approach reasonably addresses the contrained \GCContent design problem.
 
 

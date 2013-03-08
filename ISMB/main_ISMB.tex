@@ -22,6 +22,7 @@
 \usepackage{amsmath}
 \usepackage{ifthen}
 \usepackage{relsize}
+\usepackage{multirow}
 \usetikzlibrary{positioning}
 \usetikzlibrary{matrix}
 \usetikzlibrary{calc}
@@ -86,29 +87,8 @@
 
 \newcommand{\RNASTRAND}{{\sf RNA STRAND}\xspace}
 
-%\newcommand{\citep}{\cite}
-\newcommand{\Z}[2]{\mathcal{Z}{\substack{(#1)\\ [#2]}}}
-\newcommand{\Y}[3]{\mathcal{Y}_{\substack{(#1)\\ [#3]}}^{#2}}
-\newcommand{\B}{\mathcal{B}}
-\newcommand{\Kron}{\delta}
-\newcommand{\ub}{\bullet}
+\input{macros}
 
-\newcommand{\Ab}{{\sf{A}}\xspace}
-\newcommand{\Cb}{{\sf{C}}\xspace}
-\newcommand{\Gb}{{\sf{G}}\xspace}
-\newcommand{\Ub}{{\sf{U}}\xspace}
-
-\newcommand{\gc}{{\#\text{{\sf gc}}}}
-\newcommand{\PE}[1]{E(#1)}
-\newcommand{\EI}{\text{EI}}
-\newcommand{\ES}{\text{{\sf Es}}}
-\newcommand{\ISO}{\text{ISO}}
-\newcommand{\Prob}{\text{P}}
-\newcommand{\Target}{\text{\sf S}}
-\newcommand{\CNBP}[1]{\gamma(#1)}
-
-\newcommand{\CFramed}[2][gray]{\begin{tcolorbox}[colframe=#1,title=To be included only if space allows\ldots,colback=white]#1\end{tcolorbox}}
-\renewcommand{\CFramed}[2][gray]{}
 
 \title{A weighted sampling algorithm for the design of RNA sequences with targeted secondary structure and nucleotides distribution}
 \author{Vladimir Reinharz$^1$, Yann Ponty$^{2,*}$, J\'er\^{o}me Waldisp\"{u}hl$^{1,*}$}

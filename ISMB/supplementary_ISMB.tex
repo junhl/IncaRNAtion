@@ -54,16 +54,18 @@ These data demonstrate that the local search heuristic used to design nucleotide
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
-target \GCContent & \ourprog & \ourprog + \RNAinverse \\
+\multirow{3}{*}{Target \GCContent (\%)}& \multicolumn{2}{|c|}{Designed sequences \GCContent (\%)}\\ \cline{2-3}
+ & \ourprog & \ourprog + \RNAinverse\\
+ & (Global) & (Glo{\bf c}al) \\
 \hline
-10\% & 0.15 & 0.21\\
-30\% & 0.30 & 0.33\\
-50\% & 0.48 & 0.49\\
-70\% & 0.71 & 0.69\\
-90\% & 0.83 & 0.78\\
+10\% & 15\% & 21\% \quad $\nearrow 6\%$\\
+30\% & 30\% & 33\% \quad $\nearrow 3\%$\\
+50\% & 48\% & 49\% \quad $\nearrow 1\%$\\
+70\% & 71\% & 69\% \quad $\searrow 2\%$\\
+90\% & 83\% & 78\% \quad $\searrow 5\%$\\
 \hline
 \end{tabular}
 \end{center}
-\caption{Observed \GCContent of solutions returned by \ourprog (2nd column) and after the application of the local search heuristic (3rd column).}
+\caption{Observed \GCContent of solutions returned by \ourprog (2nd column) and after the application of the local search postprocessing (3rd column).}
 \label{table:impact_on_gc}
 \end{table}

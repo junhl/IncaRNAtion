@@ -2,8 +2,13 @@
 \begin{tikzpicture}
 
   \newcommand{\BSep}{9pt}
-  \newcommand{\HSep}{280pt}
-  \newcommand{\VSep}{85pt}
+  \newcommand{\HSep}{500pt}
+  \newcommand{\VSepUp}{130pt}
+  \newcommand{\VSepDown}{-130pt}
+  \newcommand{\LabSepA}{57pt}
+  \newcommand{\LabSepB}{74pt}
+  \newcommand{\LabSepC}{69pt}
+
   \tikzstyle{base}=[circle,draw,thick,inner sep=0,minimum width=15pt,fill=white]
   \tikzstyle{basesmall}=[circle,draw,thick,inner sep=0,minimum width=10pt,fill=white]
   \tikzstyle{basephantom}=[base,dashed]
@@ -12,16 +17,24 @@ line after snake=0pt,
         segment length=10pt,thick]
   \tikzstyle{lined}=[linez,draw,snake=none,thick]
   \tikzstyle{line}=[linez,draw,snake=none,thick]
-  \tikzstyle{bp}=[in=90,out=90,draw,line width=1.5pt,blue,looseness=1]
-  \tikzstyle{block}=[trapezium,trapezium angle=33, fill=green!20, draw=green!40!black,line width=1.5pt, inner sep=0]
+  \tikzstyle{bp}=[in=95,out=85,draw,line width=1.5pt,blue,looseness=1]
+  \tikzstyle{block}=[trapezium,trapezium angle=33, fill=green!20, draw=green!20!gray,line width=1pt, inner sep=0]
   \tikzstyle{lbl}=[inner sep=0]
-  \tikzstyle{arr}=[line width=1.3pt,decorate,decoration={snake,amplitude=1mm, segment length=20pt,pre length=1mm, post length=2mm},->]
+  \tikzstyle{arr}=[line width=1.3pt,->,snake=snake, segment aspect=.0,%
+line after snake=10pt, 
+        segment length=20pt, segment amplitude=3pt]
+  \tikzstyle{prob}=[fill=none,below=5pt,font=\relsize{+2}]
+  \tikzstyle{caption}=[draw=black, font=\relsize{+2},anchor=north west,xshift=-70pt]
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{scope}[yshift=\VSepUp]
   \node[base] (a-1) at (0,0) {$s_i$};
-  \node[base] (a-2) at (3,0) {$s_j$};
+  \node[base] (a-2) at (4,0) {$s_j$};
   \node[left=\BSep of a-1, basephantom] (a-0) {$a$};
   \node[right=\BSep of a-2, basephantom] (a-3) {$b$};
-  \node[right=0 of a-3] (x) {};
+  \node[right=0 of a-3] (x1) {};
 
 
   \path[linez] (a-1) --  (a-2);
@@ -30,19 +43,18 @@ line after snake=0pt,
   \node[lbl,below=3pt of a-1] (c1) {$i$};
   \node[lbl,below=3pt of a-2] (c2) {$j$};
 
-
-
   \begin{pgfonlayer}{background}
   \node[rectangle,inner sep=2pt,draw,fit=(a-1.west)(a-2.east) (c1) (c2)] (r1) {};
   \path[block]   (r1.south west) to (r1.south east) to (r1.north east) to[out=110,in=70] (r1.north west) to (r1.south west) ;
   \end{pgfonlayer}{background}
+\end{scope}
+\node[above= \LabSepA of a-1, caption] {Case 1: Position $i$ is unpaired};
 
-
-\begin{scope}[xshift=\HSep,yshift=\VSep]
+\begin{scope}[xshift=\HSep,yshift=\VSepUp]
   \node[base] (a-1) at (0,0) {\color{red}$a'$};
   \node[basesmall,right=\BSep of a-1] (a-1b)  {};
   \node[basesmall] (a-2) at (5,0) {};
-  \node[left=\BSep of a-1, basephantom] (a-0) {$a$}; 
+  \node[left=\BSep of a-1, basephantom] (a-0) {}; 
   \node[right=\BSep of a-2, basephantom] (a-3) {$b$};
   \path[linez] (a-1b) --  (a-2);
   \path[line] (a-1) -- (a-1b);
@@ -51,62 +63,45 @@ line after snake=0pt,
   \node[below=3pt of a-1b, inner sep=0] (c1) {$i+1$};
   \node[below=3pt of a-2, inner sep=0] (c2) {$j$};
 
-  \node[right=3em of a-3,anchor=west] {\relsize{+2}[Position $i$ unpaired]};
   \node[xshift=-2pt] at (a-0.west) (y1) {};
 
 \begin{pgfonlayer}{background}
   \node[rectangle,inner sep=2pt,draw,fit=(a-1b.west)(a-2.east) (c1) (c2)] (r1) {};
   \path[block]   (r1.south west) to (r1.south east) to (r1.north east) to[out=110,in=70,looseness=.6] (r1.north west) to (r1.south west) ;
-
   \end{pgfonlayer}{background}
 
 \end{scope}
 
-\begin{scope}[xshift=\HSep,yshift=-\VSep]
+  \path (x1) edge[arr] node[midway,prob]{$p_{a'}={x^{\gc(a')}\cdot\Z{i+1,j}{a',b}}/{\Z{i,j}{a,b}}$} 
+(y1);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{scope}[yshift=0]
   \node[base] (a-1) at (0,0) {\color{red}$a'$};
-  \node[base] (a-p) at (3,0) {\color{red}$b'$};
+  \node[base] (a-2) at (4,0) {\color{red}$b'$};
 
-  \node[basesmall,right=\BSep of a-1] (a-1b) {};
-  \node[basesmall,left=\BSep of a-p] (a-pb)  {};
-  \node[basesmall,right=\BSep of a-p] (a-pa)  {};
 
-  \node[basesmall] (a-2) at (5,0) {};
   \node[left=\BSep of a-1, basephantom] (a-0) {$a$};
   \node[right=\BSep of a-2, basephantom] (a-3) {$b$};
+  \node[right=0 of a-3] (x2) {};
 
-  \node[right=3em of a-3,anchor=west] {\relsize{+2}[Position $i$ paired anywhere else]};
-
-  \path[linez] (a-1b) -- (a-pb);
-  \path[linez] (a-pa) --(a-2);
-
-  \path[line] (a-1) -- (a-1b);
-  \path[line] (a-pb) -- (a-p);
-  \path[line] (a-pa) -- (a-p);
+  \path[linez] (a-1) --  (a-2);
 
   \path[lined] (a-0) -- (a-1);
   \path[lined] (a-2) -- (a-3);
-  \node[lbl,below=3pt of a-1b] (c1) {$i+1$};
-  \node[lbl,below=3pt of a-2] (c5){$j$};
-  \node[lbl,below=3pt of a-p] (c3) {$k$};
-  \node[lbl,below=3pt of a-pb] (c2){$k-1$};
-  \node[lbl,below=3pt of a-pa] (c4){$k+1$};
+  \node[lbl,below=3pt of a-1] (c1) {$i$};
+  \node[lbl,below=3pt of a-2] (c2){$j$};
 
-  \draw[bp]  (a-1) to (a-p);
-  \node[xshift=-2pt] at (a-0.west) (y2) {};
+  \draw[bp,looseness=1]  (a-0) to (a-3);
+  \draw[bp,out=80,in=100,looseness=.9]  (a-1) to (a-2);
+  \node[xshift=-2pt] at (a-0.west) (y3) {};
 
 \begin{pgfonlayer}{background}
-
-  \node[rectangle,inner sep=2pt,draw,fit=(a-1b.west)(a-pb.east) (c1) (c2)] (r1) {};
-  \path[block]   (r1.south west) to (r1.south east) to (r1.north east) to[out=110,in=70,looseness=0.8] (r1.north west) to (r1.south west) ;
-
-  \node[rectangle,inner sep=2pt,draw,fit=(a-pa.west)(a-2.east) (c4) (c5)] (r2) {};
-  \path[block]   (r2.south west) to (r2.south east) to (r2.north east) to[out=110,in=70,looseness=0.8] (r2.north west) to (r2.south west) ;
-
+  \node[rectangle,inner sep=2pt,draw,fit=(a-1.west)(a-2.east) (c1) (c2)] (r1) {};
+  \path[block]   (r1.south west) to (r1.south east) to (r1.north east) to[out=90,in=90,looseness=1.1] (r1.north west) to (r1.south west) ;
   \end{pgfonlayer}{background}
-
 \end{scope}
+\node[above= \LabSepB of a-1, caption] {Case 2: Extremities are paired and involved in a stacking pair};
 
- 
 \begin{scope}[xshift=\HSep,yshift=00pt]
   \node[base] (a-1) at (0,0) {\color{red}$a'$};
   \node[base] (a-2) at (5,0) {\color{red}$b'$};
@@ -126,24 +121,99 @@ line after snake=0pt,
   \node[lbl,below=3pt of a-1b] (c1) {$i+1$};
   \node[lbl,below=3pt of a-2b] (c2){$j-1$};
 
-  \draw[bp,looseness=.7]  (a-1) to (a-2);
-  \draw[bp,looseness=.7]  (a-0) to (a-3);
-  \node[right=3em of a-3,anchor=west] {\relsize{+2}[Paired ends + Stacking pairs]};
-  \node[xshift=-2pt] at (a-0.west) (y3) {};
+  \draw[bp,out=80,in=100,looseness=.9]  (a-1) to (a-2);
+  \draw[bp,out=80,in=100,looseness=.9]  (a-0) to (a-3);
+  \node[xshift=-2pt] at (a-0.west) (y2) {};
 
 \begin{pgfonlayer}{background}
   \node[rectangle,inner sep=2pt,draw,fit=(a-1b.west)(a-2b.east) (c1) (c2)] (r1) {};
   \path[block]   (r1.south west) to (r1.south east) to (r1.north east) to[out=110,in=70,looseness=.6] (r1.north west) to (r1.south west) ;
   \end{pgfonlayer}{background}
+\end{scope}
+
+  \path (x2) edge[arr] node[midway,prob]{$p_{a',b'}={x^{\gc(a'.b')}
+			 \cdot e^{\frac{-\ES^{\beta}_{ab \to a'b'}}{RT}}
+			 \cdot \Z{i+1,j-1}{a',b'}}/{\Z{i,j}{a,b}}$} 
+(y2);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{scope}[yshift=\VSepDown]
+  \node[base] (a-1) at (0,0) {\color{red}$a'$};
+  \node[basesmall] (a-2) at (4,0) {\color{red}};
+  \node[base] (a-2k) at (2.33,0) {\color{red}$b'$};
+
+  \node[left=\BSep of a-1, basephantom] (a-0) {$a$};
+  \node[right=\BSep of a-2, basephantom] (a-3) {$b$};
+  \node[right=0 of a-3] (x3) {};
+
+
+  \path[linez] (a-1) --  (a-2k);
+  \path[linez] (a-2k) --  (a-2);
+
+  \path[lined] (a-0) -- (a-1);
+  \path[lined] (a-2) -- (a-3);
+  \node[lbl,below=3pt of a-1] (c1) {$i$};
+  \node[lbl,below=3pt of a-2] (c2){$j$};
+  \node[lbl,below=3pt of a-2k] (c3){$k$};
+
+  \draw[bp,looseness=.9,dashed]  (a-0) to (a-3);
+  \draw[bp,out=80,in=100,looseness=.9]  (a-1) to (a-2k);
+
+\begin{pgfonlayer}{background}
+  \node[rectangle,inner sep=2pt,draw,fit=(a-1.west)(a-2.east) (c1) (c2)] (r1) {};
+  \path[block]   (r1.south west) to (r1.south east) to (r1.north east) to[out=90,in=90,looseness=1.1] (r1.north west) to (r1.south west) ;
+  \end{pgfonlayer}{background}
+\end{scope}
+
+\node[above= \LabSepC of a-1, caption] {Case 3: Position $i$ is paired to some $k$ without stacking pair ($k\neq j$ or not nesting base-pair)};
+
+\begin{scope}[xshift=\HSep,yshift=\VSepDown]
+  \node[base] (a-1) at (0,0) {\color{red}$a'$};
+  \node[base] (a-p) at (3,0) {\color{red}$b'$};
+
+  \node[basesmall,right=\BSep of a-1] (a-1b) {};
+  \node[basesmall,left=\BSep of a-p] (a-pb)  {};
+  \node[basesmall,right=\BSep of a-p] (a-pa)  {};
+
+  \node[basesmall] (a-2) at (5,0) {};
+  \node[left=\BSep of a-1, basephantom] (a-0) {};
+  \node[right=\BSep of a-2, basephantom] (a-3) {};
+
+  \path[linez] (a-1b) -- (a-pb);
+  \path[linez] (a-pa) --(a-2);
+
+  \path[line] (a-1) -- (a-1b);
+  \path[line] (a-pb) -- (a-p);
+  \path[line] (a-pa) -- (a-p);
+
+  \path[lined] (a-0) -- (a-1);
+  \path[lined] (a-2) -- (a-3);
+  \node[lbl,below=3pt of a-1b] (c1) {$i+1$};
+  \node[lbl,below=3pt of a-2] (c5){$j$};
+  \node[lbl,below=3pt of a-p] (c3) {$k$};
+  \node[lbl,below=3pt of a-pb] (c2){$k-1$};
+  \node[lbl,below=3pt of a-pa] (c4){$k+1$};
+
+  \draw[bp]  (a-1) to (a-p);
+  \node[xshift=-2pt] at (a-0.west) (y3) {};
+
+\begin{pgfonlayer}{background}
+
+  \node[rectangle,inner sep=2pt,draw,fit=(a-1b.west)(a-pb.east) (c1) (c2)] (r1) {};
+  \path[block]   (r1.south west) to (r1.south east) to (r1.north east) to[out=110,in=70,looseness=0.8] (r1.north west) to (r1.south west) ;
+
+  \node[rectangle,inner sep=2pt,draw,fit=(a-pa.west)(a-2.east) (c4) (c5)] (r2) {};
+  \path[block]   (r2.south west) to (r2.south east) to (r2.north east) to[out=110,in=70,looseness=0.8] (r2.north west) to (r2.south west) ;
+
+  \end{pgfonlayer}{background}
 
 \end{scope}
 
-  \tikzstyle{prob}=[fill=white,line width=1pt, opacity=.9]
-  \path (x) edge[arr] %node[midway,prob]{$\frac{\mathcal{Z}\substack{(i+1,j)\\ [a',b]}}{\mathcal{Z}\substack{(i,j)\\ [a,b]}}$} 
-(y1);
-  \path (x) edge[arr] %node[midway,prob]{ $\frac{\mathcal{Z}\substack{(i+1,j)\\ [a',b]}}{\mathcal{Z}\substack{(i,j)\\ [a,b]}}$} 
-(y2);
-  \path (x) edge[arr] %node[midway,prob]{$\frac{\mathcal{Z}\substack{(i+1,j)\\ [a',b]}}{\mathcal{Z}\substack{(i,j)\\ [a,b]}}$} 
+
+
+  \path (x3) edge[arr] node[midway,prob]{$p_{a',b'}={x^{\gc(a'.b')}
+			\cdot e^{\frac{-\ES^{\beta}_{\varnothing\to a'b'}}{RT}}
+      \cdot\Z{i+1,k-1}{a',b'}
+      \cdot\Z{k+1,j}{b',b}}/{\Z{i,j}{a,b}}$} 
 (y3);
   
 \end{tikzpicture}
