@@ -23,30 +23,30 @@ stacked canonical base-pairs. We show how a modification of the dynamic programm
 %\subsubsection{Energy contribution}
 \subsection{Definitions}
 
-A targeted secondary structure $\Target$ is given as a non-crossing arc-annotated sequence,  where 
+A targeted secondary structure $\Target$ of length $n$ is given as a non-crossing arc-annotated sequence,  where 
 $\Target_i$ stands for the base-pairing position of position $i$ in $\Target$ if any (and, reciprocally, $\Target_{\Target_i}=i$), or $-1$ otherwise. 
-In addition, we denote by $\gc(s)$ the number of occurrences of \Gb and \Cb in an RNA sequence $s$.
+In addition, let us denote by $\gc(s)$ the number of occurrences of \Gb and \Cb in an RNA sequence $s$.
 
 \subsubsection{Simplified energy model}
-We use a simplified free-energy model which only includes additive contributions from stacking base-pairs. Using individual values from the Turner 2004 model (retrieved from the NNDB~\cite{Turner2010}). Given a candidate sequence $s$ for a secondary structure $S$, the free-energy of $S$ on $s$ is given by
+We use a simplified free-energy model which only includes additive contributions from stacking base-pairs. Using individual values from the Turner 2004 model (retrieved from the NNDB~\cite{Turner2010}). Given a candidate sequence $s$ for a secondary structure $\Struct$, the free-energy of any sequence $s$ of length $|\Struct|$  is given by
 \begin{align*}
-  \ES(s,S) = \sum_{\substack{(i,j)\to (i',j')\in S\\ \text{stacking pairs}}}\ES^{\beta}_{s_is_j\to s_{i'}s_{j'}} 
+  \ES(s,\Struct) = \sum_{\substack{(i,j)\to (i',j')\in \Struct\\ \text{stacking pairs}}}\ES^{\beta}_{s_is_j\to s_{i'}s_{j'}} 
 \end{align*}
 where $\ES^{\beta}_{ab\to a'b'}$ is set to $0$ if $ab=\varnothing$ (no base-pair to stack onto), the tabulated free-energy of stacking pairs $(ab)/(a'b')$ in the Turner model if available, or $\beta\in[0,\infty]$ for non-Watson-Crick/Wobble pairs (i.e. not in $\{\Gb\Ub,\Ub\Gb,\Cb\Gb,\Gb\Cb, \Ab\Ub\text{ or }\Ub\Ab\}$). This latter parameter allows one to choose whether to simply penalize invalid base pairs ($\beta>0$), or forbid them altogether ($\beta = +\infty$). 
-Position-specific sequence constraints can also be enforced at this level (details omitted for the sake of clarity) by assigning to $\ES$ a $+\infty$ penalty (leading to a null probability) to the presence, at a given position, of a base that is incompatible with a user-specified constraint mask.
+Position-specific sequence constraints can also be enforced at this level (details omitted for the sake of clarity) by assigning to $\ES$ a $+\infty$ penalty (leading to a null probability) in the presence of a base incompatible with a user-specified constraint mask.
 
 
 \subsubsection{\GCContent weighted pseudo-Boltzmann ensemble and distribution}
 
-In order to counterbalance the documented tendency of sampling methods to generate \Gb\Cb-rich sequences~\cite{Levin:2012kx}, we introduce a parameter $x\in\mathbb{R}^+$, whose value will influence the \GCContent of generated sequences. Let $\Target$ be a targeted secondary structure, then the pseudo-Boltzmann factor of a sequence $s$ is $\B_{x}(s,S)$  such that
+In order to counterbalance the documented tendency of sampling methods to generate \Gb\Cb-rich sequences~\cite{Levin:2012kx}, we introduce a parameter $x\in\mathbb{R}^+$, whose value will influence the \GCContent of generated sequences. For any secondary structure $\Struct$, the pseudo-Boltzmann factor of a sequence $s$ is $\B^{[x]}_{\Struct}(s)$  such that
 \begin{equation}
-\B_{x, \Target}(s) = e^{\frac{-\ES(s,\Target)}{RT}}\cdot x^{\gc(s)}
+\B_{\Target}^{[x]}(s) = e^{\frac{-\ES(s,\Target)}{RT}}\cdot x^{\gc(s)}
 \label{def:genBoltz}
 \end{equation}
 where $R$ is the Boltzmann constant and $T$ the temperature in Kelvin.
 
 Summing the pseudo-Boltzmann factor over all possible sequences of a given length $|\Target|$, one obtains the pseudo-partition function $\mathcal{Z}_{x,\Target}$, from which one defines the pseudo-Boltzmann probability $\Prob_{x,\Target}(s)$ of each sequence $s$, respectively such that 
-\begin{align}\mathcal{Z}_{x,\Target} &= \sum_{\substack{|s|=|\Target|}}\B_{x,\Target}(s)& \text{and}&&
+\begin{align}\mathcal{Z}_{x,\Target} &= \sum_{\substack{|s|=n}}\B_{x,\Target}(s)& \text{and}&&
 \Prob_{x,\Target}(s) &= \frac{\B_{x,\Target}(s)}{\mathcal{Z}_{x,\Target}}.\label{def:distribution}\end{align}
 
 \subsection{Sampling the pseudo-Boltzmann ensemble}
@@ -57,7 +57,7 @@ Let us now describe a linear-time algorithm to sample sequences at random in the
 
 
 
-Firstly, a dynamic programming algorithm computes $\mathcal{Z}\substack{(i,j)\\ [a,b]}$ the pseudo-partition function restricted to an interval $[i,j]$, assuming its (previously chosen) flanking nucleotides are $a$ and $b$ respectively. 
+Firstly, a dynamic programming algorithm computes $\Z{i,j}{a,b}$ the pseudo-partition function restricted to an interval $[i,j]$, assuming its (previously chosen) flanking nucleotides are $a$ and $b$ respectively. 
 Remark that the empty interval only supports the empty structure, having energy $0$, so one has
 \begin{equation}
 	\forall i \in [0,n-1]:\, \Z{i+1,i}{a,b}=1.
@@ -95,9 +95,9 @@ The recursion consists in four terms, depending on the base-pairing status and c
 \label{eq:Z_rec}
 \end{equation}
 
-Despite its apparent quadratic complexity, the recurrence described in Subsection~\ref{sec:pf} can be computed in linear $\Theta(|\Target|)$ time and space, owing to the fact that, on any recursive call, the position $k$ is entirely determined by $i$. 
+Despite its apparent quadratic complexity, the recurrence described in Subsection~\ref{sec:pf} can be computed in linear $\Theta(n)$ time and space, owing to the fact that, on any recursive call, the position $k$ is entirely determined by $i$. 
 
-\begin{theorem}Starting from the complete region $[0,n-1]$, Equation~\eqref{eq:Z_rec} can be computed in $\Theta(|\Target|)$ time and space complexity.
+\begin{theorem}Starting from the complete region $[0,n-1]$, Equation~\eqref{eq:Z_rec} can be computed in $\Theta(n)$ time and space complexity.
 \end{theorem}
 \begin{proof}
 
@@ -111,7 +111,7 @@ Then, it is easily shown by induction that, starting from the complete interval 
 \end{itemize}
 The case of an empty sequence does not cause a recursive call and must not be verified.
 }
-Since, in any interval $[i,j]$ satisfying the property, the ending position $j$ is completely determined by $i$, then there exists at most $\Theta(|\Target|)$ intervals that need to be evaluated, and we conclude on the overall complexity with the remark that $a$, $b$, $a'$ and $b'$ vary over bounded ranges and only contribute to a constant factor in the complexity.
+Since, in any interval $[i,j]$ satisfying the property, the ending position $j$ is completely determined by $i$, then there exists at most $\Theta(n)$ intervals that need to be evaluated, and we conclude on the overall complexity with the remark that $a$, $b$, $a'$ and $b'$ vary over bounded ranges, only contributing to a constant factor in the complexity.
 \end{proof}
 
 \begin{figure}
@@ -119,7 +119,7 @@ Since, in any interval $[i,j]$ satisfying the property, the ending position $j$ 
 \caption{Stochastic backtrack procedure over an interval $[i,j]$: Either position $i$ is left unpaired (top), a base-pair $(i,j)$ is formed, stacking onto $(i+1,j-1)$ (middle), or $i$ is paired somewhere else, defining two regions on which subsequent recursive calls are needed (bottom). Positions indicated in red are assigned during this stage of the backtrack.\label{fig:stochastic}}
 \end{figure}
 \subsubsection{Stochastic backtrack}
-Once the pseudo-partition functions have been memorized, a stochastic backtrack starts from the complete interval $[0,|\Target|-1]$ and, at each step, chooses a suitable assignment for one or several positions, using probabilities derived from the precomputation, as illustrated by Figure~\ref{fig:stochastic}. One or several recursive calls over the remaining regions are then performed, as described in Algorithm~\ref{alg:back}. On each recursive call, the algorithm assigns at least one nucleotide to a -- previously unassigned -- position. Moreover, the number of executions of each loops is bounded by a constant. Consequently, the complexity of Algorithm~\ref{alg:back} is in $\Theta(|\Target|)$ time and space. 
+Once the pseudo-partition functions have been memorized, a stochastic backtrack starts from the complete interval $[0,n-1]$ and, at each step, chooses a suitable assignment for one or several positions, using probabilities derived from the precomputation, as illustrated by Figure~\ref{fig:stochastic}. One or several recursive calls over the remaining regions are then performed, as described in Algorithm~\ref{alg:back}. On each recursive call, the algorithm assigns at least one nucleotide to a -- previously unassigned -- position. Moreover, the number of executions of each loops is bounded by a constant. Consequently, the complexity of Algorithm~\ref{alg:back} is in $\Theta(n)$ time and space. 
 
 
 \begin{algorithm}[t]
@@ -185,8 +185,8 @@ It can be shown that the expected \GCContent is a continuous and strictly increa
 In practice, a simple binary search~\cite{Waldispuhl2011} is used in our implementation, and typically converges after very few iterations. However the optimal value for $x$ can also be derived analytically using an interpolation after $\Theta(n)$ evaluations of $\Z{i,j}{a,b}$ for different candidate values of $x$, as previously noted~\cite{Waldispuhl2011} and implemented using the Fast-Fourier Transform~\cite{Senter2012}.
 
 
-Regarding the complexity, it was previously established~\cite{Waldispuhl2011} that, for each value of $x$, there exists constants $\mu_x$ and $\sigma_x$ such that the distribution of \GCContent asymptotically converges towards a normal law having expectation in $\mu\cdot n\cdot(1+o(1))$ and standard deviation in $\sigma\cdot\sqrt{n}\cdot(1+o(1))$.
-Furthermore, the concentration of the distribution, asserted by its limited standard deviation, implies a growth in $\Theta(\sqrt{n})$ (resp. $\Theta(1)$, i.e. constant) for the expected number of attempts required to generate a valid sequence when $\kappa=0$ (resp. $\kappa\in\Omega(1/\sqrt n)$).
+Regarding the overall complexity of the algorithm, it was previously established~\cite{Waldispuhl2011} that, for each value of $x$, there exists constants $\mu_x$ and $\sigma_x$ such that the distribution of \GCContent asymptotically converges towards a normal law having expectation in $\mu_x\cdot n\cdot(1+o(1))$ and standard deviation in $\sigma_x\cdot\sqrt{n}\cdot(1+o(1))$.
+Furthermore, the concentration of the distribution, asserted by its limited standard deviation, therefore the expected number of attempts required to generate a valid sequence when $\kappa=0$ (resp. $\kappa\in\Omega(1/\sqrt n)$) grows linke $\Theta(\sqrt{n})$ (resp. $\Theta(1)$, i.e. a constant), leading to the announced complexities.
 
 
 
