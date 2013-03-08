@@ -49,16 +49,15 @@ whose length ranges between $20$ and $100$ nucleotides.
  To benchmark our method, we first started by sampling about $1000$ sequences per structure. After correcting the free nucleotides with
  \texttt{RNAinverse} we computed their MFE with \texttt{RNAfold} from the \textit{Vienna Package 2.0}~\cite{Hofacker:1994}.
  
-A first criterion is which percentage of sequences have as MFE the target
-secondary structures. We are also interested by the number of structures
-for which we can design at least one sequence with the desired MFE.
-We show the results when using only \ourprog in 
- Figure~\ref{fig:mfe_struct_solved_noinverse}. As mentioned earlier, the high rate of failure
+A first criterion is the proportion of sequences accepting the target
+secondary structures as their MFE. A second criterion is the number of structures
+for which at least one sequence with the desired MFE was produced.
+Figure~\ref{fig:mfe_struct_solved_noinverse} shows the results obtained by \ourprog for these criteria. As mentioned earlier, the high rate of failure
 is due to the fact that no selection criterion is applied to
 unpaired nucleotides. A local strategy is thus needed.
 After processing \ourprog sequences with \RNAinverse to 
 locally optimize the free nucleotides, we obtained the results 
-shown in Figure~\ref{fig:mfe_struct_solved}. We observed
+summarized by Figure~\ref{fig:mfe_struct_solved}. We observed
 that length is, in general, not a good predictor for the hardness of designing a structure. 
 Instead, a high number of free nucleotides in the structure seems to be a 
 good measure of its design hardness. 

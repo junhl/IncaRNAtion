@@ -63,7 +63,7 @@
 
 %%% The "real" document content comes below...
 
-\title{A weighted sampling algorithm for the design of RNA sequences with targeted secondary structure and nucleotides distribution}
+\title{A weighted sampling algorithm for the design of RNA sequences with targeted secondary structure and nucleotides distribution\\Response to review round \#1}
 \author{Vladimir Reinharz$^1$, Yann Ponty$^{2,*}$, J\'er\^{o}me Waldisp\"{u}hl$^{1,*}$}
 \date{$^1$ School of Computer Science, McGill University, Montreal, Canada, $^2$ Laboratoire d'informatique, \'Ecole Polytechnique, Palaiseau, France.\\ \small $^*$Corresponding authors: \texttt{jeromew@cs.mcgill.ca}, \texttt{yann.ponty@lix.polytechnique.fr}}
 
@@ -81,8 +81,8 @@ First of all, the authors wish to express their gratitude to the reviewers for t
 \subsection{Reviewer \#1}
 
 \Comment{The benchmark only compares to RNAinverse which is outperformed by most methods you name in your introduction. Thus, a real benchmarking would have to compare to other methods as well. For most, source code packages are available.}
-\Answer{We systematically benchmarked {\tt IncaRNAtion} against most of the existing available tools, including NUPack~\cite{Zadeh:2011fk}, FRNAkenstein~\cite{Lyngso:2012vn},  RNA-SSD~\cite{Aguirre-Hernandez:2007kx}, Info-RNA~\cite{Busch:2006uq} and RNAexInv~\cite{Avihoo:2011fk}.
-While the page limitations associated with a conference submission do not allow for a an exhaustive discussion, we now report in the revised manuscript some of the most striking results. TODO (Comment results)
+\Answer{In addition to \RNAinverse~\cite{Hofacker:1994}, we systematically benchmarked \ourprog against an extended selection of available tools, including \NUPACK~\cite{Zadeh:2011fk}, \frankenstein~\cite{Lyngso:2012vn},  \RNASSD~\cite{Aguirre-Hernandez:2007kx}, \INFORNA~\cite{Busch:2006uq} and \RNAexinv~\cite{Avihoo:2011fk}.
+While the page limitations associated with a conference submission do not allow for a an exhaustive discussion, we now report in the revised manuscript some of the most striking results. Mainly, with the exception of \RNASSD, none of the latest version of our competitor allows an explicit control over the \GCContent, resulting in designs that are usually highly concentrated in \GCContent (with means ranging from 50\% to 80\% depending on the software).
 }
 
 \Comment{Since you have shown that RNAinverse biases the GC-content to 50-70, the GC-content increase/decrease for lower/higher IncaRNAtion values, resp., when successivly applying RNAinverse (Supp 5.2) is to be expected.}
@@ -90,7 +90,7 @@ While the page limitations associated with a conference submission do not allow 
 
 \Comment{Is there a way to apply sequence constraints within IncaRNAtion? This is something most end user will want.
 }
-\Answer{We added this feature to our implementation, which now accepts a constraint mask consisting in a sequence of IUPAC symbols (e.g. 'N' for unconstrained position, or G for Guanine-only). We also briefly mention this feature in the definition of our probabilistic model.}
+\Answer{We added this feature to our implementation, which now accepts a constraint mask consisting in a sequence of IUPAC symbols (e.g. 'N' for unconstrained position, or G for Guanine-only\ldots). We also briefly mention this feature in the definition of our probabilistic model.}
 
 \Comment{What is the time consumption/complexity of the GC-weight parameter $x_{gc}$ identification within Sec. 2.2.3? And are these values length-/structure-independent or do they have to be computed for each structure individually?}
 \Answer{TODO (Yann)}

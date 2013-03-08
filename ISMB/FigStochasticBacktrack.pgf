@@ -31,14 +31,16 @@ font=\relsize{+2},anchor=north west,xshift=-70pt]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{scope}[yshift=\VSepUp]
-  \node[base] (a-1) at (0,0) {$s_i$};
-  \node[base] (a-2) at (4,0) {$s_j$};
+  \node[basesmall] (a-1) at (0,0) {};
+  \node[basesmall] (a-1b) at (.6,0) {};
+  \node[basesmall] (a-2) at (4,0) {};
   \node[left=\BSep of a-1, basephantom] (a-0) {$a$};
   \node[right=\BSep of a-2, basephantom] (a-3) {$b$};
   \node[right=0 of a-3] (x1) {};
 
 
-  \path[linez] (a-1) --  (a-2);
+  \path[lined] (a-1) --  (a-1b);
+  \path[linez] (a-1b) --  (a-2);
   \path[lined] (a-0) -- (a-1);
   \path[lined] (a-2) -- (a-3);
   \node[lbl,below=3pt of a-1] (c1) {$i$};
@@ -77,8 +79,8 @@ font=\relsize{+2},anchor=north west,xshift=-70pt]
 (y1);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{scope}[yshift=0]
-  \node[base] (a-1) at (0,0) {\color{red}$a'$};
-  \node[base] (a-2) at (4,0) {\color{red}$b'$};
+  \node[basesmall] (a-1) at (0,0) {};
+  \node[basesmall] (a-2) at (4,0) {};
 
 
   \node[left=\BSep of a-1, basephantom] (a-0) {$a$};
@@ -138,9 +140,9 @@ font=\relsize{+2},anchor=north west,xshift=-70pt]
 (y2);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{scope}[yshift=\VSepDown]
-  \node[base] (a-1) at (0,0) {\color{red}$a'$};
+  \node[basesmall] (a-1) at (0,0) {};
   \node[basesmall] (a-2) at (4,0) {\color{red}};
-  \node[base] (a-2k) at (2.33,0) {\color{red}$b'$};
+  \node[basesmall] (a-2k) at (2.33,0) {};
 
   \node[left=\BSep of a-1, basephantom] (a-0) {$a$};
   \node[right=\BSep of a-2, basephantom] (a-3) {$b$};
