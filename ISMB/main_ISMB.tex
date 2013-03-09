@@ -23,6 +23,8 @@
 \usepackage{ifthen}
 \usepackage{relsize}
 \usepackage{multirow}
+\usepackage{cleveref}
+
 \usetikzlibrary{positioning}
 \usetikzlibrary{matrix}
 \usetikzlibrary{calc}
@@ -43,6 +45,8 @@
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{corollary}[theorem]{Corollary}
 
+\crefmultiformat{equation}{Equations~(#2#1#3)}%
+{ and~(#2#1#3)}{, (#2#1#3)}{ and~(#2#1#3)}
 
 
 %\usepackage[applemac]{inputenc} %for the encoding 
