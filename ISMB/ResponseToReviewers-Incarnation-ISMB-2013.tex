@@ -101,7 +101,7 @@ While the page limitations associated with a conference submission do not allow 
 \subsection{Reviewer \#2}
 
 \Comment{1) The $x^{\gc(s)}$ in equation (1) seems to me a novel contributing term that is of high importance. Perhaps its introduction should be highlighted more in the text.}
-\Answer{We tried to make this point clearer in our revised version.}
+\Answer{We tried to make this point clearer in our revised version. However, it should be noted that this contribution is not a goal in itself, but rather a mean to perform stochastic sampling with respect to the weighted distribution. This distribution has all sorts of desirable mathematical properties, among which the fact that induced distributions for additive features (here the \GCContent) are nicely concentrated, allowing for a rejection-based approach.}
 
 \Comment{2) Concerning Table 2 in the Supplementary data, the way it is written (IncaRNAtion + RNAinverse) it looks like "glocal" search heuristic whereas in the table it seems local. Perhaps there is a small typo ambiguity that can be resolved.}
 \Answer{Reviewer \#1 also pointed out some inconsistency/unclarity in our previous formulation. The second column indeed showed the final \GCContent of the glocal approach, following the postprocessing of sequences with a local-search approach. While such a postprocessing tends to reestablish \GCContent{}s that are  closer to 50\% \GC, this shift remains reasonable (at most ~6\% \GC). Furthermore, this shift is very predictable and offers the user the possibility to \emph{overshoot} for a more extreme \GCContent with the global approach, knowing that the postprocessing step will tend to average it.}
@@ -127,7 +127,7 @@ While the page limitations associated with a conference submission do not allow 
      $Z(a,b,P<'(',r,')'>)$ calls on $Z(a',b' r)$ for all $a'$ and $b'$.
 And the result of the computation is just the tree annotated with the $Z_{ab}$ values. 
 This way it is more transparent what is going on, and it is obvious that space and time are linear in $n$, because the size of the tree is in $O(n)$.}
-\Answer{Great suggestion. However, adopting a pure tree-like representation would require elaborating on the correspondence between trees and structures, and might lead to technicalities in the context of stacking base-pairs. Therefore, we completely rewrote our equations, figure and algorithm to adopt a classic dot-parenthesis representation. While the end result may be less elegant than tree-like representations, it has the merit of dropping the double subscripts, leading to a counterintuitive complexity claim in our original manuscript.}
+\Answer{Great suggestion. However, adopting a pure tree-like representation would require elaborating on the correspondence between trees and structures, and might lead to technicalities in the context of stacking base-pairs. Therefore, we completely rewrote our equations, figure and algorithm to adopt a classic dot-parenthesis representation. While the end result may be less elegant than expected with a tree-like representations, this rewrite has the merit of dropping the double subscripts, hopefully conveying a better intuition of the principles underlying the complexity claim in our original manuscript.}
 
 \Comment{(3) Figure 1 is also a bit misleading. Make it clear that the stochastic choice is NOT made over the three cases depicted. The case is always fixed for given $i$, just the bases are chosen.}
 \Answer{Absolutely. We changed this figure, which now explicitly distinguishes between the three different cases (different left-hand side diagrams), and also features the base emission probabilities.}
@@ -136,7 +136,8 @@ This way it is more transparent what is going on, and it is obvious that space a
 \Answer{We completely rewrote this section, which now starts by explicitly reminding the problem addressed by the algorithm.}
 
 \Comment{(5) recurring: "free-nucleotides in loops" -- isn't that the same, being "free" and in a loop? And: drop the hyphen.}
-\Answer{TODO}
+\Answer{The term of loop is sometimes used in a broader sense, which could be informally summarized as "a closed cyclic sequence of bases, connected either by the backbone or by base-pairs" (such that each connection but one goes in the $5'\to3'$ direction). This alternate definition was already used in the earlier works of M. Zuker, and maybe goes further back in the prehistory of RNA bioinformatics. Under this definition,  some of the bases involved in a loop may be paired, therefore we use the adjective to lift any ambiguity.
+}
 
 
 \bibliographystyle{amsplain}
