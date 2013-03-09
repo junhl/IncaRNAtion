@@ -893,7 +893,7 @@ def help():
       the weight of 'C' and on the next the list of sampled GC content
     -t <float>
       The temperature (default 310.5K)
-    -u <IUPAC sequence>
+    -c <IUPAC sequence>
       An IUPAC sequence to constrain the outputed sequences
     -p <file_path> 
       A data file with  starting RNA profile (i.e. every lines contains
@@ -1027,7 +1027,7 @@ if __name__ == "__main__":
       elif cmd == '-gc_data':
         file_gc_data = opts[i+1]
         i += 2
-      elif cmd == '-u':
+      elif cmd == '-c':
         iupac = opts[i+1]
         i+=2 
       else:
