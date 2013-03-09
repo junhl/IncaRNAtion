@@ -22,6 +22,7 @@
 \usepackage{amsmath}
 \usepackage{ifthen}
 \usepackage{relsize}
+\usepackage{multirow}
 \usetikzlibrary{positioning}
 \usetikzlibrary{matrix}
 \usetikzlibrary{calc}
@@ -43,72 +44,13 @@
 \newtheorem{corollary}[theorem]{Corollary}
 
 
-\newcommand{\ourprog}{\texttt{IncaRNAtion}\xspace} 
 
 %\usepackage[applemac]{inputenc} %for the encoding 
 
 
-\newcommand{\RNAmutants}{\texttt{RNAmutants}\xspace}
-\newcommand{\RNApyro}{\texttt{RNApyro}\xspace}
-\newcommand{\RNAinverse}{\texttt{RNAinverse}\xspace}
-\newcommand{\RNASSD}{\texttt{RNA-SSD}\xspace}
-\newcommand{\INFORNA}{\texttt{INFO-RNA}\xspace}
-\newcommand{\NUPACK}{\texttt{NUPACK}\xspace}
-\newcommand{\RNAiFOLD}{\texttt{RNAiFOLD}\xspace}
-\newcommand{\frankenstein}{\texttt{Frnakenstein}\xspace}
-\newcommand{\RNAexinv}{\texttt{RNAexinv}\xspace}
-\newcommand{\rnaDesign}{\texttt{rnaDesign}\xspace}
-\newcommand{\RNAensign}{\texttt{RNA-ensign}\xspace}
-\newcommand{\GCContent}{\Gb\Cb-content\xspace}
-\newcommand{\SFold}{\texttt{SFold}\xspace}
 
-\newcommand{\red}[1]{{\color{red}#1}}
-\newcommand{\farna}{\texttt{FARNA}\xspace}
-\newcommand{\mcfoldmcsym}{\texttt{MC-Pipeline}\xspace}
-\newcommand{\mcfold}{\texttt{MC-Fold}\xspace}
-\newcommand{\mcsym}{\texttt{MC-Sym}\xspace}
-\newcommand{\nast}{\texttt{NAST}\xspace}
-\newcommand{\ifoldrna}{\texttt{iFoldRNA}\xspace}
-\newcommand{\rnafold}{\texttt{RNAfold}\xspace}
-\newcommand{\rnasubopt}{\texttt{RNAsubopt}\xspace}
-\newcommand{\rnawolf}{\texttt{RNAwolf}\xspace}
-\newcommand{\rnastructure}{\texttt{RNAstructure}\xspace}
-\newcommand{\contrafold}{\texttt{contrafold}\xspace}
-\newcommand{\unafold}{\texttt{unafold}\xspace}
-\newcommand{\rnadd}{\texttt{RNA2D3D}\xspace}
-\newcommand{\assemble}{\texttt{assemble}\xspace}
-\newcommand{\fred}{\texttt{FR3D}\xspace}
-\newcommand{\rnajunction}{\texttt{RNAjunction}\xspace}
-\newcommand{\rnamotif}{\texttt{RNAmotif}\xspace}
-\newcommand{\treefolder}{\texttt{TreeFolder}\xspace}
-\newcommand{\barnacle}{\texttt{BARNACLE}\xspace}
-\newcommand{\contextfold}{\texttt{contextfold}\xspace}
+\input{macros}
 
-\newcommand{\RNASTRAND}{{\sf RNA STRAND}\xspace}
-
-%\newcommand{\citep}{\cite}
-\newcommand{\Z}[2]{\mathcal{Z}{\substack{(#1)\\ [#2]}}}
-\newcommand{\Y}[3]{\mathcal{Y}_{\substack{(#1)\\ [#3]}}^{#2}}
-\newcommand{\B}{\mathcal{B}}
-\newcommand{\Kron}{\delta}
-\newcommand{\ub}{\bullet}
-
-\newcommand{\Ab}{{\sf{A}}\xspace}
-\newcommand{\Cb}{{\sf{C}}\xspace}
-\newcommand{\Gb}{{\sf{G}}\xspace}
-\newcommand{\Ub}{{\sf{U}}\xspace}
-
-\newcommand{\gc}{{\#\text{{\sf gc}}}}
-\newcommand{\PE}[1]{E(#1)}
-\newcommand{\EI}{\text{EI}}
-\newcommand{\ES}{\text{{\sf Es}}}
-\newcommand{\ISO}{\text{ISO}}
-\newcommand{\Prob}{\text{P}}
-\newcommand{\Target}{\text{\sf S}}
-\newcommand{\CNBP}[1]{\gamma(#1)}
-
-\newcommand{\CFramed}[2][gray]{\begin{tcolorbox}[colframe=#1,title=To be included only if space allows\ldots,colback=white]#1\end{tcolorbox}}
-\renewcommand{\CFramed}[2][gray]{}
 
 \title{A weighted sampling algorithm for the design of RNA sequences with targeted secondary structure and nucleotides distribution}
 \author{Vladimir Reinharz$^1$, Yann Ponty$^{2,*}$, J\'er\^{o}me Waldisp\"{u}hl$^{1,*}$}

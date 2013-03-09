@@ -1,0 +1,187 @@
+On 2/4/2013 4:15 PM, ISMB/ECCB 2013 wrote:
+> Dear Authors,
+>
+> It is my pleasure to inform you that your submission to ISMB/ECCB 2013 has been 
+> chosen as a finalist for acceptance to ISMB/ECCB. This means that we invite you 
+> to revise your manuscript, in light of reviewer comments, for a final round of 
+> review where accepted manuscripts will be chosen. The revised manuscript will be 
+> reviewed again by the same reviewers, perhaps also by others.
+>
+> A total of 247 submissions were received and 88, including yours, were selected 
+> to the second round of review. Each manuscript was reviewed by members of the 
+> Program Committee who were assigned by the respective Area Chairs. The reviewer 
+> reports are provided below. We will be happy to consider a revised manuscript, 
+> fully taking into account the reviewer comments, for ISMB/ECCB 2013. Please 
+> notice, however, that only up to 40 of the submissions in the second round of 
+> review will be accepted for presentation at ISMB/ECCB 2013 and for inclusion in 
+> the conference proceedings, which are published in the journal Bioinformatics. 
+> The authors of selected submissions amongst the other 48 will be granted the 
+> opportunity to be redirected to Bioinformatics, subjected to Editorial 
+> considerations there.
+>
+> The submission deadline is Monday, March 11.
+>
+> The revised submission should include the following:
+> 1.            The revised manuscript, conforming to the instructions at 
+> http://www.iscb.org/ismbeccb2013-submission/call-for-proceedings .  Submissions 
+> that will exceed the space limitations will not be reviewed. The main changes 
+> compared to the previous draft should be highlighted.
+> 2.            A letter of reply to the reviewers with detailed response to each 
+> and every one of their comments and clear indication of the changes you have 
+> made in the manuscript. Please append this response to the head of the revised 
+> manuscript in #1.
+> 3.            Supplementary material if applicable, submitted as an attachment.
+>
+> Hoping to see you at ISMB 2013 in Berlin, July 19-23 
+> (http://www.iscb.org/ismbeccb2013). 
+>  
+> Sincerely,
+>  
+> Nir Ben-Tal
+> Proceedings Chair
+>
+>
+> ----------------------- REVIEW 1 ---------------------
+> PAPER: 219
+> TITLE: A weighted sampling algorithm for the design of RNA sequences with targeted secondary structure and nucleotides distribution
+> AUTHORS: Vladimir Reinharz, Yann Ponty and Jerome Waldispuhl
+>
+> OVERALL EVALUATION: 2 (accept)
+> REVIEWER'S CONFIDENCE: 4 (high)
+>
+> ----------- REVIEW -----------
+> The authors present the new dynamic programming based procedure IncaRNAtion to tackle the RNA sequence design problem for a given nested RNA secondary structure. IncaRNAtion precomputes the pseudo-partition (sub)functions of all sequences adopting the targeted structure according to an altered Boltzmann weight that incorporates GC-content. Based on probabilities using these weights and the according partition function, IncaRNAtion produces in a weighted randomized traceback sample sequences with the targeted GC-content. The latter requires in addition the identification of the correct GC-tuning factor used in the altered Boltzmann weight. The dynamic programming scheme enables the random sampling of a structure in linear time and space for a given targeted structure.
+> Currently, the energy of a (sub)structure is only accessed in terms of stacking base pair contributions. Thus, non-paired nucleotides are not constrained and might form additional base pairs within the minimum free energy structure. To face this problem, the authors use RNAinverse in a seconds step to optimize the un-paired bases of their IncaRNAtion solutions. This hybrid approach shows promising results and is compared to RNAinverse alone. The prediction reliability drops with decreasing GC-content.
+>
+> The article is compact, well written, and easy to follow. The problem of designing RNA sequences with a specific GC-content has strong impact in synthetic biology since most approaches yield too high non-natural GC-content values. Therefore, I can recomment this article for publication while I think the benchmarking (against RNAinverse only) not up to date.
+>
+>
+>
+> Some minor issues and comments are listed below:
+>
+>
+> ? The benchmark only compares to RNAinverse which is outperformed by most methods you name in your introduction. Thus, a real benchmarking would have to compare to other methods as well. For most, source code packages are available.
+* NUPack (Pierce)
+* FRNAkenstein (Lyngsoe)
+* RNA-SSD (Condon)
+* Info-RNA (Backofen)
+* RNAexInv (Barash)
+=> Ca a tourné, données dispos Jeudi soir
+
+> ? Since you have shown that RNAinverse biases the GC-content to 50-70, the GC-content increase/decrease for lower/higher IncaRNAtion values, resp., when successivly applying RNAinverse (Supp 5.2) is to be expected.
+
+Rajouter colonne Delta. Amen.
+=> Simple soustraction
+
+> ? Is there a way to apply sequence constraints within IncaRNAtion? This is something most end user will want.
+BASES = {
+  'A':['A'],
+  'C':['C'],
+  'G':['G'],
+  'U':['U'],
+  'N':['A','C','G','U'],
+  'R':['A','G'],
+  'Y':['C','U'],
+  'S':['G','C'],
+  'W':['A','U'],
+  'K':['G','U'],
+  'M':['A','C'],
+  'B':['C','G','U'],
+  'D':['A','G','U'],
+  'H':['A','C','U'],
+  'V':['A','C','G']
+  }
+
+
+> ? What is the time consumption/complexity of the GC-weight parameter x_{gc} identification within Sec. 2.2.3? And are these values length-/structure-independent or do they have to be computed for each structure individually?
+cf RECOMB'11, or subsequent rip-off by Clote.
+
+> ? Is the method available?
+YES!
+
+>
+> ----------------------- REVIEW 2 ---------------------
+> PAPER: 219
+> TITLE: A weighted sampling algorithm for the design of RNA sequences with targeted secondary structure and nucleotides distribution
+> AUTHORS: Vladimir Reinharz, Yann Ponty and Jerome Waldispuhl
+>
+> OVERALL EVALUATION: 3 (strong accept)
+> REVIEWER'S CONFIDENCE: 4 (high)
+>
+> ----------- REVIEW -----------
+>
+> I only have a few minor remarks (mostly typo corrections):
+>
+> 1) The x^{#gc(s)} in equation (1) seems to me a novel contributing term that is of high importance. Perhaps its introduction should be highlighted more in the text.
+Avec plaisir => Contexte du weighted sampling.
+ 
+> 2) Concerning Table 2 in the Supplementary data, the way it is written (IncaRNAtion + RNAinverse) it looks like "glocal" search heuristic whereas in the table it seems local. Perhaps there is a small typo ambiguity that can be resolved.
+Local would actually be even worse, what we show here is the limited impact of a local postprocessing over the final GC%.
+
+> 3) It could be interesting in the future to merge the glocal strategy with the constrained optimization problem put forth in [3] and the multiple target optimization in [10]. A good sampling approach may replace the use of the genetic algorithms and refute the claim in the discussion following Table 3 of [10] that Frnakenstein has the best nucleotide distribution compared to all other methods.
+=> Benchmark RNAExinv, FRNAkenstein
+
+> 4) On p.2, "wild sequences" should be "wild-type sequences".
+
+> 5) On p.6, first sentence in Section 2.3, the word "our" appears twice redundantly (before and after "simplified").
+>
+>
+> ----------------------- REVIEW 3 ---------------------
+> PAPER: 219
+> TITLE: A weighted sampling algorithm for the design of RNA sequences with targeted secondary structure and nucleotides distribution
+> AUTHORS: Vladimir Reinharz, Yann Ponty and Jerome Waldispuhl
+>
+> OVERALL EVALUATION: 2 (accept)
+> REVIEWER'S CONFIDENCE: 4 (high)
+>
+> ----------- REVIEW -----------
+> The paper by Reinharz et al describes a new approach for inverse RNA folding, based on earlier work of the authors and of the Vienna group. They sample the inverse folding space of a given structure, using a score function based on stacking energies and GC content. This allows to find, rather efficiently, sets of sequences that CAN fold into the desired structure and TEND to have the proper GC content. Candidates undergo filtering for these two criteria afterwards. Since the model does not account for energy contributions of unpaired bases, RNAinverse is called to improve the sequence design in loop regions. Overall, this gives an improvement of over using either method alone, and having control of GC content, of course, is  a desirable feature.
+>
+> Overall, solid and interesting work, and proper contribution to the state of the art.
+> A few things could be said more precisely; the presentation of the central algorithm actually obscures its elegance.
+> I make some suggestions to improve the formulation below.
+>
+> Minor points
+> (1) There are many points where you iterate over "all sequences of length |S|" or all of those which can fold into S; it is not always clear. Why not introduce F(s) for the folding space of a sequence, and F^{-1}(S) for the inverse folding space of a structure, and simply use F^{-1}(S) where this is what you mean?
+We prefer controlling the compatibility of a sequence to a given at the energy level, by associating a +infty penalty to disallowed sequences. The set of compatible sequences is therefore implicitly defined as the set of sequences having finite energy.
+
+> (2) You make the computation of Z look like yet another set of DP recurrences, and as a consequence, you need a proof to show that it is linear in $n$. Surely, the reader wonders at that point how you can iterate over (i,j) and compute an (n,n) table in less than quadratic time. This mis-led understanding is created by the Nussinovic style of the recurrences.
+> What you actually compute is a sparse, tree-shaped segment of that (i,j)-table.
+> Why not represent the given structure as a tree of Empty, Singleton, Pair and Bifurcation nodes, such as 
+>  S<'.',B<P<'(',S<.,E>,')',P<'(',Em')'>>> for ".(.)()"  ? (You do not even need to explicitly represent the dots and brackets at the leaves.)
+> Then, computation of Z becomes just structural recursion on the tree,
+>     Z(a,b, t) = defined by case analysis on t, such that, for example,
+>     Z(a,b,P<'(',r,')'>) calls on Z(a',b' r) for all a' and b'
+> And the result of the computation is just the tree annotated with the Z_{ab} values. 
+> This way it is more transparent what is going on, and it is obvious that space and time are linear in $n$, because the size of the tree is in O(n).
+That is a great idea! Will do.
+
+> (3) Figure 1 is also a bit misleading. Make it clear that the stochastic choice is NOT made over the three cases depicted.
+> The case is always fixed for given $i$, just the bases are chosen.
+Yep. Annotating arrows on this diagram should make things clearer.
+
+> (4) Section 2.2.3 is titled "Rejecting unsuitable candidates". It explains that candidates tend to be quite suitable, but somewhere, you should actually tell who is rejected and when ...
+Absolutely!
+
+> (5) recurring: "free-nucleotides in loops" -- isn't that the same, being "free" and in a loop? And: drop the hyphen.
+Well, people got used to the M Zuker's Mloops, which include both unpaired and paired positions, thus the apparent redundancy.
+
+>
+>
+> Typos and grammar
+>
+> abstract
+>    Software useS
+>    criterION
+> p.1 "primarily determined by secondary" sounds a bit funny
+> p.2 in [the] RNAmutants
+> p.4 last line: it is the position $k$ (not $j$) that is entirely determined by $i$
+> p.6 middle: reeStablished
+>             content [content]
+> p.7: at least one solution[s]
+> p.9:a critical propert[ies]
+> p.13: number of sample[s]
+>      sample entropy [. ] and
+>
+> Protect capital letters in the references  --- rna???
+>

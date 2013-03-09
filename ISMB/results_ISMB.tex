@@ -6,18 +6,10 @@
 \label{sec:implementation}
 Our software, \ourprog, was implemented in {\tt Python~2.7}. We used
 \RNAinverse from the \textit{Vienna Package 2.0}~\cite{Hofacker:1994}.
-All time benchmarks were run on a one AMD Opteron(tm) Processor 6278  at 2.4 GHz with cache of 512 KB.
- We used as parameter $\beta=15$, the penalty for an invalid base pair.
+All time benchmarks were run on a single AMD Opteron(tm) 6278 Processor  at 2.4 GHz with cache of 512 KB.
+The penalty $\beta$, associated with invalid base-pairs, was set to $15$.
 
-
-
-We present the average times spent by \ourprog and \RNAinverse to generate one sequence
-with the required \GCContent in Figure~\ref{fig:time}. As expected, the time grows linearly
-in function of the length of the structures for \ourprog.  A highly interesting feature
-is the huge decrease in time of computation when there is $15\%$ free 
-nucleotides inside the loops of the secondary structure.
-
-\begin{figure}[ht!]
+\begin{figure}[t!]
 	\centering
 	\includegraphics[width=\textwidth]{Figures/time_rnastrand_clustered_rnainverse_100samples_fix}
 	\caption{Average time in seconds to generate one sequence. We explicitly show 
@@ -28,19 +20,23 @@ nucleotides inside the loops of the secondary structure.
 	\label{fig:time}	
 \end{figure}
 
+Figure~\ref{fig:time} presents the average times spent running \ourprog and \RNAinverse to generate one sequence
+with the required \GCContent. As expected, the time grows linearly
+in function of the length of the structures for \ourprog.  A highly intriguing feature is the substantial decrease of the time 
+required for running \RNAinverse when $15\%$ of nucleotides are unpaired in the target structure.
+However, one must remain careful interpreting this observation, as the structures within this class all originate from the PDB, and are relatively small (for the complete STRAND DB, the average length is $\sim526$nts, compared to $\sim38$nts around 15\% unpaired bases).
+
 
 
 \subsection{Dataset}
 To evaluate the quality of our method, we used secondary
 structures from the \RNASTRAND database~\cite{andronescu2008rna}.
 Those are known secondary structure from a variety of organisms.
-We select the same subset of $50$ structures as in~\cite{Levin:2012kx}, 
+We considered a subset of $50$ structures selected by Levin~\emph{et al}~\cite{Levin:2012kx}, 
 whose length ranges between $20$ and $100$ nucleotides. 
+ To ease the visualization of results, we clustered together structures
+ having similar length, stacks density and proportion of free nucleotides in loops, leading to distributions of structures shown in Figure~\ref{fig:bins}.
 
- To ease the visualization of the results, we clustered together strucures
- having similar length, stacks density and proportion of free nucleotides in loops. 
-  We present in Figure~\ref{fig:bins} the distribution of structures in each category.
- 
  \begin{figure}[ht!]
  	\centering
 	\includegraphics[width=\textwidth]{Figures/bins_distribution.png}
@@ -53,18 +49,15 @@ whose length ranges between $20$ and $100$ nucleotides.
  To benchmark our method, we first started by sampling about $100$ sequences per structure. After correcting the free nucleotides with
  \texttt{RNAinverse} we computed their MFE with \texttt{RNAfold} from the \textit{Vienna Package 2.0}~\cite{Hofacker:1994}.
  
-{\em Définir critères d'évaluations !!!}
-
-A first criterion is which percentage of sequences have as MFE the target
-secondary structures. We are also interested by the number of structures
-for which we can design at least one sequence with the desired MFE.
-We show the results when using only \ourprog in 
- Figure~\ref{fig:mfe_struct_solved_noinverse}. As mentioned earlier, the high rate of failure
+A first criterion is the proportion of sequences accepting the target
+secondary structures as their MFE. A second criterion is the number of structures
+for which at least one sequence with the desired MFE was produced.
+Figure~\ref{fig:mfe_struct_solved_noinverse} shows the results obtained by \ourprog for these criteria. As mentioned earlier, the high rate of failure
 is due to the fact that no selection criterion is applied to
 unpaired nucleotides. A local strategy is thus needed.
 After processing \ourprog sequences with \RNAinverse to 
 locally optimize the free nucleotides, we obtained the results 
-shown in Figure~\ref{fig:mfe_struct_solved}. We observed
+summarized by Figure~\ref{fig:mfe_struct_solved}. We observed
 that length is, in general, not a good predictor for the hardness of designing a structure. 
 Instead, a high number of free nucleotides in the structure seems to be a 
 good measure of its design hardness. 
@@ -169,7 +162,7 @@ Our results (See Fig. \ref{fig:rnainverse} in Supplementary Material) indicate t
 
 It should be noted, however, than \RNAinverse produces sequences whose \GCContent is extremely concentrated (see Table~\ref{tab:nb_rnainv} in Supplementary Material), thereby requiring a large number of runs before producing a suitable \GCContent sequence. Therefore, a rejection algorithm based on \RNAinverse alone should not be considered a realistic solution for the design with constrained \GCContent. 
 
-{\em Ajouter considérations Base Pair entropy: Se rappeler, que moins, c'est bien !}
+{\em Ajouter considérations Base Pair entropy: Se rappeler, que moins, c'est mieux !}
 
 
 

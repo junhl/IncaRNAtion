@@ -23,101 +23,94 @@ stacked canonical base-pairs. We show how a modification of the dynamic programm
 %\subsubsection{Energy contribution}
 \subsection{Definitions}
 
-A targeted secondary structure $\Target$ is abstracted as a non-crossing arc-annotated sequence,  where 
+A targeted secondary structure $\Target$ of length $n$ is given as a non-crossing arc-annotated sequence,  where 
 $\Target_i$ stands for the base-pairing position of position $i$ in $\Target$ if any (and, reciprocally, $\Target_{\Target_i}=i$), or $-1$ otherwise. 
-Let us denote by $\gc(s)$ the number of occurrences of \Gb and \Cb in an RNA sequence $s$.
+In addition, let us denote by $\gc(s)$ the number of occurrences of \Gb and \Cb in an RNA sequence $s$.
 
 \subsubsection{Simplified energy model}
-The free-energy contribution in our pseudo-energy model corresponds to an additive stacking-pairs model, using individual values from the Turner 2004 model (retrieved from the NNDB~\cite{Turner2010}). Given a candidate sequence $s$ for a secondary structure $S$, the free-energy of $S$ on $s$ is given by
+We use a simplified free-energy model which only includes additive contributions from stacking base-pairs. Using individual values from the Turner 2004 model (retrieved from the NNDB~\cite{Turner2010}). Given a candidate sequence $s$ for a secondary structure $\Struct$, the free-energy of any sequence $s$ of length $|\Struct|$  is given by
 \begin{align*}
-  \ES(s,S) = \sum_{\substack{(i,j)\to (i',j')\in S\\ \text{stacking pairs}}}\ES^{\beta}_{s_is_j\to s_{i'}s_{j'}} 
+  \ES(s,\Struct) = \sum_{\substack{(i,j)\to (i',j')\in \Struct\\ \text{stacking pairs}}}\ES^{\beta}_{s_is_j\to s_{i'}s_{j'}} 
 \end{align*}
-where $\ES^{\beta}_{ab\to a'b'}$ is set to $0$ if $ab=\varnothing$ (no base-pair to stack onto), the tabulated free-energy of stacking pairs $(ab)/(a'b')$ in the Turner model if available, or $\beta\in[0,\infty]$ for non-Watson-Crick/Wobble pairs (i.e. not in $\{\Gb\Ub,\Ub\Gb,\Cb\Gb,\Gb\Cb, \Ab\Ub\text{ or }\Ub\Ab\}$). This latter parameter allows one to choose whether to simply penalize invalid base pairs ($\beta>0$), or forbid them altogether ($\beta = \infty$).
+where $\ES^{\beta}_{ab\to a'b'}$ is set to $0$ if $ab=\varnothing$ (no base-pair to stack onto), the tabulated free-energy of stacking pairs $(ab)/(a'b')$ in the Turner model if available, or $\beta\in[0,\infty]$ for non-Watson-Crick/Wobble pairs (i.e. not in $\{\Gb\Ub,\Ub\Gb,\Cb\Gb,\Gb\Cb, \Ab\Ub\text{ or }\Ub\Ab\}$). This latter parameter allows one to choose whether to simply penalize invalid base pairs ($\beta>0$), or forbid them altogether ($\beta = +\infty$). 
+Position-specific sequence constraints can also be enforced at this level (details omitted for the sake of clarity) by assigning to $\ES$ a $+\infty$ penalty (leading to a null probability) in the presence of a base incompatible with a user-specified constraint mask.
+
 
 \subsubsection{\GCContent weighted pseudo-Boltzmann ensemble and distribution}
 
-In order to counterbalance the documented tendency of sampling methods to generate \Gb\Cb-rich sequences~\cite{Levin:2012kx}, let us introduce a parameter $x\in\mathbb{R}^+$, whose value will influence the \GCContent of generated sequences. Let $\Target$ be a targeted secondary structure, then let us define the pseudo-Boltzmann factor $\B_{x}(s,S)$ of a sequence $s$ such that
+In order to counterbalance the documented tendency of sampling methods to generate \Gb\Cb-rich sequences~\cite{Levin:2012kx}, we introduce a parameter $x\in\mathbb{R}^+$, whose value will influence the \GCContent of generated sequences. For any secondary structure $\Struct$, the pseudo-Boltzmann factor of a sequence $s$ is $\B^{[x]}_{\Struct}(s)$  such that
 \begin{equation}
-\B_{x, \Target}(s) = e^{\frac{-\ES(s,\Target)}{RT}}\cdot x^{\gc(s)}
+\B_{\Struct}^{[x]}(s) = e^{\frac{-\ES(s,\Struct)}{RT}}\cdot x^{\gc(s)}
 \label{def:genBoltz}
 \end{equation}
 where $R$ is the Boltzmann constant and $T$ the temperature in Kelvin.
 
-Summing the pseudo-Boltzmann factor over all possible sequences of a given length $|\Target|$ gives the pseudo-partition function $\mathcal{Z}_{x,\Target}$, from which one defines the pseudo-Boltzmann probability $\Prob_{x,\Target}(s)$ of each sequence $s$, respectively such that 
-\begin{align}\mathcal{Z}_{x,\Target} &= \sum_{\substack{|s|=|\Target|}}\B_{x,\Target}(s)& \text{and}&&
-\Prob_{x,\Target}(s) &= \frac{\B_{x,\Target}(s)}{\mathcal{Z}_{x,\Target}}.\label{def:distribution}\end{align}
+Summing the pseudo-Boltzmann factor over all possible sequences of a given length $|\Struct|$, one obtains the pseudo-partition function $\mathcal{Z}_{\Struct}^{[x]}$, from which one defines the pseudo-Boltzmann probability $\Prob_{\Struct}^{[x]}(s)$ of each sequence $s$, respectively such that 
+\begin{align}\mathcal{Z}_{\Struct}^{[x]} &= \sum_{\substack{|s|=n}}\B_{\Struct}^{[x]}(s)& \text{and}&&
+\Prob_{\Struct}^{[x]}(s) &= \frac{\B_{\Struct}^{[x]}(s)}{\mathcal{Z}_{\Struct}^{[x]}}.\label{def:distribution}\end{align}
 
 \subsection{Sampling the pseudo-Boltzmann ensemble}
 
-Let us now describe a linear-time algorithm to sample sequences at random in the pseudo-Boltzmann distribution. This algorithm follows the general principles of the recursive approach to random generation~\cite{Wilf1977}, pioneered in the context of RNA by the \SFold algorithm~\cite{Ding2003}. The algorithm starts by precomputing the partition function restricted to each valid interval, and then performs a series of recursive stochastic backtracks, using precomputed values to decide on the probability of each alternative.
+Let us now describe a linear-time algorithm to sample sequences at random in the pseudo-Boltzmann distribution. This algorithm follows the general principles of the recursive approach to random generation~\cite{Wilf1977}, pioneered in the context of RNA by the \SFold algorithm~\cite{Ding2003}. The algorithm starts by precomputing the partition function restricted to each valid interval, and then performs a series of recursive stochastic backtracks, using precomputed values to decide on the probability of each alternative. 
 
 \subsubsection{Precomputing the pseudo-partition function}\label{sec:pf}
-\begin{figure}
-\resizebox{\textwidth}{!}{\input{FigStochasticBacktrack.pgf}}
-\caption{Three main cases in the stochastic backtrack procedure over an interval $[i,j]$: Either position $i$ is left unpaired (top), a base-pair $(i,j)$ is formed, stacking onto $(i+1,j-1)$ (middle), or $i$ is paired somewhere else, defining two regions on which subsequent recursive calls are needed (bottom). Positions indicated in red are assigned during this stage of the backtrack.\label{fig:stochastic}}
-\end{figure}
 
 
-Firstly, a dynamic programming algorithm computes $\mathcal{Z}\substack{(i,j)\\ [a,b]}$ the pseudo-partition function restricted to an interval $[i,j]$, assuming its (previously chosen) flanking nucleotides are $a$ and $b$ respectively. 
-Since the only sequence over an empty interval is the empty sequence, having energy $0$, one has
+
+Firstly, a dynamic programming algorithm computes $\Z{\N,\Struct}{a,b}$ the pseudo-partition function ($x$ is omitted here for the sake of clarity) of a structure $\Struct$, assuming its (previously chosen) flanking nucleotides are $a$ and $b$ respectively, directly nested ($\N=T$) or not ($\N=F$) by some base-pair. 
+Remark that the empty structure only supports the empty sequence, having energy $0$, so one has
 \begin{equation}
-	\forall i \in [0,n-1]:\, \Z{i+1,i}{a,b}=1.
+	\Z{T,\varepsilon}{a,b}=\Z{F,\varepsilon}{a,b}=1.
 	\label{eq:Z_in}
 \end{equation}
 
 
-The recursion consists in four terms, depending on the base-pairing status and context of $(i,j)$:
-\begin{equation}
-	\Z{i,j}{a,b}:=\left\{
-  \begin{array}{ll}
-  		\displaystyle
+The recursion considers different case, depending on whether of the first position in $\Struct$ is:
+\begin{itemize}
+\item Unpaired ($\Struct = \ub \Struct'$):
+\begin{align}
+	\Z{T,\ub \Struct'}{a,b} = \Z{F,\ub \Struct'}{a,b} &:=
       \sum_{a'\in \B}  
       x^{\gc(a')}
-      \cdot\Z{i+1,j}{a',b} &\begin{array}{@{}l@{}}\text{If }\Target_{i}=-1\\ \text{\relsize{-1}Position $i$ unpaired,}\end{array}\\
-      \displaystyle
+      \cdot\Z{F,\Struct'}{a',b}; 
+\end{align}
+\item Paired to last position, stacking onto an existing nesting pair ($\Struct = \op \Struct' \cp$ and $\N=T$):
+\begin{align}
+	\Z{T,\op \Struct' \cp}{a,b} &:=
       \sum_{a',b'\in \B^2}
 			 x^{\gc(a'.b')}
 			 \cdot e^{\frac{-\ES^{\beta}_{ab \to a'b'}}{RT}}
-			 \cdot \Z{i+1,j-1}{a',b'}&
-\begin{array}{@{}l@{}}\text{Elif }\Target_i=j \land \Target_{i-1}=j+1\\ \text{\relsize{-1}$(i,j)$ stacking pair onto $(i$-$1,j$+$1)$,}\end{array}
-			 \\
+			 \cdot \Z{T,\Struct'}{a',b'}
+\end{align}
+\item Paired to an internal position or no stacking pair ($\Struct = \op \Struct' \cp \Struct''$ and $\N=F$, or $\Struct''\neq \varepsilon$):
+\begin{align}
+	\Z{\N,\op \Struct' \cp \Struct''}{a,b} &:=
 			 \displaystyle
       \sum_{a',b'\in \B^2}
       x^{\gc(a'.b')}
 			\cdot e^{\frac{-\ES^{\beta}_{\varnothing\to a'b'}}{RT}}
       \cdot\Z{i+1,k-1}{a',b'}
-      \cdot\Z{k+1,j}{b',b} & 
-\begin{array}{@{}l@{}}\text{Elif }\Target_i=k \land i < k \leq j\\
-\text{\relsize{-1}Junction/bulge $\Rightarrow$ split, no stack,}
-\end{array}
-\\
-      0 &\text{Otherwise.}
-	\end{array}\right.
+      \cdot\Z{k+1,j}{b',b} 
 \label{eq:Z_rec}
-\end{equation}
+\end{align}
+\end{itemize}
 
-Despite its apparent quadratic complexity, the recurrence described in Subsection~\ref{sec:pf} can be computed in linear $\Theta(|\Target|)$ time and space, owing to the fact that, on any recursive call, the position $k$ is entirely determined by $i$. 
+Despite its apparent quadratic complexity, the recurrence described in Subsection~\ref{sec:pf} can be computed in linear $\Theta(n)$ time and space, owing to the fact that, on any recursive call, the position $k$ is entirely determined by $i$. 
 
-\begin{theorem}Starting from the complete region $[0,n-1]$, Equation~\eqref{eq:Z_rec} can be computed in $\Theta(|\Target|)$ time and space complexity.
+\begin{theorem}Starting from the target structure $\Target$, Equations~\eqref{eq:Z_in} to \eqref{eq:Z_rec} can be computed in $\Theta(n)$ time and space complexity.
 \end{theorem}
 \begin{proof}
-
-Consider the {\bf covering base-pair} $\CNBP{i}$ of a position $i$, defined as the base-pair $(i',j')$ such that $i'<i<j'$ and which minimizes $i-i'$. For the sake of simplicity, and without loss of generality, let us assume that there exists a virtual base-pair $(-1,n)$ in $\Target$, so that any position in $[0,n-1]$ has a covering base-pair.
-Then, it is easily shown by induction that, starting from the complete interval $[0,n-1]$, the recursive calls only evaluate $\mathcal{Z}$ over intervals $[i,j]$ such that $j=j'-1$, $\CNBP{i}=[i',j']$. 
-\CFramed{This property clearly holds initially for the complete interval $[0,n-1]$, owing to the virtual base-pair $(-1,n)$. Furthermore, if it holds for a given $(i,j)$, $\CNBP{i}=[i',j+1]$, then:
-\begin{itemize} 
-  \item If $i$ is unpaired (Case 1), then $\CNBP{i+1}=\CNBP{i}=[i',j+1]$, and the property is satisfied by the subsequent call over $[i+1,j]$. 
-  \item If $i$ is paired with $j$ and stacking onto $(i-1,j+1)$ (Case 2), then one has $\CNBP{i+1}=[i,j]$ and the  subsequent call over $[i+1,j-1]$ satisfies the property.
-  \item If $i$ is paired with some $k$ (Case 3), then $\CNBP{i+1}=[i,k]$ and $\CNBP{k+1}=[i',j+1]$. Therefore the subsequent calls, respectively over $[i+1,k-1]$ and $[k+1,j]$, both satisfy the property.
-\end{itemize}
-The case of an empty sequence does not cause a recursive call and must not be verified.
-}
-Since, in any interval $[i,j]$ satisfying the property, the ending position $j$ is completely determined by $i$, then there exists at most $\Theta(|\Target|)$ intervals that need to be evaluated, and we conclude on the overall complexity with the remark that $a$, $b$, $a'$ and $b'$ vary over bounded ranges and only contribute to a constant factor in the complexity.
+Clearly, there only exists a constant number of possible values for the vector $(a,b,\N)$, so the dependency in $n$ may only reside in $\Struct$. Reasoning on the length of the subintervals, one clearly see that the cumulated lengths XXXXXXXXXXXXXXXXXXXX
 \end{proof}
 
-
+\begin{figure}
+\resizebox{\textwidth}{!}{\input{FigStochasticBacktrack.pgf}}
+\caption{Stochastic backtrack procedure over an interval $[i,j]$: Either position $i$ is left unpaired (top), a base-pair $(i,j)$ is formed, stacking onto $(i+1,j-1)$ (middle), or $i$ is paired somewhere else, defining two regions on which subsequent recursive calls are needed (bottom). Positions indicated in red are assigned during this stage of the backtrack.\label{fig:stochastic}}
+\end{figure}
 \subsubsection{Stochastic backtrack}
-Once the pseudo-partition functions have been memorized, a stochastic backtrack starts from the complete interval $[0,|\Target|-1]$ and, at each step, chooses a suitable assignment for one or several positions, using probabilities derived from the precomputation. One or several recursive calls over regions that are left unassigned are then performed, as described by Algorithm~\ref{alg:back}, and illustrated by Figure~\ref{fig:stochastic}.
+Once the pseudo-partition functions have been memorized, a stochastic backtrack starts from the complete interval $[0,n-1]$ with any exterior bases $[a,b]$ and, at each step, chooses a suitable assignment for one or several positions, using probabilities derived from the precomputation, as illustrated by Figure~\ref{fig:stochastic}. One or several recursive calls over the remaining regions are then performed, as described in Algorithm~\ref{alg:back}. On each recursive call, the algorithm assigns at least one nucleotide to a -- previously unassigned -- position. Moreover, the number of executions of each loops is bounded by a constant. Consequently, the complexity of Algorithm~\ref{alg:back} is in $\Theta(n)$ time and space. 
+
+
 \begin{algorithm}[t]
 \DontPrintSemicolon
 	\SetAlgoLined
@@ -127,20 +120,20 @@ Once the pseudo-partition functions have been memorized, a stochastic backtrack 
  \lIf(\tcp*[f]{Empty sequence}){$j<i$}{\Return{$\varepsilon$}}
 	\Else{
   k $\leftarrow S_i$\;
-	\If(\tcp*[f]{Unpaired}){$(k = -1)$}{
+	\If(\tcp*[f]{Unpaired base}){$(k = -1)$}{
 		\For{$a'\in\B$}{
 			rand $\leftarrow$ rand $- x^{\gc(a')}\cdot \Z{i+1,j}{a',b}$\;
-			\lIf{$\text{rand}<0$}\Return{$a'.\Backtrack\left(i+1,j,a',b,\Target\right)$}\;
+			\lIf{$\text{\rm rand}<0$}\Return{$a'.\Backtrack\left(i+1,j,a',b,\Target\right)$}\;
 		}
 	}
 	\lElse{
-		\If(\tcp*[f]{Stacking pairs}){$(k=j) \land (S_{i-1}=j+1)$}{
+		\If(\tcp*[f]{Stacking base pair}){$(k=j) \land (S_{i-1}=j+1)$}{
 			\For{$(a',b')\in\B\times\B$}{
 				rand $\leftarrow$ rand $-
 			 	x^{\gc(a'.b')}
 			 	\cdot e^{\frac{-\ES^{\beta}_{ab \to a'b'}}{RT}}
 			 	\cdot \Z{i+1,j-1}{a',b'}	$\;
-				\lIf{$\text{rand}<0$}{
+				\lIf{$\text{\rm rand}<0$}{
 					\Return{$a'.\Backtrack\left(i+1,j-1,a',b',\Target\right). b'$}\;		
 				}
 			}
@@ -153,7 +146,7 @@ Once the pseudo-partition functions have been memorized, a stochastic backtrack 
 					\cdot e^{\frac{-\ES^{\beta}_{\varnothing\to a'b'}}{RT}}
   	    	\cdot\Z{i+1,k-1}{a',b'}
 	    	  \cdot\Z{k+1,j}{b',b}$\;	
- 					\If{$\text{rand}<0$}{
+ 					\If{{\rm rand} $<0$}{
 						\Return{$a'
 						.\Backtrack\left(i+1,k-1,a',b',\Target\right)
 						.b'
@@ -168,22 +161,26 @@ Once the pseudo-partition functions have been memorized, a stochastic backtrack 
 \caption{\protect\Backtrack$\left(i,j,a,b,\Target\right)$\label{alg:back}}
 \end{algorithm}
 
-Since, on each recursive call, the algorithm assigns at least one nucleotide to a -- previously unassigned -- position, and that the number of executions of the loops are bounded by a constant, then the complexity of the algorithm grows linearly on the targeted length. 
+
+\subsubsection{Self-adaptive sampling strategy and overall complexity}
+
+Our goal is to produce a set of sequences whose \GCContent matches a prescribed value $gc$.
+An absolute tolerance $\kappa$ may be allowed, so that the \GCContent of any valid sequence must fall in  
+$[gc-\kappa,gc+\kappa]$. Since sequences of arbitrary \GCContent may be generated by Algorithm~\ref{alg:back}, we use a rejection-based approach~\cite{Bodini2010}, previously adapted by the authors in a similar context~\cite{Waldispuhl2011}. In our context, this gives an algorithm which generates $k$ valid sequences in expected time $\Theta(k\cdot n\sqrt{n})$ when $\kappa=0$ (resp. $\Theta(k\cdot n)$ when $\kappa$ is a positive constant) memory $\Theta(k\cdot n)$.
+Although a complete analysis can be found in an earlier contribution~\cite{Waldispuhl2011}, let us briefly outline the strategy and arguments used to analyze the complexity.
+
+This approach simply generates sets of sequences by repeatedly running the stochastic backtrack algorithm. The average \GCContent induced by the current value of the $x$ parameter, can then be adequately estimated from the sample, or computed exactly using recent algorithmic advances~\cite{Ponty2011}. The set of sequences is filtered to only retain valid sequences. The value of the parameter $x$ is then adapted to match the average \GCContent (induced by the value of $x$) with the targeted one.
+It can be shown that the expected \GCContent is a continuous and strictly increasing monotonic function of $x$, whose limits are $0$ when $x=0$ and $n$ when $x\to +\infty$. Consequently, for any targeted \GCContent $gc\in[0\%,100\%]$, there exists a unique value $x_{gc}$ such that generated sequences feature, on the average, the right \GCContent.
+In practice, a simple binary search~\cite{Waldispuhl2011} is used in our implementation, and typically converges after very few iterations. However the optimal value for $x$ can also be derived analytically using an interpolation after $\Theta(n)$ evaluations of $\Z{i,j}{a,b}$ for different candidate values of $x$, as previously noted~\cite{Waldispuhl2011} and implemented using the Fast-Fourier Transform~\cite{Senter2012}.
 
 
-\subsubsection{Rejecting unsuitable candidates}
-
-Note that, although the parameter $x$ is introduced to match the expected \GCContent with the targeted one, nothing prevents Algorithm~\ref{alg:back} to generate sequences of arbitrary \GCContent. Therefore, we use a rejection-based approach~\cite{Bodini2010} previously used by the authors in a similar context~\cite{Waldispuhl2011}.
-
-It was established~\cite{Waldispuhl2011} that, for each value of $x$, there exists constants $\mu_x$ and $\sigma_x$ such that the \GCContent distribution observed in sequences sampled with respect to the above distribution converges asymptotically towards a normal law having expectation in $\mu\cdot n\cdot(1+o(1))$ and standard deviation in $\sigma\cdot\sqrt{n}\cdot(1+o(1))$.
-Furthermore, it can easily be shown that the expected \GCContent is a continuous and strictly increasing monotonic  function of $x$, whose limits are $0$ when $x=0$ and $n$ when $x\to +\infty$. 
-
-Consequently, for any targeted \GCContent $gc\in[0\%,100\%]$, there exists a unique value $x_{gc}$ such that generated sequences feature, on the average, the right \GCContent. Such a value can be determined using any numerical recipe, and a simple bisection procedure, further described in earlier work~\cite{Waldispuhl2011}, is used in our implementation. Furthermore, the concentration of the distribution, asserted by its limited standard deviation, implies a growth in $\Theta(\sqrt{n})$ (resp. $\Theta(1)$, i.e. constant) for the expected number of attempts before generating a sequence having the exact targeted \GCContent  (resp. within $[gc-\kappa,gc+\kappa]$, where $\kappa\in\Theta(1/\sqrt n)$).
+Regarding the overall complexity of the algorithm, it was previously established~\cite{Waldispuhl2011} that, for each value of $x$, there exists constants $\mu_x$ and $\sigma_x$ such that the distribution of \GCContent asymptotically converges towards a normal law having expectation in $\mu_x\cdot n\cdot(1+o(1))$ and standard deviation in $\sigma_x\cdot\sqrt{n}\cdot(1+o(1))$.
+Furthermore, the concentration of the distribution, asserted by its limited standard deviation, therefore the expected number of attempts required to generate a valid sequence when $\kappa=0$ (resp. $\kappa\in\Omega(1/\sqrt n)$) grows linke $\Theta(\sqrt{n})$ (resp. $\Theta(1)$, i.e. a constant), leading to the announced complexities.
 
 
 
 \subsection{Postprocessing unpaired regions: A local/global (glocal) hybrid approach}
 \label{subsec:glocal_method}
-Due to our simplified energy model, unpaired regions are not subject to design constraints other than the \GCContent, leading to modest probabilities for refolded design candidates to match the targeted structure. To improve these performances and test the complementarity  of our global sampling approach with previous contributions based on local search, we used the \RNAinverse software to redesign unpaired regions. We specified a constraint mask to prevent stacking base-pairs from being modified and, whenever necessary, reestablished their content a posteriori as \RNAinverse has been witnessed to take some liberties with constraints masks. As shown in Table~\ref{table:impact_on_gc} (Supplementary material), this postprocessing does not drastically alter the \GCContent, so the glocal approach reasonably addresses the contrained \GCContent design problem.
+Due to our simplified energy model, unpaired regions are not subject to design constraints other than the \GCContent, leading to modest probabilities for refolded design candidates to match the targeted structure. To improve these performances and test the complementarity  of our global sampling approach with previous contributions based on local search, we used the \RNAinverse software to redesign unpaired regions. We specified a constraint mask to prevent stacking base-pairs from being modified and, whenever necessary, reestablished their content {\em a posteriori}, as \RNAinverse has been witnessed to take some liberties with constraints masks. As shown in Table~\ref{table:impact_on_gc} (Supplementary material), this postprocessing does not drastically alter the \GCContent, so the glocal approach reasonably addresses the contrained \GCContent design problem.
 
 
