@@ -3,15 +3,15 @@
 
   \newcommand{\BSep}{9pt}
   \newcommand{\HSep}{500pt}
-  \newcommand{\VSepUp}{130pt}
-  \newcommand{\VSepDown}{-130pt}
+  \newcommand{\VSepUp}{110pt}
+  \newcommand{\VSepDown}{-110pt}
   \newcommand{\LabSepA}{63pt}
   \newcommand{\LabSepB}{75pt}
   \newcommand{\LabSepC}{72pt}
 
-  \tikzstyle{base}=[circle,draw,thick,inner sep=0,minimum width=15pt,fill=white]
+  \tikzstyle{base}=[circle,draw,thick,inner sep=0,minimum width=17pt,fill=white,,font=\relsize{+2}]
   \tikzstyle{basesmall}=[circle,draw,thick,inner sep=0,minimum width=10pt,fill=white]
-  \tikzstyle{basephantom}=[base,dashed]
+  \tikzstyle{basephantom}=[base,dashed,font=\relsize{+2}]
   \tikzstyle{linez}=[draw,snake=coil, segment aspect=.2,%
 line after snake=0pt, 
         segment length=10pt,thick]
@@ -26,8 +26,8 @@ line after snake=10pt,
   \tikzstyle{prob}=[fill=none,above=5pt,font=\relsize{+2}]
   \tikzstyle{caption}=[%fill=gray!20,draw=gray!60,thick,inner sep=4pt,rounded corners=6pt,
 font=\relsize{+2},anchor=north west,xshift=-70pt]
-  \tikzstyle{prob}=[fill=none,above=5pt,font=\relsize{+2}]
-  \tikzstyle{cap2}=[fill=none,above=12pt,font=\relsize{+3}]
+  \tikzstyle{prob}=[fill=none,above=5pt,font=\relsize{+3}]
+  \tikzstyle{cap2}=[fill=none,above=12pt,font=\relsize{+4}]
 
 
 
@@ -221,8 +221,8 @@ font=\relsize{+2},anchor=north west,xshift=-70pt]
 
   \path (x3) edge[arr] node[midway,prob]{$p_{a',b'}={x^{\gc(a'.b')}
 			\cdot e^{\frac{-\ES^{\beta}_{\varnothing\to a'b'}}{RT}}
-      \cdot\Z{\BoolFalse,\Struct'}{a',b'}
-      \cdot\Z{\BoolTrue,\Struct''}{b',b}}/{\Z{\N,\Struct}{a,b}}$} 
+      \cdot\Z{\BoolTrue,\Struct'}{a',b'}
+      \cdot\Z{\BoolFalse,\Struct''}{b',b}}/{\Z{\N,\Struct}{a,b}}$} 
 (y3);
   
 \end{tikzpicture}
