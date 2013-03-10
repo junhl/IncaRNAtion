@@ -27,7 +27,7 @@ the average sample entropy and the average base pairs entropy in Figure.~\ref{fi
 \begin{figure}[ht!]
 	\centering
 	%\hspace{-5em}
-	\includegraphics[scale=0.4]{Figures/RNAinverse_data_100.png}
+	\includegraphics[width=0.5\textwidth]{Figures/RNAinverse_data_100.png}
 	\caption{Entropy and \GCContent  for structures solved by
 	the 3 methods.}
 	\label{fig:rnainverse}
@@ -52,6 +52,7 @@ However, as summarized in Table~\ref{table:impact_on_gc}, we observed that the l
 
 \begin{table}[h!]
 \begin{center}
+\resizebox{0.5\textwidth}{!}{
 \begin{tabular}{|c|c|c|}
 \hline
 \multirow{3}{*}{Target \GCContent (\%)}& \multicolumn{2}{|c|}{Designed sequences \GCContent (\%)}\\ \cline{2-3}
@@ -65,6 +66,7 @@ However, as summarized in Table~\ref{table:impact_on_gc}, we observed that the l
 90\% & 83\% & 78\% \quad $\searrow 5\%$\\
 \hline
 \end{tabular}
+}
 \end{center}
 \caption{Observed \GCContent of solutions returned by \ourprog (2nd column) and after the application of the local search postprocessing (3rd column).}
 \label{table:impact_on_gc}
