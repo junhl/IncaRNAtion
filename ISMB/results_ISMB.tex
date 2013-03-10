@@ -10,16 +10,16 @@ Our software, \ourprog, is available at \oururl and was implemented in {\tt Pyth
 All time benchmarks were run on a single AMD Opteron(tm) 6278 Processor  at 2.4 GHz with cache of 512 KB.
 The penalty $\beta$, associated with invalid base-pairs, was set to $15$.
 
-\begin{figure}[t!]
+\begin{figure*}[t!]
 	\centering
- 	\includegraphics[width=0.5\textwidth]{Figures/time_rnastrand_clustered_rnainverse_100samples_fix}
+ 	\includegraphics[width=\textwidth]{Figures/time_rnastrand_clustered_rnainverse_100samples_fix}
 	\caption{Average time in seconds to generate one sequence. We explicitly show 
 	the time spent by \ourprog (full line) and \texttt{RNAinverse} (dashed) for various \GCContent. The first plot is in function
 	of the length of the structures. The second is in function of the stack
 	density (i.e. $2\cdot\#stacks/length$) and the latter in function of 
 	the proportion of free nucleotides (i.e. unpaired bases) within loops.}
 	\label{fig:time}	
-\end{figure}
+\end{figure*}
 
 Figure~\ref{fig:time} presents the average times spent running \ourprog and \RNAinverse to generate one sequence
 with the required \GCContent. As expected, the time grows linearly
@@ -38,12 +38,12 @@ whose length ranges between $20$ and $100$ nucleotides.
  To ease the visualization of results, we clustered together structures
  having similar length, stacks density and proportion of free nucleotides in loops, leading to distributions of structures shown in Figure~\ref{fig:bins}.
 
- \begin{figure}[ht!]
+ \begin{figure*}[ht!]
  	\centering
-	\includegraphics[width=0.5\textwidth]{Figures/bins_distribution.png}
+	\includegraphics[width=\textwidth]{Figures/bins_distribution.png}
 	\caption{Number of secondary structures per bin, according to our three clustering criteria.}
 	\label{fig:bins}
- \end{figure}
+ \end{figure*}
  
  
 \subsection{Design}
@@ -71,27 +71,27 @@ do not fold into the target. A few structures remained unsolved under
 all \GCContent.
 
 
-\begin{figure}[ht!]	
+\begin{figure*}[ht!]	
 	\centering
-	\includegraphics[width=0.5\textwidth]{Figures/mfe_struct_solve_nornainverse.png}
+	\includegraphics[width=\textwidth]{Figures/mfe_struct_solve_nornainverse.png}
 	\caption{Quality of \ourprog results. The first row shows the percentage
 	of sampled sequences folding into the target. The second shows the 	
 	proportion	of structures for which at least one correct sequence was 
 	sampled.}
 	\label{fig:mfe_struct_solved_noinverse}	
-\end{figure}
+\end{figure*}
 
 
 
-\begin{figure}[ht!]	
+\begin{figure*}[ht!]	
 	\centering
-	\includegraphics[width=0.5\textwidth]{Figures/mfe_struct_solved}
+	\includegraphics[width=\textwidth]{Figures/mfe_struct_solved}
 	\caption{Quality of \texttt{Incarnation+RNAinverse} results. The first row shows the percentage
 	of sampled sequences folding into the target. The second shows the 	
 	proportion	of structures for which at least one correct sequence was 
 	sampled.}
 	\label{fig:mfe_struct_solved}	
-\end{figure}
+\end{figure*}
  
 To evaluate the global quality of \ourprog sequences, we show
 in Figure~\ref{fig:ss_sens} the ratio of well predicted base pairs in the
@@ -105,12 +105,12 @@ computational time needed to generate the sequences with $15\%$ free
 nucleotides in the loops. We remark that those structures also yield 
 a much lower structural sensitivity.
 
-\begin{figure}[ht!]
+\begin{figure*}[ht!]
  	\centering
-	\includegraphics[width=0.5\textwidth]{Figures/rnastrand_clustered_rnainverse_100samples_struct_sens.png}
+	\includegraphics[width=\textwidth]{Figures/rnastrand_clustered_rnainverse_100samples_struct_sens.png}
 	\caption{Structural sensitivity (i.e. $\#$ well predicted base pairs / $\#$ base pairs in target) of the sampled sequences MFE. }
 	\label{fig:ss_sens}	
-\end{figure}
+\end{figure*}
 
 
 \subsection{Samples properties}
@@ -136,23 +136,23 @@ for an average \GCContent, the frequency stays over $10\%$ even
 at size of $100$ nucleotides.
 
 
-\begin{figure}[ht!]
+\begin{figure*}[ht!]
 	\centering
-	\includegraphics[width=0.5\textwidth]{Figures/nb_sols_entropy.png}
+	\includegraphics[width=\textwidth]{Figures/nb_sols_entropy.png}
 	\caption{Number of solutions generated and their average entropy. 
 	The last row presents only the entropy of the nucleotides inside base 
 	pairs.}
 	\label{fig:nb_sols_entropy}
-\end{figure}
+\end{figure*}
 
 
 
-\begin{figure}[ht!]
+\begin{figure*}[ht!]
 	\centering
-	\includegraphics[width=0.5\textwidth]{Figures/freq.png}
+	\includegraphics[width=\textwidth]{Figures/freq.png}
 	\caption{Average Boltzmann probability of the MFE.}
 	\label{fig:freq}
-\end{figure}
+\end{figure*}
 
 \subsection{Global sampling vs Local search vs Glocal approach}
 
