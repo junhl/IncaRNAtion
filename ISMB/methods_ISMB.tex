@@ -66,8 +66,8 @@ Remark that the empty structure only supports the empty sequence, having energy 
 
 
 The recursion must consider different cases, depending on whether the first position in $\Struct$ is:
-\begin{description}
-\item[{\bf Case 1.}] Unpaired ($\Struct = \ub \Struct'$):
+\begin{itemize}
+\item {\bf Case 1.} Unpaired ($\Struct = \ub \Struct'$):
 \begin{align}
 	\Z{\BoolTrue,\ub \Struct'}{a,b} = \Z{\BoolFalse,\ub \Struct'}{a,b}  &:=
       \sum_{a'\in \B}  
@@ -75,7 +75,7 @@ The recursion must consider different cases, depending on whether the first posi
       \cdot\Z{\BoolFalse,\Struct'}{a',b}; 
 \label{eq:Z_unpaired}
 \end{align}
-\item[{\bf Case 2.}] Paired to last position ($\Struct = \op \Struct' \cp$), stacking onto a pre-existing closing pair ($\N=\BoolTrue$):
+\item {\bf Case 2.} Paired to last position ($\Struct = \op \Struct' \cp$), stacking onto a pre-existing closing pair ($\N=\BoolTrue$):
 \begin{align}
 	\Z{\BoolTrue,\op \Struct' \cp}{a,b} &:=
       \sum_{a',b'\in \B^2}
@@ -84,30 +84,30 @@ The recursion must consider different cases, depending on whether the first posi
 			 \cdot \Z{\BoolTrue,\Struct'}{a',b'};
 \label{eq:Z_stack}
 \end{align}
-\item[{\bf Case 3.}] Paired to some position ($\Struct = \op \Struct' \cp \Struct''$), but not stacking ($\N=\BoolFalse$ or $\Struct''\neq \varepsilon$):
+\item {\bf Case 3.} Paired to some position ($\Struct = \op \Struct' \cp \Struct''$), but not stacking ($\N=\BoolFalse$ or $\Struct''\neq \varepsilon$):
 \begin{align}
 	\Z{\N,\op \Struct' \cp \Struct''}{a,b} &:=
 			 \displaystyle
       \sum_{a',b'\in \B^2}
       x^{\gc(a'.b')}
 			\cdot e^{\frac{-\ES^{\beta}_{\varnothing\to a'b'}}{RT}}
-      \cdot\Z{\BoolFalse,\Struct'}{a',b'}
-      \cdot\Z{\BoolTrue,\Struct''}{b',b}.
+      \cdot\Z{\BoolTrue,\Struct'}{a',b'}
+      \cdot\Z{\BoolFalse,\Struct''}{b',b}.
 \label{eq:Z_rec}
 \end{align}
-\end{description}
+\end{itemize}
 
 Remark that the number of combinations of $a$, $b$ and $\N$ remains bounded by a constant, thus the complexity of computing $\Z{\N,\Struct}{a,b}$ mainly depends on the values taken by $\Struct$ upon subsequent recursive calls. Such values are entirely determined by $\Struct$ at any given step of the recursion, and their dependency can be summarized in a tree having $\Theta(|\Struct|)$. Therefore, the computation of $\Z{\N,\Target}{a,b}$ requires $\Theta(n)$ time and space using dynamic-programming.
 
-\begin{figure}
-\resizebox{0.5\textwidth}{!}{\input{FigStochasticBacktrack.pgf}}
+\begin{figure*}
+\resizebox{\linewidth}{!}{\input{FigStochasticBacktrack.pgf}}
 \caption{Stochastic backtrack procedure for a given substructure $\Struct$: Either the first position is left unpaired (top), a base-pair is formed between the two extremities, stacking onto an exterior base-pair (middle), or paired without creating a stacking, defining two regions on which subsequent recursive calls are needed (bottom). For the empty structure (omitted here), the empty sequence is returned. Positions indicated in red are assigned at the current stage of the backtrack.\label{fig:stochastic}}
-\end{figure}
+\end{figure*}
 
 \begin{algorithm}[t]
 \DontPrintSemicolon
 	\SetAlgoLined
-\SetKwFunction{Backtrack}{StocBack}
+\SetKwFunction{Backtrack}{SB}
 \SetKwFunction{Random}{Random}
 	rand $\leftarrow$ \Random$\left(\Z{\N,\Struct}{a,b}\right)$\tcp*[r]{Draw random number in $[0,\Z{\N,\Struct}{a,b}[$}
  \Switch{}{
