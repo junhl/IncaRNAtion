@@ -12,7 +12,7 @@
   \tikzstyle{base}=[circle,draw,thick,inner sep=0,minimum width=17pt,fill=white,,font={\relsize{+2}}]
   \tikzstyle{basesmall}=[circle,draw,thick,inner sep=0,minimum width=10pt,fill=white]
   \tikzstyle{basephantom}=[base,dashed,font=\relsize{+2}]
-  \tikzstyle{linez}=[draw,snake=coil, segment aspect=.2,%
+  \tikzstyle{linez}=[draw,snake=zigzag, segment aspect=.2,%
 line after snake=0pt, 
         segment length=10pt,thick]
   \tikzstyle{lined}=[linez,draw,snake=none,thick]
@@ -20,9 +20,9 @@ line after snake=0pt,
   \tikzstyle{bp}=[in=95,out=85,draw,line width=1.5pt,blue,looseness=1]
   \tikzstyle{block}=[trapezium,trapezium angle=33, fill=green!20, draw=green!20!gray,line width=1pt, inner sep=0]
   \tikzstyle{lbl}=[inner sep=0]
-  \tikzstyle{arr}=[line width=1.3pt,->,snake=snake, segment aspect=.0,%
-line after snake=10pt, 
-        segment length=20pt, segment amplitude=3pt]
+  \tikzstyle{arr}=[line width=1.5pt,-open triangle 60,snake=snake, segment aspect=.0,%
+line after snake=1pt, 
+        segment length=50pt, segment amplitude=6pt]
   \tikzstyle{caption}=[%fill=gray!20,draw=gray!60,thick,inner sep=4pt,rounded corners=6pt,
 font=\relsize{+3},anchor=north west,xshift=-70pt]
   \tikzstyle{prob}=[fill=none,above=5pt,font=\relsize{+4}]
