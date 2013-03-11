@@ -9,7 +9,7 @@ For the sake of simplicity, we choose to base this proof-of-concept implementati
 stacked canonical base-pairs. We show how a modification of the dynamic programming scheme used in \RNAmutants allows for the sampling of good and diverse design candidates, in linear time and space complexities.
 
 
-%To that purpose, a Boltzmann weighted distribution is used, based on a pseudo-energy function $\PE{\cdot}$ which includes contributions for both the free-energy and its putative isostericity towards a multiple sequence alignment. In this model, the probability that the nucleotide at a given position needs to be mutated (i.e. corresponds to a sequencing error) can be computed using a variant of the \emph{Inside-Outside algorithm}~\cite{Lari1990}.
+%To that purpose, a Boltzmann weighted distribution is used, based on an energy function $\PE{\cdot}$ which includes contributions for both the free-energy and its putative isostericity towards a multiple sequence alignment. In this model, the probability that the nucleotide at a given position needs to be mutated (i.e. corresponds to a sequencing error) can be computed using a variant of the \emph{Inside-Outside algorithm}~\citep{Lari1990}.
 %
 %\subsection{Probabilistic model}
 %Let $\Omega$ be an gap-free RNA alignment sequence, $S$ its associated secondary structure, 
@@ -28,7 +28,7 @@ $\Target_i$ stands for the base-pairing position of position $i$ in $\Target$ if
 In addition, let us denote by $\gc(s)$ the number of occurrences of \Gb and \Cb in an RNA sequence $s$.
 
 \subsubsection{Simplified energy model}
-We use a simplified free-energy model which only includes additive contributions from stacking base-pairs. Using individual values from the Turner 2004 model (retrieved from the NNDB~\cite{Turner2010}). Given a candidate sequence $s$ for a secondary structure $\Struct$, the free-energy of any sequence $s$ of length $|\Struct|$  is given by
+We use a simplified free-energy model which only includes additive contributions from stacking base-pairs. Using individual values from the Turner 2004 model (retrieved from the NNDB~\citep{Turner2010}). Given a candidate sequence $s$ for a secondary structure $\Struct$, the free-energy of any sequence $s$ of length $|\Struct|$  is given by
 \begin{align*}
   \ES(s,\Struct) = \sum_{\substack{(i,j)\to (i',j')\in \Struct\\ \text{stacking pairs}}}\ES^{\beta}_{s_is_j\to s_{i'}s_{j'}} 
 \end{align*}
@@ -36,28 +36,26 @@ where $\ES^{\beta}_{ab\to a'b'}$ is set to $0$ if $ab=\varnothing$ (no base-pair
 Position-specific sequence constraints can also be enforced at this level (details omitted for the sake of clarity) by assigning to $\ES$ a $+\infty$ penalty (leading to a null probability) in the presence of a base incompatible with a user-specified constraint mask.
 
 
-\subsubsection{\GCContent weighted pseudo-Boltzmann ensemble and distribution}
+\subsubsection{\GCWeighted Boltzmann ensemble and distribution}
 
-In order to counterbalance the documented tendency of sampling methods to generate \Gb\Cb-rich sequences~\cite{Levin:2012kx}, we introduce a parameter $x\in\mathbb{R}^+$, whose value will influence the \GCContent of generated sequences. For any secondary structure $\Struct$, the pseudo-Boltzmann factor of a sequence $s$ is $\B^{[x]}_{\Struct}(s)$  such that
+In order to counterbalance the documented tendency of sampling methods to generate \Gb\Cb-rich sequences~\citep{Levin:2012kx}, we introduce a parameter $x\in\mathbb{R}^+$, whose value will influence the \GCContent of generated sequences. For any secondary structure $\Struct$, the \GCWeighted-Boltzmann factor of a sequence $s$ is $\B^{[x]}_{\Struct}(s)$  such that
 \begin{equation}
 \B_{\Struct}^{[x]}(s) = e^{\frac{-\ES(s,\Struct)}{RT}}\cdot x^{\gc(s)}
 \label{def:genBoltz}
 \end{equation}
 where $R$ is the Boltzmann constant and $T$ the temperature in Kelvin.
 
-Summing the pseudo-Boltzmann factor over all possible sequences of a given length $|\Struct|$, one obtains the pseudo-partition function $\mathcal{Z}_{\Struct}^{[x]}$, from which one defines the pseudo-Boltzmann probability $\Prob_{\Struct}^{[x]}(s)$ of each sequence $s$, respectively such that 
+Summing the \GCWeighted-Boltzmann factor over all possible sequences of a given length $|\Struct|$, one obtains the \GCWeighted partition function $\mathcal{Z}_{\Struct}^{[x]}$, from which one defines the \GCWeighted Boltzmann probability $\Prob_{\Struct}^{[x]}(s)$ of each sequence $s$, respectively such that 
 \begin{align}\mathcal{Z}_{\Struct}^{[x]} &= \sum_{\substack{|s|=n}}\B_{\Struct}^{[x]}(s)& \text{and}&&
 \Prob_{\Struct}^{[x]}(s) &= \frac{\B_{\Struct}^{[x]}(s)}{\mathcal{Z}_{\Struct}^{[x]}}.\label{def:distribution}\end{align}
 
-\subsection{Sampling the pseudo-Boltzmann ensemble}
+\subsection{Linear-time stochastic sampling algorithm for the \GCWeighted-Boltzmann ensemble}
 
-Let us now describe a linear-time algorithm to sample sequences at random in the pseudo-Boltzmann distribution. This algorithm follows the general principles of the recursive approach to random generation~\cite{Wilf1977}, pioneered in the context of RNA by the \SFold algorithm~\cite{Ding2003}. The algorithm starts by precomputing the partition function restricted to each valid interval, and then performs a series of recursive stochastic backtracks, using precomputed values to decide on the probability of each alternative. 
+Let us now describe a linear-time algorithm to sample sequences at random in the \GCWeighted Boltzmann distribution. This algorithm follows the general principles of the recursive approach to random generation~\citep{Wilf1977}, pioneered in the context of RNA by the \SFold algorithm~\citep{Ding2003}. The algorithm starts by precomputing the partition function restricted to each substructure occurring in the target structure, and then performs a series of recursive stochastic backtracks, using precomputed values to decide on the probability of each alternative. 
 
-\subsubsection{Precomputing the pseudo-partition function}\label{sec:pf}
+\subsubsection{Precomputing the \GCWeighted partition function}\label{sec:pf}
 
-
-
-Firstly, a dynamic programming algorithm computes $\Z{\N,\Struct}{a,b}$ the pseudo-partition function ($x$ is omitted here for the sake of clarity) for a structure $\Struct$, assuming its (previously chosen) flanking nucleotides are $a$ and $b$ respectively, either forming a closing base-pair ($\N=\BoolTrue$) or not ($\N=\BoolFalse$). 
+Firstly, a dynamic programming algorithm computes $\Z{\N,\Struct}{a,b}$ the \GCWeighted partition function ($x$ is omitted here for the sake of clarity) for a structure $\Struct$, assuming its (previously chosen) flanking nucleotides are $a$ and $b$ respectively, either forming a closing base-pair ($\N=\BoolTrue$) or not ($\N=\BoolFalse$). 
 Remark that the empty structure only supports the empty sequence, having energy $0$, so one has
 \begin{equation}
 	\Z{\BoolTrue,\varepsilon}{a,b}=\Z{\BoolFalse,\varepsilon}{a,b}= e^{-0/RT} = 1.
@@ -65,7 +63,7 @@ Remark that the empty structure only supports the empty sequence, having energy 
 \end{equation}
 
 
-The general recursion scheme specializes, depending on the first position in $\Struct$.\\
+The general recursion scheme consists in three different terms, depending on the first position in $\Struct$:\\
 {\bf Case 1.} First position is unpaired ($\Struct = \ub \Struct'$):
 \begin{equation}
 	\Z{\BoolTrue,\ub \Struct'}{a,b} = \Z{\BoolFalse,\ub \Struct'}{a,b}  :=
@@ -105,7 +103,7 @@ Remark that the number of combinations of $a$, $b$ and $\N$ remains bounded by a
 \begin{algorithm}[t]
 \DontPrintSemicolon
 	\SetAlgoLined
-\SetKwFunction{Backtrack}{SB}
+\SetKwFunction{Backtrack}{SB$_x$}
 \SetKwFunction{Random}{Random}
 \newcommand{\rand}{{r}}
 	$\rand \leftarrow $\Random$\left(\Z{\N,\Struct}{a,b}\right)$\tcp*[r]{Random real in $[0,\Z{\N,\Struct}{a,b}[$}
@@ -152,7 +150,7 @@ Remark that the number of combinations of $a$, $b$ and $\N$ remains bounded by a
 \caption{\protect\Backtrack$\left(a,b,\N,\Struct\right)$\label{alg:back}}
 \end{algorithm}
 \subsubsection{Stochastic backtrack}
-Once the pseudo-partition functions have been computed and memorized, a stochastic backtrack starts from the target structure $\Target$ with any exterior bases $[a,b]$ and no nesting base-pair, corresponding to a call \Backtrack$\left(\varnothing,\varnothing,\BoolFalse,\Target\right)$ to Algorithm~\ref{alg:back}.  At each step, a suitable assignment for one or several positions is chosen, using probabilities derived from the precomputation, as illustrated by Figure~\ref{fig:stochastic}. One or several recursive calls over the appropriate substructures are then performed. On each recursive call, the algorithm assigns at least one nucleotide to a -- previously unassigned -- position. Moreover, the number of executions of each loops is bounded by a constant. Consequently, the complexity of Algorithm~\ref{alg:back} is in $\Theta(n)$ time and space. 
+Once the \GCWeighted partition functions have been computed and memorized, a stochastic backtrack starts from the target structure $\Target$ with any exterior bases $[a,b]$ and no nesting base-pair, corresponding to a call \Backtrack$\left(\varnothing,\varnothing,\BoolFalse,\Target\right)$ to Algorithm~\ref{alg:back}.  At each step, a suitable assignment for one or several positions is chosen, using probabilities derived from the precomputation, as illustrated by Figure~\ref{fig:stochastic}. One or several recursive calls over the appropriate substructures are then performed. On each recursive call, the algorithm assigns at least one nucleotide to a -- previously unassigned -- position. Moreover, the number of executions of each loops is bounded by a constant. Consequently, the complexity of Algorithm~\ref{alg:back} is in $\Theta(n)$ time and space. 
 
 
 
@@ -161,17 +159,23 @@ Once the pseudo-partition functions have been computed and memorized, a stochast
 
 Let us remind that our goal is to produce a set of sequences whose \GCContent matches a prescribed value $gc$.
 An absolute tolerance $\kappa$ may be allowed, so that the \GCContent of any valid sequence must fall in  
-$[gc-\kappa,gc+\kappa]$. Since sequences of arbitrary \GCContent may be generated by Algorithm~\ref{alg:back}, we use a rejection-based approach~\cite{Bodini2010}, previously adapted by the authors in a similar context~\cite{Waldispuhl2011}. This gives an algorithm which generates $k$ valid sequences in expected time $\Theta(k\cdot n\sqrt{n})$ when $\kappa=0$ (or $\Theta(k\cdot n)$ when $\kappa$ is a positive constant) and memory in $\Theta(k\cdot n)$.
-A complete analysis of the rejection process can be found in an earlier contribution~\cite{Waldispuhl2011}, but let us briefly outline the approach, and the main arguments used to establish its complexity.
+$[gc-\kappa,gc+\kappa]$. Since sequences of arbitrary \GCContent may be generated by Algorithm~\ref{alg:back}, we use a rejection-based approach~\citep{Bodini2010}, previously adapted by the authors in a similar context~\citep{Waldispuhl2011}. This gives an algorithm which generates $k$ valid sequences in expected time $\Theta(k\cdot n\sqrt{n})$ when $\kappa=0$ (or $\Theta(k\cdot n)$ when $\kappa$ is a positive constant) and memory in $\Theta(k\cdot n)$.
+A complete analysis of the rejection process can be found in an earlier contribution~\citep{Waldispuhl2011}, but let us briefly outline the approach, and the main arguments used to establish its complexity.
 
-Our adaptive sampling approach simply generates sets of sequences by repeatedly running the stochastic backtrack algorithm. The average \GCContent induced by the current value of the $x$ parameter, can then be adequately estimated from the sample, or computed exactly using recent algorithmic advances~\cite{Ponty2011}. The set of sequences is filtered to only retain valid sequences. The value of the parameter $x$ is then adapted to match the average \GCContent (induced by the value of $x$) with the targeted one.
+\begin{figure}
+\resizebox{\linewidth}{!}{\input{workflow.pgf}}
+\caption{General workflow of our adaptive sampling algorithm~\citep{Waldispuhl2011}.}
+\label{fig:workflow}
+\end{figure}
+
+As summarized by Figure~\ref{fig:workflow}, our adaptive sampling approach simply generates sets of sequences by repeatedly running the stochastic backtrack algorithm. The average \GCContent induced by the current value of the $x$ parameter, can then be adequately estimated from the sample, or computed exactly using recent algorithmic advances~\citep{Ponty2011}. The set of sequences is filtered to only retain valid sequences. The value of the parameter $x$ is then adapted to match the average \GCContent (induced by the value of $x$) with the targeted one.
 It can be shown that the expected \GCContent is a continuous and strictly increasing monotonic function of $x$, whose limits are $0$ when $x=0$ and $n$ when $x\to +\infty$. Consequently, for any targeted \GCContent $gc\in[0\%,100\%]$, there exists a unique value $x_{gc}$ such that generated sequences feature, on the average, the right \GCContent.
-In practice, a simple binary search~\cite{Waldispuhl2011} is used in our implementation, and typically converges after very few iterations. An optimal value for $x$ can also be derived analytically using interpolation after $\Theta(n)$ evaluations of $\Z{i,j}{a,b}$ for different candidate values of $x$, as previously noted~\cite{Waldispuhl2011} and implemented using the Fast-Fourier Transform~\cite{Senter2012}.
+In practice, a simple binary search~\citep{Waldispuhl2011} is used in our implementation, and typically converges after very few iterations. An optimal value for $x$ can also be derived analytically using interpolation after $\Theta(n)$ evaluations of $\Z{i,j}{a,b}$ for different candidate values of $x$, as previously noted~\citep{Waldispuhl2011} and could be implemented using the Fast-Fourier Transform~\citep{Senter2012}.
 
 \subsubsection{Overall complexity}
 
-Regarding the overall complexity claim for our approach, it was previously established~\cite{Waldispuhl2011} that, for each value of $x$, there exists constants $\mu_x$ and $\sigma_x$ such that the distribution of \GCContent asymptotically converges towards a normal law having expectation in $\mu_x\cdot n\cdot(1+o(1))$ and standard deviation in $\sigma_x\cdot\sqrt{n}\cdot(1+o(1))$.
-Furthermore, the concentration of the distribution, asserted by its limited standard deviation, therefore the expected number of attempts required to generate a valid sequence when $\kappa=0$ (resp. $\kappa\in\Omega(1/\sqrt n)$) grows like $\Theta(\sqrt{n})$ (resp. $\Theta(1)$, i.e. a constant), leading to the announced complexities. Formally, since a suitable weight $x$ must be recomputed for each targeted structure and \GCContent, then the number $M$ of iterations required for the converge can be accounted for explicitly, leading to time complexities in $\Theta((M+\sqrt{n})\cdot k\cdot n)$ (if $\kappa=0$, i.e. without any tolerance) and $\Theta(M\cdot k\cdot n)$ (if $\kappa>0$).
+It was previously established~\citep{Waldispuhl2011} that, for each value of $x$, there exists constants $\mu_x$ and $\sigma_x$ such that the distribution of \GCContent asymptotically converges towards a normal law having expectation in $\mu_x\cdot n\cdot(1+o(1))$ and standard deviation in $\sigma_x\cdot\sqrt{n}\cdot(1+o(1))$.
+Furthermore, the distribution of \GCContent is highly concentrated, as asserted by its limited standard deviation, therefore the expected number of attempts required to generate a valid sequence when $\kappa=0$ (resp. $\kappa\in\Omega(1/\sqrt n)$) grows like $\Theta(\sqrt{n})$ (resp. $\Theta(1)$, i.e. a constant), leading to the announced complexities. Formally, since a suitable weight $x$ must be recomputed for each targeted structure and \GCContent, then the number $M$ of iterations required for the converge can be accounted for explicitly, leading to time complexities in $\Theta((M+\sqrt{n})\cdot k\cdot n)$ (if $\kappa=0$, i.e. without any tolerance) and $\Theta(M\cdot k\cdot n)$ (if $\kappa>0$).
 
 
 
