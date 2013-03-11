@@ -1,5 +1,5 @@
 
-\begin{tikzpicture}
+\begin{tikzpicture}[scale=.95]
 
   \newcommand{\BSep}{9pt}
   \newcommand{\HSep}{500pt}
@@ -9,7 +9,7 @@
   \newcommand{\LabSepB}{75pt}
   \newcommand{\LabSepC}{72pt}
 
-  \tikzstyle{base}=[circle,draw,thick,inner sep=0,minimum width=17pt,fill=white,,font=\relsize{+2}]
+  \tikzstyle{base}=[circle,draw,thick,inner sep=0,minimum width=17pt,fill=white,,font={\relsize{+2}}]
   \tikzstyle{basesmall}=[circle,draw,thick,inner sep=0,minimum width=10pt,fill=white]
   \tikzstyle{basephantom}=[base,dashed,font=\relsize{+2}]
   \tikzstyle{linez}=[draw,snake=coil, segment aspect=.2,%
