@@ -4,7 +4,7 @@
 \tikzstyle{block} = [rectangle, draw,
 outer color=gray!20,
 inner color=white,
-text width=4.3cm, minimum height=1cm,drop shadow,
+text width=4.5cm, minimum height=1cm,drop shadow,
 thick]
 \tikzstyle{edgeblock} = [block, rectangle split,rectangle split parts=2, rounded corners=10pt,
 outer color=white,
