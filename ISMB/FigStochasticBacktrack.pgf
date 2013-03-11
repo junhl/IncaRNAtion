@@ -1,15 +1,15 @@
 
-\begin{tikzpicture}
+\begin{tikzpicture}[scale=.95]
 
   \newcommand{\BSep}{9pt}
-  \newcommand{\HSep}{500pt}
+  \newcommand{\HSep}{600pt}
   \newcommand{\VSepUp}{110pt}
   \newcommand{\VSepDown}{-110pt}
   \newcommand{\LabSepA}{63pt}
   \newcommand{\LabSepB}{75pt}
   \newcommand{\LabSepC}{72pt}
 
-  \tikzstyle{base}=[circle,draw,thick,inner sep=0,minimum width=17pt,fill=white,,font=\relsize{+2}]
+  \tikzstyle{base}=[circle,draw,thick,inner sep=0,minimum width=17pt,fill=white,,font={\relsize{+2}}]
   \tikzstyle{basesmall}=[circle,draw,thick,inner sep=0,minimum width=10pt,fill=white]
   \tikzstyle{basephantom}=[base,dashed,font=\relsize{+2}]
   \tikzstyle{linez}=[draw,snake=coil, segment aspect=.2,%
@@ -23,10 +23,9 @@ line after snake=0pt,
   \tikzstyle{arr}=[line width=1.3pt,->,snake=snake, segment aspect=.0,%
 line after snake=10pt, 
         segment length=20pt, segment amplitude=3pt]
-  \tikzstyle{prob}=[fill=none,above=5pt,font=\relsize{+2}]
   \tikzstyle{caption}=[%fill=gray!20,draw=gray!60,thick,inner sep=4pt,rounded corners=6pt,
-font=\relsize{+2},anchor=north west,xshift=-70pt]
-  \tikzstyle{prob}=[fill=none,above=5pt,font=\relsize{+3}]
+font=\relsize{+3},anchor=north west,xshift=-70pt]
+  \tikzstyle{prob}=[fill=none,above=5pt,font=\relsize{+4}]
   \tikzstyle{cap2}=[fill=none,above=12pt,font=\relsize{+4}]
 
 
@@ -55,7 +54,7 @@ font=\relsize{+2},anchor=north west,xshift=-70pt]
   \path[block]   (r1.south west) to (r1.south east) to (r1.north east) to[out=90,in=90,looseness=1.1] (r1.north west) to (r1.south west) ;
   \end{pgfonlayer}{background}
 \end{scope}
-\node[above= \LabSepA of a-1, caption] {{\bf Case 1:} First position is unpaired};
+\node[above= \LabSepA of a-1, caption] {{\bf Case 1:} First position is unpaired.};
 
 \begin{scope}[xshift=\HSep,yshift=\VSepUp]
   \node[base] (a-1) at (0,0) {\color{red}$a'$};
@@ -108,7 +107,7 @@ font=\relsize{+2},anchor=north west,xshift=-70pt]
   \path[block]   (r1.south west) to (r1.south east) to (r1.north east) to[out=90,in=90,looseness=1.1] (r1.north west) to (r1.south west) ;
   \end{pgfonlayer}{background}
 \end{scope}
-\node[above= \LabSepB of a-1, caption] {{\bf Case 2:} Extremities are paired, surrounded by another base-pair, forming a stacking base-pair};
+\node[above= \LabSepB of a-1, caption] {{\bf Case 2:} Extremities are paired, surrounded by another base-pair, forming a stacking base-pair.};
 
 \begin{scope}[xshift=\HSep,yshift=00pt]
   \node[base] (a-1) at (0,0) {\color{red}$a'$};
@@ -173,7 +172,7 @@ font=\relsize{+2},anchor=north west,xshift=-70pt]
   \end{pgfonlayer}{background}
 \end{scope}
 
-\node[above= \LabSepC of a-1, caption] {{\bf Case 3:} First position in paired to some position, but not involved in a stacking pair};
+\node[above= \LabSepC of a-1, caption] {{\bf Case 3:} First position in paired to some position, but not involved in a stacking pair.};
 
 \begin{scope}[xshift=\HSep,yshift=\VSepDown]
   \node[base] (a-1) at (0,0) {\color{red}$a'$};
