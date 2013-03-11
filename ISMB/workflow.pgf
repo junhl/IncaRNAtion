@@ -19,7 +19,7 @@ inner color=white,minimum height=2cm]
   \newcommand{\VDist}{.6cm}
     \node [edgeblock] (init) {{\normalsize Start}\nodepart{second}{} {$x:=1$\quad $ \res:=\varnothing$}};
     \node [block,below=\VDist of init] (gen) {Draw sequences in\\ $x$-weighted distribution};
-    \node [block, below=\VDist of gen] (filter) {Filter on GC$\%$\\ Enrich $\res$};
+    \node [block, below=\VDist of gen] (filter) {Filter on GC$\%$\\ Add suitable seqs to $\res$};
     \node [block, right=0.6cm of filter, node distance=2.5cm] (update) {Estimate average GC\% for $x$\\ Update $x$};
     \node [decision, below=\VDist of filter] (decide) {$|\res| \ge k$?};
     \node [edgeblock, below=\VDist of decide] (stop) {{Stop}\nodepart{second}{}{Return $\res$}};
