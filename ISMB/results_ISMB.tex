@@ -47,7 +47,7 @@ whose length ranges between $20$ and $100$ nucleotides.
  
 \subsection{Design}
  To benchmark our method, we first started by sampling about $100$ sequences per structure. After correcting the free nucleotides with
- \texttt{RNAinverse} we computed their MFE with \texttt{RNAfold} from the \textit{Vienna Package 2.0}~\cite{Hofacker:1994}.
+ \RNAinverse we computed their MFE with \rnafold from the \textit{Vienna Package 2.0} by~\cite{Hofacker:1994}.
  
 A first criterion is the proportion of sequences accepting the target
 secondary structures as their MFE. A second criterion is the number of structures
@@ -118,7 +118,24 @@ In this section, we further analyze the generated sequences that fold into the
 target structure. 
 
 A desirable feature in sequence design, is to produce samples with a high
-diversity. Figure~\ref{fig:nb_sols_entropy} shows the number of correct
+diversity but with a conserved structure.
+Two useful measures are the entropy~\ref{eq:entropy} and the base pair entropy~\ref{eq:bpentropy}.
+The entropy is defined as:
+\begin{equation}
+  \sum_{\substack{i\\b \in (A,C,G,U)}} -p^b_i\log_4 p^b_i
+  \label{eq:entropy}
+\end{equation}
+where $p^b_i$ is the proportion of nucleotides $b$ at position $i$.
+The base pair entropy is defined as:
+\begin{equation}
+  \sum_{i<j}-p_{i,j}\log_2 p_{i,j}
+  \label{eq:bpentropy}
+\end{equation}
+where $p_{i,j}$ is the probability of having a base pair between positions $i$ and $j$. The base pair entropy reflects
+the distribution of structures weights in the Boltzmann ensemble. Thus, a low base pair entropy implies a highly conserved structure.
+To compute the base pairs probabilities, we used \rnafold from the \texttt{Vienna Package 2.0} developed by~\cite{Hofacker:1994}.
+
+  Figure~\ref{fig:nb_sols_entropy} shows the number of correct
 solutions as their average entropy and base pair entropy, since 
 \ourprog  only influences the distribution of nucleotides inside 
 stacked base pairs. The most constraining factor for generating valid
