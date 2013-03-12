@@ -140,21 +140,15 @@ where $\mathcal{Z}^s$ is the partition function of sequence $s$. This measure te
 %the distribution of structures weights in the Boltzmann ensemble. Thus, a low base pair entropy implies a highly conserved structure.
 %To compute the base pairs probabilities, we used \rnafold from the \texttt{Vienna Package 2.0} developed by~\cite{Hofacker:1994}.
 
-  Figure~\ref{fig:nb_sols_entropy} shows the number of correct
-solutions \highlight{as their average sequence identity. Since \ourprog
-only influences the distribution of nucleotides inside stacked base pairs, 
-we consider the \GCContent only inside those base pairs.}
   %entropy and positions inside base pairs entropy, since 
 %\ourprog  only influences the distribution of nucleotides inside 
 %stacked base pairs. 
-The most constraining factor for generating valid
- solutions seems to be  low \GCContent and the percentage of free nucleotides. 
 
 %Our method is able to generate 
 %Figure~\ref{fig:nb_sols_entropy} shows the number of correct solutions as their average entropy and positions inside base pairs entropy, since \ourprog  only influences the distribution of nucleotides inside stacked base pairs. The most constraining factor for generating valid solutions seems to be  low \GCContent and the percentage of free nucleotides. 
 
 \highlight{
-Figure~\ref{fig:nb_sols_entropy} shows the number of solutions generated (i.e. sequences with a MFE structure identical to the target structure) and the average sequence identity of the sequences. Here, we note that low {\GCContent}s have a strong (negative) influence on the number of sequences generated, and in parallel also affect negatively the sequence diversity. This observation emphasizes the difficulty to  design sequences with low \GCContent. Once again, large percentages of free nucleotides increase the difficulty of the task. 
+Figure~\ref{fig:nb_sols_entropy} shows the number of solutions generated (i.e. sequences with a MFE structure identical to the target structure). Here, we note that low {\GCContent}s have a strong (negative) influence on the number of sequences generated, and in parallel also affect negatively the sequence diversity. This observation emphasizes the difficulty to  design sequences with low \GCContent. Once again, large percentages of free nucleotides increase the difficulty of the task. 
 
 The thermodynamical stability of the target structure on the designed sequence is another important property when estimating the performance of RNA design algorithms. We estimate the quality of our solutions in Figure~\ref{fig:freq}. First, we observe a slow decline of the structure stability (i.e. the frequency) when the target structure increases in size. Yet, for an average \GCContent, the frequency stays over $10\%$ even at size of $100$ nucleotides. Next, we note that for the most difficult target structures (i.e. the longer ones or those with high percentages of unpaired nucleotides in loops) the \GCContent have a limited (almost null) influence on the stability of the target structure on the designed sequence. By contrast, this less true for easiest and small structures with only few free nucleotides in internal loops.
 }
