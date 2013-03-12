@@ -51,7 +51,9 @@ leading to distributions of structures shown in Figure~\ref{fig:bins}.
 We ran our method as follows. First, we sampled approximately $100$ sequences per structure. Then, we use these sequences 
 as seed in \RNAinverse. Finally, we computed the MFE with the \rnafold program from the \textit{Vienna Package 2.0} \citep{Hofacker:1994}.
 
-Before starting our benchmark, we asses the need for our methods and performed an analysis of the \GCContent drift achieved with state-of-the-art software. Using our dataset of $50$ structures, we generated $100$ samples per structure with classical softwares who do not control the \GCContent. Namely,  \RNAinverse, \INFORNA, \NUPACK and \frankenstein.  We show the distribution of the \GCContent of the sequences produced with these softwares in Fig.~\ref{fig:gcdist} those distributions. As anticipated, we observe a clear bias toward high {\GCContent}s and a complete absence of sequence with less than $30\%$ of \GC. This striking results motivates a need for methods that enable to explicitly control the \GCContent and more precisely that enable to design sequences with low \GCContent (i.e. 30\% or less).
+Before starting our benchmark, we asses the need for our methods and performed an analysis of the \GCContent drift achieved with state-of-the-art software. Using our dataset of $50$ structures, we generated $100$ samples per structure with classical softwares who do not control the \GCContent. Namely,  \RNAinverse, \INFORNA, \NUPACK and \frankenstein.  We show the distribution of the \GCContent of the sequences produced with these softwares in Fig.~\ref{fig:gcdist} those distributions.
+
+As anticipated, we observe a clear bias toward high {\GCContent}s and a complete absence of sequence with less than $30\%$ of \GC. This striking results motivates a need for methods that enable to explicitly control the \GCContent and more precisely that enable to design sequences with low \GCContent (i.e. 30\% or less). In order to provide a complete overview of the performance of \ourprog, we provide additional statistics for these software in the supplementary material.
 }
 
 \begin{figure}[ht!]
@@ -174,31 +176,18 @@ The thermodynamical stability of the target structure on the designed sequence i
 	\label{fig:freq}
 \end{figure*}
 
-%<<<<<<< HEAD
-
-%\begin{figure*}[ht!]
-%  \centering
-%  \includegraphics[width=\textwidth]{Figures/seq_identity_10_30}
-%  \caption{Sequence identity of \ourprog and \RNAinverse for $10$ and $30\%$ of \GC.}
-%\end{figure*}
-
-
-%\subsection{Global sampling vs Local search vs Glocal approach}
-
-
 %Here, we are interested in estimating the impact of the design methodology on the performances. More precisely, we aim to determine the merits of a global sampling approach (\ourprog), compared to a glocal procedure (\ourprog + \RNAinverse) and local search methodologies (\RNAinverse, \INFORNA, \NUPACK and \frankenstein). 
 %=======
 \highlight{
 \subsection{Global sampling vs Local search vs Glocal approach}
-To conclude this study, we estimate the impact of the design methodology on the performances. More precisely, we aim to determine the merits of a global sampling approach (\ourprog), compared to a glocal procedure (\ourprog + \RNAinverse) and a local search methodology (\RNASSD). To our knowledge, \RNASSD is the only other software that implements an explicit control of the \GCContent. We focus our analysis on the design of sequences with low {\GCContent}s (30\% and less) as they are almost impossible to design with classical software (See Figure~\ref{fig:gcdist}).
-%>>>>>>> af029e5428ff6e8980ef29cd0002a6fd72501bd9
 
-Our results (See Fig. \ref{fig:no_gc_controle} in Supplementary Material) indicate that a glocal approach produces sequences that are consistently more diverse than those obtained with both {\em pure} methods alone. Furthermore, while \ourprog outperforms \RNAinverse for extreme pressures on the \GCContent, \RNAinverse produces sequences with a lower sequence identity than \ourprog for the central \GCContent regime ($30\%-70\%$). 
+To conclude this study, we estimate the impact of the design methodology on the performances. More precisely, we aim to determine the merits of a global sampling approach (\ourprog), compared to a glocal procedure (\ourprog + \RNAinverse) and a local search methodology (\RNASSD). To our knowledge, \RNASSD, beside \ourprog, is the only software that implements an explicit control of the \GCContent.
 
-%<<<<<<< HEAD
-%It should be noted, however, that \RNAinverse, \INFORNA, \NUPACK  and \frankenstein produce sequences whose \GCContent is extremely concentrated (see Fig.~\ref{fig:gcdist}), thereby requiring a large number of runs before producing a suitable \GCContent sequence. Therefore, a rejection algorithm based on \RNAinverse alone should not be considered a realistic solution for the design with constrained \GCContent. 
-%=======
-It should be noted, however, than \RNAinverse produces sequences whose \GCContent is extremely concentrated (see Fig.~\ref{fig:gcdist}), thereby requiring a large number of runs before producing a suitable \GCContent sequence. Therefore, a rejection algorithm based on \RNAinverse alone should not be considered a realistic solution for the design with constrained \GCContent. 
+Here, we compare the running time and the sequence diversity of the solutions produced by each software. In addition, we focus on the design of sequences with low {\GCContent}s (30\% and less) as they are almost impossible to design with classical software (See Figure~\ref{fig:gcdist}).
+
+Figure~\ref{fig:time} shows the running time of each software. These data demonstrate the efficiency and scalability of our techniques. In particular, this figure suggests that our strategy has the potential to be applied efficiently for designing sequences on long (and difficult) target secondary structures at low \GCContent -- A task that could have not been achieved before due time requirements.
+
+Next, we show in Figure~\ref{fig:benchmark_RNASSD} the average sequence identity achieved by the various methods. Our results show that at extremely low {\GCContent}s (i.e. 10\%), \ourprog slightly outperforms \RNASSD while this advantage becomes less evident when the \GCContent increases. Our experiments on higher {\GCContent}s (i.e. 50\% and above) showed that our glocal strategy and the local search approach perform similarly. Similarly, we did not find any clear evidence that a global, local or glocal approach outperforms others when we compare at the thermodynamical stability of the target structure (data not shown).
 }
 %>>>>>>> af029e5428ff6e8980ef29cd0002a6fd72501bd9
 
@@ -207,6 +196,12 @@ It should be noted, however, than \RNAinverse produces sequences whose \GCConten
 %  \includegraphics[width=\textwidth]{Figures/seq_identity_10_30}
 %  \caption{Sequence identity of \ourprog and \RNAinverse for $10$ and $30\%$ of \GC.}
 %\end{figure*}
+\begin{figure*}[ht!]
+  \centering
+  \includegraphics[width=\textwidth]{Figures/seq_identity_10_30}
+  \caption{Sequence identity of \ourprog and \RNAinverse for $10$ and $30\%$ of \GC.}
+  \label{fig:benchmark_RNASSD}
+\end{figure*}
 
 
 
