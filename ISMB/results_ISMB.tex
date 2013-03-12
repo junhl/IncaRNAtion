@@ -139,9 +139,13 @@ where $\mathcal{Z}^s$ is the partition function of sequence $s$. This measure te
 %To compute the base pairs probabilities, we used \rnafold from the \texttt{Vienna Package 2.0} developed by~\cite{Hofacker:1994}.
 
   Figure~\ref{fig:nb_sols_entropy} shows the number of correct
-solutions as their average entropy and positions inside base pairs entropy, since 
-\ourprog  only influences the distribution of nucleotides inside 
-stacked base pairs. The most constraining factor for generating valid
+solutions \highlight{as their average sequence identity. Since \ourprog
+only influences the distribution of nucleotides inside stacked base pairs, 
+we consider the \GCContent only inside those base pairs.}
+  %entropy and positions inside base pairs entropy, since 
+%\ourprog  only influences the distribution of nucleotides inside 
+%stacked base pairs. 
+The most constraining factor for generating valid
  solutions seems to be  low \GCContent and the percentage of free nucleotides. 
 
 %Our method is able to generate 
@@ -158,9 +162,8 @@ at size of $100$ nucleotides.
 \begin{figure*}[ht!]
 	\centering
 	\includegraphics[width=\textwidth]{Figures/nb_sols_entropy}
-	\caption{Number of solutions generated and their average entropy. 
-	The last row presents only the entropy of the nucleotides inside base 
-	pairs.}
+	\caption{Number of solutions generated with \ourprog+\RNAinverse. and their average sequence identity. 
+	The second row is the sequence identity for a $10\%$\GC and the last for $30\%$\GC inside the base pairs. }
 	\label{fig:nb_sols_entropy}
 \end{figure*}
 
@@ -173,21 +176,21 @@ at size of $100$ nucleotides.
 \end{figure*}
 
 
-\begin{figure*}[ht!]
-  \centering
-  \includegraphics[width=\textwidth]{Figures/seq_identity_10_30}
-  \caption{Sequence identity of \ourprog and \RNAinverse for $10$ and $30\%$ of \GC.}
-\end{figure*}
+%\begin{figure*}[ht!]
+%  \centering
+%  \includegraphics[width=\textwidth]{Figures/seq_identity_10_30}
+%  \caption{Sequence identity of \ourprog and \RNAinverse for $10$ and $30\%$ of \GC.}
+%\end{figure*}
 
 
 \subsection{Global sampling vs Local search vs Glocal approach}
 
 
-Here, we are interested in estimating the impact of the design methodology on the performances. More precisely, we aim to determine the merits of a global sampling approach (\ourprog), compared to a glocal procedure (\ourprog + \RNAinverse) and a local search methodology (\RNAinverse). 
+Here, we are interested in estimating the impact of the design methodology on the performances. More precisely, we aim to determine the merits of a global sampling approach (\ourprog), compared to a glocal procedure (\ourprog + \RNAinverse) and local search methodologies (\RNAinverse, \INFORNA, \NUPACK and \frankenstein). 
 
-Our results (See Fig. \ref{fig:rnainverse} in Supplementary Material) indicate that a glocal approach produces sequences that are consistently more diverse than those obtained with both {\em pure} methods alone. Furthermore, while \ourprog outperforms \RNAinverse for extreme pressures on the \GCContent, \RNAinverse produces more entropic sequences than \ourprog for the central \GCContent regime ($30\%-70\%$). 
+Our results (See Fig. \ref{fig:no_gc_controle} in Supplementary Material) indicate that a glocal approach produces sequences that are consistently more diverse than those obtained with both {\em pure} methods alone. Furthermore, while \ourprog outperforms \RNAinverse for extreme pressures on the \GCContent, \RNAinverse produces sequences with a lower sequence identity than \ourprog for the central \GCContent regime ($30\%-70\%$). 
 
-It should be noted, however, than \RNAinverse produces sequences whose \GCContent is extremely concentrated (see Fig.), thereby requiring a large number of runs before producing a suitable \GCContent sequence. Therefore, a rejection algorithm based on \RNAinverse alone should not be considered a realistic solution for the design with constrained \GCContent. 
+It should be noted, however, that \RNAinverse, \INFORNA, \NUPACK  and \frankenstein produce sequences whose \GCContent is extremely concentrated (see Fig.~\ref{fig:gcdist}), thereby requiring a large number of runs before producing a suitable \GCContent sequence. Therefore, a rejection algorithm based on \RNAinverse alone should not be considered a realistic solution for the design with constrained \GCContent. 
 
 {\em Ajouter considérations Base Pair entropy: Se rappeler, que moins, c'est mieux !}
 
