@@ -9,16 +9,17 @@ Our software, \ourprog, was implemented in {\tt Python~2.7}. We used
 All time benchmarks were run on a single AMD Opteron(tm) 6278 Processor  at 2.4 GHz with cache of 512 KB.
 The penalty $\beta$, associated with invalid base-pairs, was set to $15$.
 
-\begin{figure*}[t!]
+\begin{figure}[ht!]
 	\centering
- 	\includegraphics[width=\textwidth]{Figures/time_rnastrand_clustered_rnainverse_100samples_fix}
-	\caption{Average time in seconds to generate one sequence. We explicitly show 
-	the time spent by \ourprog (full line) and \texttt{RNAinverse} (dashed) for various \GCContent. The first plot is in function
-	of the length of the structures. The second is in function of the stack
-	density (i.e. $2\cdot\#stacks/length$) and the latter in function of 
-	the proportion of free nucleotides (i.e. unpaired bases) within loops.}
+ 	\includegraphics[width=0.5\textwidth]{Figures/time_incar_rnassd}
+	\caption{
+  Average time in seconds to generate one sequence for \ourprog and \RNAinverse.}
+	%the time spent by \ourprog (full line) and \texttt{RNAinverse} (dashed) for various \GCContent. The first plot is in function
+	%of the length of the structures. The second is in function of the stack
+	%density (i.e. $2\cdot\#stacks/length$) and the latter in function of 
+	%the proportion of free nucleotides (i.e. unpaired bases) within loops.}
 	\label{fig:time}	
-\end{figure*}
+\end{figure}
 
 Figure~\ref{fig:time} presents the average times spent running \ourprog and \RNAinverse to generate one sequence
 with the required \GCContent. As expected, the time grows linearly
@@ -72,25 +73,25 @@ all \GCContent.
 
 \begin{figure*}[ht!]	
 	\centering
-	\includegraphics[width=\textwidth]{Figures/mfe_struct_solve_nornainverse.png}
+	\includegraphics[width=\textwidth]{Figures/mfe_struct_solved_vsrnainverse}
 	\caption{Quality of \ourprog results. The first row shows the percentage
-	of sampled sequences folding into the target. The second shows the 	
-	proportion	of structures for which at least one correct sequence was 
-	sampled.}
+	of sampled sequences folding into the target when using only \ourprog. The second shows 
+  after processing previous results with \RNAinverse.
+	}
 	\label{fig:mfe_struct_solved_noinverse}	
 \end{figure*}
 
 
 
-\begin{figure*}[ht!]	
-	\centering
-	\includegraphics[width=\textwidth]{Figures/mfe_struct_solved}
-	\caption{Quality of \texttt{Incarnation+RNAinverse} results. The first row shows the percentage
-	of sampled sequences folding into the target. The second shows the 	
-	proportion	of structures for which at least one correct sequence was 
-	sampled.}
-	\label{fig:mfe_struct_solved}	
-\end{figure*}
+%\begin{figure*}[ht!]	
+%	\centering
+%	\includegraphics[width=\textwidth]{Figures/mfe_struct_solved}
+%	\caption{Quality of \texttt{Incarnation+RNAinverse} results. The first row shows the percentage
+%	of sampled sequences folding into the target. The second shows the 	
+%	proportion	of structures for which at least one correct sequence was 
+%	sampled.}
+%	\label{fig:mfe_struct_solved}	
+%\end{figure*}
  
 To evaluate the global quality of \ourprog sequences, we show
 in Figure~\ref{fig:ss_sens} the ratio of well predicted base pairs in the
@@ -117,9 +118,25 @@ a much lower structural sensitivity.
 In this section, we further analyze the generated sequences that fold into the 
 target structure. 
 
+Using the same dataset of $50$ structures, we generated $100$ samples
+per structure with classical softwares who can not control the \GC content.%with \RNAinverse. They yield for most parameters
+%a high entropy.
+%Table.~\ref{tab:nb_rnainv} contains the number of samples with a given \GCContent generated
+with  \RNAinverse, \INFORNA, \NUPACK and \frankenstein.  We present in Fig.~\ref{fig:gcdist} those distributions. They have a highly concentrated distribution of \GC content showing one of theirs major deficiencies, with no sequence below $30\%$\GC. Therefore the need to be able to explicitly
+ control the \GC content.
+
+\begin{figure}[ht!]
+  \begin{center}
+    \includegraphics[width=0.5\textwidth]{Figures/histograme_5_gc_distribution_nornaexinv.png}
+  \end{center}
+  \caption{Overall \GCContent distribution for sequences designed using \RNAinverse, \INFORNA, \NUPACK and \frankenstein folding in the desired structure.}
+  \label{fig:gcdist}
+\end{figure}
+
+
 A desirable feature in sequence design, is to produce samples with a high
-diversity but with a conserved structure.
-Two useful measures are the positional entropy and the base pair entropy.
+diversity.
+Two useful measures are the positional entropy and the sequence identity. %base pair entropy.
 The positional entropy is defined as:
 \begin{align}
   \sum_{\substack{i\\b \in (\Ab,\Cb,\Gb,\Ub)}} -p_{i\to b}\cdot \log_4(p_{i\to b}) &&& \text{(Positional entropy)}
@@ -127,18 +144,24 @@ The positional entropy is defined as:
 \end{align}
 where $p_{i\to b}$ is the proportion of nucleotides $b$ at position $i$.
 Intuitively, this measure captures the variability of sequences generated by a given method.
-The base pair entropy is defined as:
+The positional entropy is defined over a set $\mathcal{S}$ of sequences of equal length as follows:
 \begin{align}
-  \sum_{i<j}-p_{i,j}\cdot \log_2(p_{i,j})&&& \text{(Base-Pair entropy)}
-  \label{eq:bpentropy}
+  \sum_{s^1,s^2 \in\mathcal{S}\times\mathcal{S}}\left(\frac{1}{|s^1|}{\sum_{\substack{i\\s^1_i\equiv s^2_i}}1}\right) &&& \text{Seq. identity}
 \end{align}
-where $p_{i,j}$ is the Boltzman probability, i.e. probability that a random structure drawn with respect to 
-the Boltzmann distribution forms a base-pair between positions $i$ and $j$. The base pair entropy reflects
-the distribution of structures weights in the Boltzmann ensemble. Thus, a low base pair entropy implies a highly conserved structure.
-To compute the base pairs probabilities, we used \rnafold from the \texttt{Vienna Package 2.0} developed by~\cite{Hofacker:1994}.
+where $s_i$ is the nucleotide at position $i$ in sequence $s$. The sequence identity is the ratio of perfectly conserved positions over
+all pairwise sequences in the set. It reflects how over all the sequences the same positions are conserved. 
+%The base pair entropy is defined as:
+%\begin{align}
+%  \sum_{i<j}-p_{i,j}\cdot \log_2(p_{i,j})&&& \text{(Base-Pair entropy)}
+%  \label{eq:bpentropy}
+%\end{align}
+%where $p_{i,j}$ is the Boltzman probability, i.e. probability that a random structure drawn with respect to 
+%the Boltzmann distribution forms a base-pair between positions $i$ and $j$. The base pair entropy reflects
+%the distribution of structures weights in the Boltzmann ensemble. Thus, a low base pair entropy implies a highly conserved structure.
+%To compute the base pairs probabilities, we used \rnafold from the \texttt{Vienna Package 2.0} developed by~\cite{Hofacker:1994}.
 
   Figure~\ref{fig:nb_sols_entropy} shows the number of correct
-solutions as their average entropy and base pair entropy, since 
+solutions as their average entropy and positions inside base pairs entropy, since 
 \ourprog  only influences the distribution of nucleotides inside 
 stacked base pairs. The most constraining factor for generating valid
  solutions seems to be  low \GCContent and the percentage of free nucleotides. 
@@ -153,10 +176,16 @@ there is a slow decline of the frequency with the increase in size. Yet,
 for an average \GCContent, the frequency stays over $10\%$ even
 at size of $100$ nucleotides.
 
+\begin{figure*}[ht!]
+  \centering
+  \includegraphics[width=\textwidth]{Figures/seq_identity_10_30}
+  \caption{Sequence identity of \ourprog and \RNAinverse for $10$ and $30\%$ of \GC.}
+\end{figure*}
+
 
 \begin{figure*}[ht!]
 	\centering
-	\includegraphics[width=\textwidth]{Figures/nb_sols_entropy.png}
+	\includegraphics[width=\textwidth]{Figures/nb_sols_entropy}
 	\caption{Number of solutions generated and their average entropy. 
 	The last row presents only the entropy of the nucleotides inside base 
 	pairs.}
@@ -179,7 +208,7 @@ Here, we are interested in estimating the impact of the design methodology on th
 
 Our results (See Fig. \ref{fig:rnainverse} in Supplementary Material) indicate that a glocal approach produces sequences that are consistently more diverse than those obtained with both {\em pure} methods alone. Furthermore, while \ourprog outperforms \RNAinverse for extreme pressures on the \GCContent, \RNAinverse produces more entropic sequences than \ourprog for the central \GCContent regime ($30\%-70\%$). 
 
-It should be noted, however, than \RNAinverse produces sequences whose \GCContent is extremely concentrated (see Table~\ref{tab:nb_rnainv} in Supplementary Material), thereby requiring a large number of runs before producing a suitable \GCContent sequence. Therefore, a rejection algorithm based on \RNAinverse alone should not be considered a realistic solution for the design with constrained \GCContent. 
+It should be noted, however, than \RNAinverse produces sequences whose \GCContent is extremely concentrated (see Fig.), thereby requiring a large number of runs before producing a suitable \GCContent sequence. Therefore, a rejection algorithm based on \RNAinverse alone should not be considered a realistic solution for the design with constrained \GCContent. 
 
 {\em Ajouter considérations Base Pair entropy: Se rappeler, que moins, c'est mieux !}
 
