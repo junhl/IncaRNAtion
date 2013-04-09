@@ -877,7 +877,7 @@ def help():
     -m <int> 
       The max penality for an invalid base pair, -1 for infinity
     -b <int> 
-      print 'n' optimal sequences
+      print 'n' stochasticly backtracked sequences
     -no_profile <> 
       Doesn't output a profile
     -s_gc <target_gc> <nb_samples> 
