@@ -276,7 +276,9 @@ The general recursion scheme consists in three different terms, depending on the
 Remark that the number of combinations of $a$, $b$ and $\N$ remains bounded by a constant, thus the complexity of computing $\Z{\N,\Struct}{a,b}$ mainly depends on the values taken by $\Struct$ upon subsequent recursive calls. Such values are entirely determined by $\Struct$ at any given step of the recursion, and their dependency can be summarized in a tree having $\Theta(|\Struct|)$. Therefore, the computation of $\Z{\N,\Target}{a,b}$ requires $\Theta(n)$ time and space using dynamic-programming.
 
 \begin{figure*}
-\resizebox{\linewidth}{!}{\input{Waldispuhl.337.fig.1.pgf}}
+%\resizebox{\linewidth}{!}{\input{{Waldispuhl.337.fig.1}.pdf}}
+  \centering
+  \includegraphics[width=\textwidth]{{Waldispuhl.337.fig.1}.pdf}
 \caption{Stochastic backtrack procedure for a given substructure $\Struct$: Either the first position is left unpaired (top), a base-pair is formed between the two extremities, stacking onto an exterior base-pair (middle), or paired without creating a stacking, defining two regions on which subsequent recursive calls are needed (bottom). For the empty structure (omitted here), the empty sequence is returned. Positions indicated in red are assigned at the current stage of the backtrack.\label{fig:stochastic}}
 \end{figure*}
 
@@ -335,7 +337,9 @@ Once the \GCWeighted partition functions have been computed and memorized, a sto
 
 
 \begin{figure}
-\resizebox{\linewidth}{!}{\input{Waldispuhl.337.fig.2.pgf}}
+%\resizebox{\linewidth}{!}{\input{{Waldispuhl.337.fig.2}.pdf}}
+  \centering
+  \includegraphics[width=0.45\textwidth]{{Waldispuhl.337.fig.2}.pdf}
 \caption{General workflow of our adaptive sampling algorithm~\protect\citep{Waldispuhl2011}.}
 \label{fig:workflow}
 \end{figure}
