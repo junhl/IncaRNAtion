@@ -378,6 +378,11 @@ Our software, \ourprog, was implemented in {\tt Python~2.7}. We used
 All time benchmarks were run on a single AMD Opteron(tm) 6278 Processor  at 2.4 GHz with cache of 512 KB.
 The penalty $\beta$, associated with invalid base-pairs, was set to $15$.
 
+
+Figure~\ref{fig:time} presents the average times spent running \ourprog+\RNAinverse to generate one sequence
+with the required \GCContent. As expected, the time grows linearly
+in function of the length of the structures for \ourprog.  
+
 \begin{figure}[ht!]
 	\centering
  	\includegraphics[width=0.5\textwidth]{{Waldispuhl.337.fig.3}.pdf}
@@ -385,10 +390,6 @@ The penalty $\beta$, associated with invalid base-pairs, was set to $15$.
   Average time in seconds to generate one sequence for \ourprog and \RNAinverse.}
 	\label{fig:time}	
 \end{figure}
-
-Figure~\ref{fig:time} presents the average times spent running \ourprog+\RNAinverse to generate one sequence
-with the required \GCContent. As expected, the time grows linearly
-in function of the length of the structures for \ourprog.  
 
 
 
