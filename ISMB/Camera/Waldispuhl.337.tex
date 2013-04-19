@@ -275,10 +275,19 @@ The general recursion scheme consists in three different terms, depending on the
 
 Remark that the number of combinations of $a$, $b$ and $\N$ remains bounded by a constant, thus the complexity of computing $\Z{\N,\Struct}{a,b}$ mainly depends on the values taken by $\Struct$ upon subsequent recursive calls. Such values are entirely determined by $\Struct$ at any given step of the recursion, and their dependency can be summarized in a tree having $\Theta(|\Struct|)$. Therefore, the computation of $\Z{\N,\Target}{a,b}$ requires $\Theta(n)$ time and space using dynamic-programming.
 
+\begin{figure}
+%\resizebox{\linewidth}{!}{\input{{Waldispuhl.337.fig.2}.pdf}}
+  \centering
+  \includegraphics[width=0.45\textwidth]{{Waldispuhl.337.fig.1}.pdf}
+\caption{General workflow of our adaptive sampling algorithm~\protect\citep{Waldispuhl2011}.}
+\label{fig:workflow}
+\end{figure}
+
+
 \begin{figure*}
 %\resizebox{\linewidth}{!}{\input{{Waldispuhl.337.fig.1}.pdf}}
   \centering
-  \includegraphics[width=\textwidth]{{Waldispuhl.337.fig.1}.pdf}
+  \includegraphics[width=\textwidth]{{Waldispuhl.337.fig.2}.pdf}
 \caption{Stochastic backtrack procedure for a given substructure $\Struct$: Either the first position is left unpaired (top), a base-pair is formed between the two extremities, stacking onto an exterior base-pair (middle), or paired without creating a stacking, defining two regions on which subsequent recursive calls are needed (bottom). For the empty structure (omitted here), the empty sequence is returned. Positions indicated in red are assigned at the current stage of the backtrack.\label{fig:stochastic}}
 \end{figure*}
 
@@ -336,14 +345,6 @@ Once the \GCWeighted partition functions have been computed and memorized, a sto
 
 
 
-\begin{figure}
-%\resizebox{\linewidth}{!}{\input{{Waldispuhl.337.fig.2}.pdf}}
-  \centering
-  \includegraphics[width=0.45\textwidth]{{Waldispuhl.337.fig.2}.pdf}
-\caption{General workflow of our adaptive sampling algorithm~\protect\citep{Waldispuhl2011}.}
-\label{fig:workflow}
-\end{figure}
-
 \subsubsection{Self-adaptive sampling strategy}
 
 Let us remind that our goal is to produce a set of sequences whose \GCContent matches a prescribed value $gc$.
@@ -365,7 +366,7 @@ Furthermore, the distribution of \GCContent is highly concentrated, as asserted 
 
 \subsection{Postprocessing unpaired regions: A local/global (glocal) hybrid approach}
 \label{subsec:glocal_method}
-Due to our simplified energy model, unpaired regions are not subject to design constraints other than the \GCContent, leading to modest probabilities for refolded design candidates to match the targeted structure. To improve these performances and test the complementarity  of our global sampling approach with previous contributions based on local search, we used the \RNAinverse software to redesign unpaired regions. We specified a constraint mask to prevent stacking base-pairs from being modified and, whenever necessary, reestablished their content {\em a posteriori}, as \RNAinverse has been witnessed to take some liberties with constraints masks. As shown in Table~\ref{table:impact_on_gc} (Supplementary material), this postprocessing does not drastically alter the \GCContent, so the glocal approach reasonably addresses the constrained \GCContent design problem.
+Due to our simplified energy model, unpaired regions are not subject to design constraints other than the \GCContent, leading to modest probabilities for refolded design candidates to match the targeted structure. To improve these performances and test the complementarity  of our global sampling approach with previous contributions based on local search, we used the \RNAinverse software to redesign unpaired regions. We specified a constraint mask to prevent stacking base-pairs from being modified and, whenever necessary, reestablished their content {\em a posteriori}, as \RNAinverse has been witnessed to take some liberties with constraints masks. As shown in the supplementary material, this postprocessing does not drastically alter the \GCContent, so the glocal approach reasonably addresses the constrained \GCContent design problem.
 
 \section{Results}
 \label{sec:results}
@@ -401,7 +402,7 @@ To ease the visualization of results, we clustered together structures
 having similar length, stacks density and proportion of free nucleotides in loops,
 leading to distributions of structures shown in Figure~\ref{fig:bins}.
 
- \begin{figure*}[ht!]
+ \begin{figure*}[hb!]
  	\centering
 	\includegraphics[width=\textwidth]{{Waldispuhl.337.fig.4}.pdf}
 	\caption{Number of secondary structures per bin, according to our three clustering criteria.}
@@ -417,7 +418,7 @@ Before starting our benchmark, we asses the need for our methods and performed a
 As anticipated, we observe a clear bias toward high {\GCContent}s and a complete absence of sequence with less than $30\%$ of \GC. This striking results motivates a need for methods that enable to explicitly control the \GCContent and more precisely that enable to design sequences with low \GCContent (i.e. 30\% or less). In order to provide a complete overview of the performance of \ourprog, we provide additional statistics for these software in the supplementary material.
 
 
-\begin{figure}[ht!]
+\begin{figure}[hb!]
   \begin{center}
     \includegraphics[width=0.5\textwidth]{{Waldispuhl.337.fig.5}.pdf}
   \end{center}
