@@ -1,0 +1,95 @@
+%!TEX root = ../vreinharz_RECOMB2013_talk.tex
+\begin{tikzpicture}
+
+ \newcommand{\BSep}{9pt}
+ \newcommand{\HSep}{250pt}
+  \tikzstyle{base}=[circle,draw,thick,inner sep=0,minimum width=15pt,fill=white]
+  \tikzstyle{basesmall}=[circle,draw,thick,inner sep=0,minimum width=10pt,fill=white]
+  \tikzstyle{basephantom}=[base,dashed]
+  \tikzstyle{linez}=[draw,snake=coil, segment aspect=.2,%
+line after snake=0pt, 
+        segment length=10pt,thick]
+  \tikzstyle{lined}=[linez,draw,snake=none,thick]
+  \tikzstyle{line}=[linez,draw,snake=none,thick]
+  \tikzstyle{bp}=[in=90,out=90,draw,line width=1.5pt,blue,looseness=1.2]
+  \tikzstyle{redbp}=[in=90,out=90,draw,line width=1.5pt,red,looseness=1.2]
+  \tikzstyle{greenbp}=[in=90,out=90,draw,line width=1.5pt,green,looseness=1.2]
+  \tikzstyle{inblock}=[trapezium,trapezium angle=83, fill=blue!20, draw=blue!40,line width=1.5pt, inner sep=0]
+   \tikzstyle{outblock}=[trapezium,trapezium angle=83, fill=red!50, draw=red!40,line width=1.5pt, inner sep=0]
+  \tikzstyle{lbl}=[inner sep=0]
+  \tikzstyle{arr}=[line width=1.3pt,->]
+%
+\node[basephantom] (a-0) at (0,0) {};
+\node[lbl,below=3pt of a-0] (i-0) {$-$};
+
+
+\foreach \i in {1,...,17}
+{
+	\pgfmathtruncatemacro\j{\i - 1}
+
+	\ifthenelse{\not\(\i = 9\)}{
+		\ifthenelse{\not\(\i = 15\)}{
+			\node[right=\BSep of a-\j, base] (a-\i) {};
+		}
+		{	
+			\node[right=\BSep of a-\j, base] (a-\i) {$y$};		
+		}
+	}
+	{
+	\node[right=\BSep of a-\j, base] (a-\i) {$x$};
+	}
+	\node[lbl,below=3pt of a-\i] (i-\i) {$\i$};
+	\path[lined] (a-\j) -- (a-\i);
+}
+
+\node[right=\BSep of a-17, basephantom] (a-18) {};
+\node[lbl,below=3pt of a-18] (i-18) {$-$};
+\path[lined] (a-17) -- (a-18);
+
+\draw[bp] (a-2) to (a-17);
+\draw[bp] (a-3) to (a-16);
+\draw[bp] (a-4) to (a-8);
+\draw[bp] (a-10) to (a-14);
+
+\alt<1>{\draw[greenbp] (a-9) to (a-15);}	
+	{\draw[redbp] (a-9) to (a-15);}
+
+\begin{pgfonlayer}{background}	
+	\visible<2->{
+	\coordinate (northr1) at ($ (a-12.north) + (0,5pt) $);
+  \node[rectangle,inner sep=2pt,fit=(a-10.west) (northr1) (a-14.east) (i-10) (i-14)] (r1) {};
+  \path[inblock]   (r1.south west) to  (r1.south east) to (r1.north east) 		to[out=90,in=90] (r1.north west) to (r1.south west) ;
+  \node[below=-10pt of r1.north] (m1) {\scalebox{1.5}{$m$}};
+  	\node[below=15pt of a-12] (inside) {\scalebox{1.4}{$\mathds{Z}\text{ Inside}$}};
+	}
+	\visible<2>{
+	  \node[above=170pt of a-6] (total) {\scalebox{1.8}{$\mathds{Z}(\text{ Inside}\mid nt_9=x\text{ and }nt_{15}=y)\times$}};
+	  \node[below=0pt of total] (nut) {\scalebox{1.8}{$m\text{ mutations}$}};
+	}
+
+
+
+\end{pgfonlayer}{background}
+
+\begin{pgfonlayer}{background}
+	\visible<3->{
+	\coordinate (northr1) at ($ (a-12.north) + (0,10pt) $);
+	\node[rectangle,inner sep=2pt,fit=(a-9.west) (northr1) (a-15.east) (i-9.south) (i-15.south)] (r1) {};
+	\coordinate (northr2) at ($ (a-9.north) + (0,8pt) $);
+	\node[rectangle,inner sep=2pt, fit=(a-0.west) (northr2) (a-18.east) (i-0.south) (i-18.south)] (r2) {};
+\path[outblock] (r1.south west) to (r2.south west) to (r2.north west) to[out=90,in=90] (r2.north east) to (r2.south east) to (r1.south east) to (r1.north east) to[out=90,in=90] (r1.north west) to (r1.south west);
+	  	\node[below=15pt of a-5] (outside) {\scalebox{1.4}{$\mathds{Z}\text{ Outside}$}};
+		  \node[below=-80pt of r2.north] (m2) {\scalebox{1.5}{$m'$}};
+	}
+	\visible<3>{
+		\node[above=170pt of a-10] (total) {\scalebox{1.8}{$\mathds{Z}(\text{ Inside}\mid nt_9=x	\text{ and }nt_{15}=y)\times\mathds{Z}(\text{ Outside}\mid nt_9=x\text{ and }nt_{15}=y)$}};
+			\node[below=0pt of total] (nut) {\scalebox{1.8}{$m\text{ mutations }+ m'\text{ mutations }=k$}};
+	}
+	\visible<4>{
+	\node[above=170pt of a-10] (total) {\scalebox{1.8}{$\displaystyle\frac{\mathds{Z}(\text{ Inside}\mid nt_9=x	\text{ and }nt_{15}=y)\times\mathds{Z}(\text{ Outside}\mid nt_9=x\text{ and }nt_{15}=y)}{\mathds{Z}}$}};
+			\node[below=0pt of total] (nut) {\scalebox{1.8}{$m\text{ mutations }+ m'\text{ mutations }=k$}};
+	}
+\end{pgfonlayer}{background}
+
+
+\end{tikzpicture}

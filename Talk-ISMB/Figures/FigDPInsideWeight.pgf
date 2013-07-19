@@ -1,0 +1,172 @@
+\usetikzlibrary{shapes.multipart}
+\begin{tikzpicture}
+
+  \newcommand{\BSep}{9pt}
+  \newcommand{\HSep}{300pt}
+  \tikzstyle{base}=[circle,draw,thick,inner sep=0,minimum width=15pt,fill=white]
+  \tikzstyle{basesmall}=[circle,draw,thick,inner sep=0,minimum width=10pt,fill=white]
+  \tikzstyle{basephantom}=[base,dashed]
+  \tikzstyle{linez}=[draw,snake=coil, segment aspect=.2,%
+line after snake=0pt, 
+        segment length=10pt,thick]
+  \tikzstyle{lined}=[linez,draw,snake=none,thick]
+  \tikzstyle{line}=[linez,draw,snake=none,thick]
+  \tikzstyle{bp}=[in=90,out=90,draw,line width=1.5pt,blue,looseness=1.7]
+  \tikzstyle{block}=[trapezium,trapezium angle=83, fill=blue!20, draw=blue!40,line width=1.5pt, inner sep=0]
+  \tikzstyle{lbl}=[inner sep=0]
+  \tikzstyle{arr}=[line width=1.3pt,->]
+  
+%  \begin{tikzpicture}[every text node part/.style={align=left}]
+
+  
+
+
+
+  \node[base] (a-1) at (0,0) {$s_i$};
+  \node[base] (a-2) at (3,0) {$s_j$};
+  \node[left=\BSep of a-1, basephantom] (a-0) {$a$};
+  \node[right=\BSep of a-2, basephantom] (a-3) {$b$};
+  \node[right=0 of a-3] (x) {};
+
+
+  \path[linez] (a-1) --  node[pos=.5,above=5pt] (lbl1) {}  (a-2);
+  \path[lined] (a-0) -- (a-1);
+  \path[lined] (a-2) -- (a-3);
+  \node[lbl,below=3pt of a-1] (c1) {$i$};
+  \node[lbl,below=3pt of a-2] (c2) {$j$};
+
+
+
+  \begin{pgfonlayer}{background}
+  \node[rectangle,inner sep=2pt,draw,fit=(a-1.west)(a-2.east) (c1) (c2)] (r1) {};
+  \path[block]   (r1.south west) to  (r1.south east) to (r1.north east) to[out=90,in=90] (r1.north west) to (r1.south west) ;
+  \end{pgfonlayer}{background}
+  
+%\coordinate (seq_space) at ($ (r1.north west) + (-25pt, 100pt) $);
+%\node[align=left,right=0pt of seq_space] (ex_seq) {\huge Explore sequence space\\\huge Structure fixed};
+%%\node[above=0pt of ex_seq] {\huge Structure fixed};
+% \visible<5->{
+% 	\node[below=0pt of r1] {\huge Only $1$ case applies};
+%}
+
+
+\visible<2,5>{
+\begin{scope}[xshift=\HSep,yshift=130pt]
+  \node[base] (a-1) at (0,0) {\color{red}$a'$};
+  \node[basesmall,right=\BSep of a-1] (a-1b)  {};
+  \node[basesmall] (a-2) at (5,0) {};
+  \node[left=\BSep of a-1, basephantom] (a-0) {$a$}; 
+  \node[right=\BSep of a-2, basephantom] (a-3) {$b$};
+  \path[linez] (a-1b) -- node[pos=.5,above=5pt] (lbl1) {} (a-2);
+  \path[line] (a-1) -- (a-1b);
+  \path[lined] (a-0) -- (a-1);
+  \path[lined] (a-2) -- (a-3);
+  \node[below=3pt of a-1b, inner sep=0] (c1) {$i+1$};
+  \node[below=3pt of a-2, inner sep=0] (c2) {$j$};
+	\node[left=0pt of a-0] (sum_a-0) {\scalebox{1.5}{$\displaystyle\sum_{a'}\mathds{P}(a')$}};
+  \node[yshift=-10pt] at ($ (sum_a-0.west) + (5pt,-10pt) $) (y1) {};
+
+\begin{pgfonlayer}{background}
+  \node[rectangle,inner sep=2pt,fit=(a-1b.west)(a-2.east) (c1) (c2)] (r1) {};
+  \visible<2,5>{
+  \path[block]   (r1.south west) to  (r1.south east) to (r1.north east) to[out=90,in=90,looseness=.7] (r1.north west) to (r1.south west) ;
+  \path (a-0) to node[midway,yshift=-3.5em] {\relsize{+2}[Position $i$ unpaired]} (a-3);
+	}
+  \end{pgfonlayer}{background}
+
+	\end{scope}
+	\draw[arr] (x) -- (y1);
+}
+
+\visible<4->{
+\begin{scope}[xshift=\HSep,yshift=-90pt]
+  \node[base] (a-1) at (0,0) {\color{red}$a'$};
+  \node[base] (a-p) at (3,0) {\color{red}$b'$};
+
+  \node[basesmall,right=\BSep of a-1] (a-1b) {};
+  \node[basesmall,left=\BSep of a-p] (a-pb)  {};
+  \node[basesmall,right=\BSep of a-p] (a-pa)  {};
+
+  \node[basesmall] (a-2) at (5,0) {};
+  \node[left=\BSep of a-1, basephantom] (a-0) {$a$};
+  \node[right=\BSep of a-2, basephantom] (a-3) {$b$};
+
+  
+  \path[linez] (a-1b) -- node[pos=.5,above=5pt,text width = 5em,text centered] (lbl1) {} (a-pb);
+  \path[linez] (a-pa) -- node[pos=.5,above=5pt] (lbl2) {} (a-2);
+
+  \path[line] (a-1) -- (a-1b);
+  \path[line] (a-pb) -- (a-p);
+  \path[line] (a-pa) -- (a-p);
+
+  \path[lined] (a-0) -- (a-1);
+  \path[lined] (a-2) -- (a-3);
+  \node[lbl,below=3pt of a-1b] (c1) {$i+1$};
+  \node[lbl,below=3pt of a-2] (c5){$j$};
+  \node[lbl,below=3pt of a-p] (c3) {$k$};
+  \node[lbl,below=3pt of a-pb] (c2){$k-1$};
+  \node[lbl,below=3pt of a-pa] (c4){$k+1$};
+
+  \draw[bp]  (a-1) to (a-p);
+ 	\node[left=0pt of a-0] (sum_a-0) {\scalebox{1.5}{$\displaystyle\sum_{a',b'}\mathds{P}(a')\mathds{P}(b')$}};
+
+  \node[yshift=-0pt,xshift=2pt] at ($ (sum_a-0.north west) + (0pt,0)$) (y2) {};
+
+\begin{pgfonlayer}{background}
+	\visible<4,5>{
+  \node[rectangle,inner sep=2pt,fit=(a-1b.west)(a-pb.east) (c1) (c2)] (r1) {};
+  \path[block]   (r1.south west) to (r1.south east) to (r1.north east) to[out=90,in=90,looseness=1.8] (r1.north west) to (r1.south west) ;
+
+  \node[rectangle,inner sep=2pt,fit=(a-pa.west)(a-2.east) (c4) (c5)] (r2) {};
+  \path[block]   (r2.south west) to (r2.south east) to (r2.north east) to[out=90,in=90,looseness=1.8] (r2.north west) to (r2.south west) ;
+
+  \path (a-0) to node[midway,yshift=-3.5em] {\relsize{+2}[Position $i$ paired with $k$]} (a-3);
+  }
+  \end{pgfonlayer}{background}
+
+\end{scope}
+\draw[arr] (x) -- (y2);
+}
+
+
+\visible<3,5>{
+\begin{scope}[xshift=\HSep,yshift=10pt]
+  \node[base] (a-1) at (0,0) {\color{red}$a'$};
+  \node[base] (a-2) at (5,0) {\color{red}$b'$};
+
+  \node[basesmall,right=\BSep of a-1] (a-1b) {};
+  \node[basesmall,left=\BSep of a-2] (a-2b)  {};
+
+  \node[left=\BSep of a-1, basephantom] (a-0) {$a$};
+  \node[right=\BSep of a-2, basephantom] (a-3) {$b$};
+
+  \path[linez] (a-1b) -- node[pos=.5,above=5pt] (lbl1) {} (a-2b);
+
+  \path[line] (a-1) -- (a-1b);
+  \path[line] (a-2) -- (a-2b);
+  \path[lined] (a-0) -- (a-1);
+  \path[lined] (a-2) -- (a-3);
+  \node[lbl,below=3pt of a-1b] (c1) {$i+1$};
+  \node[lbl,below=3pt of a-2b] (c2){$j-1$};
+
+  \draw[bp,looseness=1.1]  (a-1) to (a-2);
+  \draw[bp,looseness=1.1]  (a-0) to (a-3);
+   	\node[left=0pt of a-0] (sum_a-0) {\scalebox{1.5}{$\displaystyle\sum_{a',b'}\mathds{P}(a')\mathds{P}(b')$}};
+  \node[xshift=0pt] at ($ (sum_a-0.west) + (0pt,0) $) (y3) {};
+
+
+
+\begin{pgfonlayer}{background}
+  \node[rectangle,inner sep=2pt,fit=(a-1b.west)(a-2b.east) (c1) (c2)] (r1) {};
+  \visible<3,5->{
+  \path[block]   (r1.south west) to  (r1.south east) to (r1.north east) to[out=90,in=90,looseness=.9] (r1.north west) to (r1.south west) ;
+  \path (a-0) to node[midway,yshift=-3.5em] {\relsize{+2}[Paired ends + Stacking pairs]} (a-3);}
+  \end{pgfonlayer}{background}
+
+
+
+\end{scope}
+\draw[arr] (x) -- (y3);
+}
+
+\end{tikzpicture}

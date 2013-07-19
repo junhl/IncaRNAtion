@@ -1,0 +1,2 @@
+.(((...)((...))))
+python IncaRNAtion.py -d data.txt -a 1 -no_profile -s_gc 0.15 1000 -gc_data dump_gc_data.txt -gc_max_err 0.05

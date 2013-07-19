@@ -1,0 +1,94 @@
+%!TEX root = ../vreinharz_RECOMB2013_talk.tex
+\usetikzlibrary{shapes.multipart}
+
+\newcommand{\SideEllRef}{15pt}
+\newcommand{\TopEllRef}{15pt}
+\newcommand{\BottomEllRef}{15pt}
+\newcommand{\TopEll}{-20pt}
+
+%\pgfdeclareimage[width=230pt,height=3em]{logo}{Figures/logo.png}
+\pgfdeclareimage[width=0.5\textwidth]{boltz}{Figures/convergence_1}
+
+
+\begin{tikzpicture}[every text node part/.style={align=center}]
+
+
+\node[] (seq) at (0,0) {$\large \text{\texttt{UGGUUUC}}\cdots\text{\texttt{AACCCA}}$};
+
+\coordinate (c-west) at ($ (seq.west) + (\SideEllRef,0) $);
+\coordinate (c-east) at ($ (seq.east) - (\SideEllRef,0) $);
+\coordinate (c-north) at ($ (seq.north) + (0,\TopEllRef) $);
+\coordinate (c-south) at ($ (seq.south) - (0,\BottomEllRef) $);
+
+\node[ellipse,fit=(c-west) (c-east) (c-north) (c-south),line width=2pt,color=black] (e0) {};
+%\node[above=\TopEll of e0] {\Large no mutation};
+
+\node[ellipse,fit=(e0),line width=2pt,color=black] (e1) {};
+\node[above=\TopEll of e1] {\Large 1 mutation};
+
+
+\node[ellipse,fit=(e1),line width=2pt,color=black] (e2) {};
+\node[above=-25pt of e2.north] {\huge 2 mutations};
+
+\node[ellipse,fit=(e2),line width=2pt,color=black] (e3) {};
+\node[above=-37pt of e3.north] {\huge $m$ mutations\\\huge$\vdots$};
+
+\begin{pgfonlayer}{background}
+	%\visible<5->{
+	\node[ellipse,fit=(e2),draw, line width=2pt,color=black, fill=gray!50] {};
+	%}
+	%\visible<4->{
+	\node[ellipse,fit=(e1),draw, line width=2pt,color=black, fill=gray!30] {};
+	%}
+	%\visible<3->{
+	\node[ellipse,fit=(e0),draw, line width=2pt,color=black, fill=gray!10] {};
+	%}
+	\node[ellipse,draw, fit=(c-west) (c-east) (c-north) (c-south),line width=2pt,color=black, fill=white] {};
+\end{pgfonlayer}{background}
+
+
+
+\coordinate (coord_boltz_fig) at ($ (e3.south east) + (200pt,100pt) $);
+
+
+\node[right=10pt of coord_boltz_fig] (boltz_fig) {\pgfbox[right,top]{\pgfuseimage{boltz}}};
+
+
+\node[above=20pt of e3] (MSE){\texttt{UGGUUU{\color{black}C}CUGCUUCA{\color{black}A}CAGUGC{\color{black}U}UGAACG{\color{black}G}AACCCA}\\
+												\texttt{UGGGUU{\color{black}C}CUGCUUCA{\color{black}A}CAGUGC{\color{black}U}UGAAUG{\color{black}G}AACCCA}\\
+												\texttt{GAGGUU{\color{black}C}UUGCUUCA{\color{black}G}CAGUGU{\color{black}U}UGGACG{\color{black}G}AACCUC}\\
+												\texttt{CGGUUU{\color{black}C}CCGCUUCA{\color{black}A}CAGUGC{\color{black}U}UGGACG{\color{black}G}AAGCCG}\\
+															\texttt{CCGAUU{\color{black}U}GUGCUUCA{\color{black}A}CAGUGA{\color{black}U}UGUACC{\color{black}G}AAACAG}};
+\draw [line width=1.5pt,decoration={brace},decorate] (MSE.south west) -- (MSE.north west);
+\node [left=10pt of MSE] {\scalebox{1.5}{$\text{\large MSE }(\Omega)$}};
+
+\node[right=40pt of MSE] (rnapyro) {\Huge \color{red}\texttt{RNAPyro}};
+
+%\visible<2->{
+\coordinate (arrow1) at ($ (rnapyro.south) - (40pt,0) $);
+\path[->]<1-> (e0.east) edge [bend right=30,line width=2] (arrow1);
+\coordinate (arrow5) at ($ (rnapyro.east) - (0,10pt) $);
+\coordinate (arrow6) at ($ (boltz_fig) - (30pt,10pt) $);
+\path[->]<1-> (arrow6) edge [bend right=15,line width=2,color=blue] node[above,sloped] {\color{black}\huge Stacking Energy}  (arrow5);
+\coordinate (arrow6) at ($ (rnapyro.north) + (0,10pt) $);
+\path[->]<1-> (MSE.north) edge [bend left=55,line width=2,color=blue] node[above] {\color{black}\huge Isostericity} (arrow6);
+%}
+
+%\visible<3->{
+\coordinate (arrow2) at ($ (rnapyro.south) - (20pt,0) $);
+\path[->]<1-> (e1.east) edge [bend right=30,line width=2] (arrow2);
+%}
+
+%\visible<4->{
+\coordinate (arrow3) at ($ (rnapyro.south) - (0pt,0) $);
+\path[->]<1-> (e2.east) edge [bend right=22,line width=2] (arrow3);
+%}
+
+%\visible<5->{
+\coordinate (arrow4) at ($ (rnapyro.south) + (20pt,0) $);
+\path[->]<1-> (e3.east) edge [bend right=10,line width=2] (arrow4);
+%}
+
+
+					
+\end{tikzpicture}

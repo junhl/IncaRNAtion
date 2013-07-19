@@ -1,0 +1,96 @@
+%!TEX root = ../vreinharz_RECOMB2013_talk.tex
+\usetikzlibrary{shapes.multipart}
+
+\newcommand{\Lowrec}{-70pt}
+
+
+\pgfdeclareimage[width=230pt,height=3em]{logo}{Figures/logo.png}
+
+\begin{tikzpicture}[every text node part/.style={align=left}]
+
+
+\visible<1-3>{\node[] (MSA) at (0,0) {\texttt{UGGUUU{\color{black}C}CUGCUUCA{\color{black}A}CAGUGC{\color{black}U}UGAACG{\color{black}G}AACCCA}\\
+												\texttt{UGGGUU{\color{black}C}CUGCUUCA{\color{black}A}CAGUGC{\color{black}U}UGAAUG{\color{black}G}AACCCA}\\
+												\texttt{GAGGUU{\color{black}C}UUGCUUCA{\color{black}G}CAGUGU{\color{black}U}UGGACG{\color{black}G}AACCUC}\\
+												\texttt{CGGUUU{\color{black}C}CCGCUUCA{\color{black}A}CAGUGC{\color{black}U}UGGACG{\color{black}G}AAGCCG}\\
+															\texttt{CCGAUU{\color{black}U}GUGCUUCA{\color{black}A}CAGUGA{\color{black}U}UGUACC{\color{black}G}AAACAG}};}
+
+\visible<4>{\node[] (MSE) at (0,0) {\texttt{UGGUUU{\color{black}C}CUGCUUCA{\color{blue}A}CAGUGC{\color{blue}U}UGAACG{\color{black}G}AACCCA}\\
+												\texttt{UGGGUU{\color{black}C}CUGCUUCA{\color{blue}A}CAGUGC{\color{blue}U}UGAAUG{\color{black}G}AACCCA}\\
+												\texttt{GAGGUU{\color{black}C}UUGCUUCA{\color{blue}G}CAGUGU{\color{blue}U}UGGACG{\color{black}G}AACCUC}\\
+												\texttt{CGGUUU{\color{black}C}CCGCUUCA{\color{blue}A}CAGUGC{\color{blue}U}UGGACG{\color{black}G}AAGCCG}\\
+															\texttt{CCGAUU{\color{black}U}GUGCUUCA{\color{blue}A}CAGUGA{\color{blue}U}UGUACC{\color{black}G}AAACAG}};}
+
+
+\visible<5>{\node[] (MSE) at (0,0) {\texttt{UGGUUU{\color{red}C}CUGCUUCA{\color{blue}A}CAGUGC{\color{blue}U}UGAACG{\color{red}G}AACCCA}\\
+												\texttt{UGGGUU{\color{red}C}CUGCUUCA{\color{blue}A}CAGUGC{\color{blue}U}UGAAUG{\color{red}G}AACCCA}\\
+												\texttt{GAGGUU{\color{red}C}UUGCUUCA{\color{blue}G}CAGUGU{\color{blue}U}UGGACG{\color{red}G}AACCUC}\\
+												\texttt{CGGUUU{\color{red}C}CCGCUUCA{\color{blue}A}CAGUGC{\color{blue}U}UGGACG{\color{red}G}AAGCCG}\\
+															\texttt{CCGAUU{\color{red}U}GUGCUUCA{\color{blue}A}CAGUGA{\color{blue}U}UGUACC{\color{red}G}AAACAG}};}
+															
+\draw [line width=1.5pt,decoration={brace},decorate] (MSE.south west) -- (MSE.north west);
+
+\node [left=10pt of MSE] {$\text{\large MSA }(\Omega)$};
+
+\visible<1-3>{												
+	\node[below=0pt of MSE] (ss) {\texttt{(((((({\color{black}(}(.(.(((((......))))))){\color{black})}))))))}};
+}
+\visible<4>{
+	\node[below=0pt of MSE] (ss) {\texttt{(((((({\color{black}(}(.(.(((({\color{blue}(}......{\color{blue})})))))){\color{black})}))))))}};
+}
+\visible<5>{
+	\node[below=0pt of MSE] (ss) {\texttt{(((((({\color{red}(}(.(.(((({\color{blue}(}......{\color{blue})})))))){\color{red})}))))))}};
+}
+
+\node [left=10pt of ss] {\large Sec. Struct. $(S)$};
+
+\visible<1-3>{
+\node[below=10pt of ss] (new_seq) {\texttt{CCGUUU{\color{black}U}GUGCUUCA{\color{black}A}CAGUGA{\color{black}C}UGAACC{\color{black}A}AAACAG}};}
+
+\visible<4>{
+\node[below=10pt of ss] (new_seq) {\texttt{CCGUUU{\color{black}U}GUGCUUCA{\color{blue}A}CAGUGA{\color{blue}C}UGAACC{\color{black}A}AAACAG}};}
+
+\visible<5>{
+\node[below=10pt of ss] (new_seq) {\texttt{CCGUUU{\color{red}U}GUGCUUCA{\color{blue}A}CAGUGA{\color{blue}C}UGAACC{\color{red}A}AAACAG}};}
+
+\node [left=10pt of new_seq] {\large Input Seq. $(s)$};
+
+\visible<3->{
+\coordinate (t) at ($ (new_seq.south) - (5.6pt,0) $);
+
+\node[below=30pt of t] (logo_fig) {\pgfbox[center,bottom]{\pgfuseimage{logo}}};			
+}
+
+\visible<4->{
+\coordinate (r5) at ($ (MSE.north west) + (90.5pt,0) $);
+\coordinate (r6) at ($ (MSE.south west) + (95pt,\Lowrec) $);
+
+\node[rectangle,draw,color=blue,line width=1.5pt,inner sep=1pt,fit=(r5)(r6)] (rec2) {};
+
+\coordinate (r7) at ($ (MSE.north west) + (131pt,0) $);
+\coordinate (r8) at ($ (MSE.south west) + (135.5pt,\Lowrec) $);
+
+\node[rectangle,draw,color=blue,line width=1.5pt,inner sep=1pt,fit=(r7)(r8)] (rec2) {};}
+
+\visible<5->{
+\coordinate (r1) at ($ (MSE.north west) + (38.5pt,0) $);
+\coordinate (r2) at ($ (MSE.south west) + (43.7pt,\Lowrec) $);
+
+\node[rectangle,draw,color=red,line width=1.5pt,inner sep=1pt,fit=(r1)(r2)] (rec1) {};
+
+\coordinate (r3) at ($ (MSE.north west) + (171.5pt,0) $);
+\coordinate (r4) at ($ (MSE.south west) + (176pt,\Lowrec) $);
+
+\node[rectangle,draw,color=red,line width=1.5pt,inner sep=1pt,fit=(r3)(r4),label=below:{\color{red}$Error$}] (rec2) {};
+\node[circle,draw,line width=3pt,minimum size=12pt,above=31pt of rec2.south] (c1) {}; 
+\coordinate (t_error_2) at ($ (rec2.south) + (13pt,-5pt) $);
+\coordinate (t_error_1) at ($ (rec2.south) - (13pt,5pt) $);
+\path[->]<1-> (t_error_1) edge  [color=red,bend left=40,line width=2] (c1);
+\path[->]<1-> (t_error_2) edge  [color=red,bend right=40,line width=2] (c1);
+%	\node[below=10pt of (rec2)] (t_error)   {\Large\color{red}Error};
+}
+
+\visible<2->{
+\node[below=10pt of logo_fig] {\large Structural similarity preserves function\\\large Evolutionary information to use isostericity};}
+												
+\end{tikzpicture}

@@ -1,0 +1,323 @@
+%!TEX root = ../vreinharz_RECOMB2013_talk.tex
+\begin{tikzpicture}
+
+ \newcommand{\BSep}{9pt}
+ \newcommand{\ESep}{30pt}
+ \newcommand{\HSep}{250pt}
+  \tikzstyle{base}=[circle,draw,thick,inner sep=0,minimum width=20pt,fill=white]
+  \tikzstyle{basesmall}=[circle,draw,thick,inner sep=0,minimum width=10pt,fill=white]
+  \tikzstyle{basephantom}=[base,dashed]
+  \tikzstyle{linez}=[draw,snake=coil, segment aspect=.2,%
+line after snake=0pt, 
+        segment length=10pt,thick]
+  \tikzstyle{lined}=[linez,draw,snake=none,thick]
+  \tikzstyle{line}=[linez,draw,snake=none,thick]
+  \tikzstyle{bp}=[in=90,out=90,draw,line width=1.5pt,blue,looseness=1.2]
+  \tikzstyle{redbp}=[in=90,out=90,draw,line width=1.5pt,red,looseness=1.2]
+  \tikzstyle{inblock}=[trapezium,trapezium angle=83, fill=blue!20, draw=blue!40,line width=1.5pt, inner sep=0]
+   \tikzstyle{outblock}=[trapezium,trapezium angle=83, fill=red!50, draw=red!40,line width=1.5pt, inner sep=0]
+  \tikzstyle{lbl}=[inner sep=0]
+  \tikzstyle{arr}=[line width=1.3pt,->]
+%
+
+\begin{scope}[yshift=185pt]
+  \node[] (tot) at (0,0) {\Huge Sequence:};
+	\visible<2->{
+		\node[right=\ESep of tot, base] (iso-a-1) {$nt^1$};
+	}
+	
+	\visible<3->{
+%	\node[right=\BSep of iso-a-1] (p0) {$+$};
+	\node[right=\BSep of iso-a-1, base] (iso-a-2) {$nt^2$};
+	\path[lined] (iso-a-1) to (iso-a-2);
+	\node[right=4\ESep of iso-a-2, base] (iso-a-17) {$nt^{17}$};
+
+	}
+	\visible<3>{
+			\path[linez] (iso-a-2) to (iso-a-17);
+				\draw[redbp] (iso-a-2) to (iso-a-17);
+	}
+	\visible<4->{
+%	\node[right=\BSep of iso-a-17] (p1) {$+$};
+%	\draw[bp] (iso-a-2) to (iso-a-17);
+	\node[right=\BSep of iso-a-2, base] (iso-a-3) {$nt^3$};
+	\path[lined] (iso-a-2) to (iso-a-3);
+	\node[left=\BSep of iso-a-17, base] (iso-a-16) {$nt^{16}$};
+	\path[lined] (iso-a-16) to (iso-a-17);
+}		
+	\visible<4>{
+			\path[linez] (iso-a-3) to (iso-a-16);
+			\draw[redbp] (iso-a-3) to (iso-a-16);
+	}
+
+	\visible<5->{
+%		\draw[bp] (iso-a-3) to (iso-a-16);
+		
+		\node[right=\BSep of iso-a-3,base] (iso-a-4) {$nt^4$};
+		\path[lined] (iso-a-3) to (iso-a-4);
+		\node[right=100pt of iso-a-4,base] (iso-a-8) {$nt^8$};
+	}
+	\visible<5>{
+	\path[linez] (iso-a-4) to (iso-a-8);
+	\path[linez] (iso-a-8) to (iso-a-16);
+	\draw[redbp] (iso-a-4) to (iso-a-8);
+	}	
+\end{scope}
+
+
+
+\begin{scope}[yshift=150pt]
+
+	\visible<6->{
+%	\node[]  (p3) at (0,0) {$+$};
+%	\node[right=\BSep of iso-a-8] (p3) {$+$};
+
+	\node[right=\BSep of iso-a-4,base] (iso-a-5) {$nt^5$};
+	\path[lined] (iso-a-4) to (iso-a-5);
+	\node[right=\BSep of iso-a-5,base] (iso-a-6) {$nt^6$};
+	\path[lined] (iso-a-5) to (iso-a-6);
+	\node[right=\BSep of iso-a-6,base] (iso-a-7) {$nt^7$};
+	\path[lined] (iso-a-6) to (iso-a-7);
+	\path[lined] (iso-a-7) to (iso-a-8);
+
+				
+	\node[right=\BSep of iso-a-8,base] (iso-a-9) {$nt^9$};
+	\path[lined] (iso-a-8) to (iso-a-9);
+	\node[left=\BSep of iso-a-16,base] (iso-a-15) {$nt^{15}$};
+	\path[lined] (iso-a-15) to (iso-a-16);
+	}
+	\visible<6>{
+		\path[linez] (iso-a-9) to (iso-a-15);
+		\draw[redbp] (iso-a-9) to (iso-a-15);
+	}
+	
+	\visible<7->{
+%	\node[right=\BSep of iso-a-15] (p4) {$+$};
+	
+	\node[right=\BSep of iso-a-9,base] (iso-a-10) {$nt^{10}$};
+	\path[lined] (iso-a-9) to (iso-a-10);
+	\node[left=\BSep of iso-a-15,base] (iso-a-14) {$nt^{14}$};
+		\path[lined] (iso-a-14) to (iso-a-15);
+	\path[linez] (iso-a-10) to (iso-a-14);
+	\draw[redbp] (iso-a-10) to (iso-a-14);
+	}
+
+%	\node[right=\ESep of iso-a-14,base] (e-a-9) {$nt^9$};
+%	\node[right=\BSep of e-a-9,base] (e-a-10) {$nt^{10}$};
+%	\node[right=\ESep of e-a-10,base] (e-a-14) {$nt^{14}$};
+%	\node[right=\BSep of e-a-14,base] (e-a-15) {$nt^{15}$};
+%	\path[lined] (e-a-9) to (e-a-10);
+%	\path[lined] (e-a-14) to (e-a-15);
+%	\path[linez] (e-a-10) to (e-a-14);
+%	\draw[bp] (e-a-9) to (e-a-15);
+%	\draw[bp] (e-a-10) to (e-a-14);
+%	}
+\end{scope}
+
+\begin{scope}[yshift=-20pt,xshift=70pt]
+\node[basephantom] (a-0) at (0,0) {};
+\node[lbl,below=3pt of a-0] (i-0) {$-$};
+
+\alt<2>{\node[right=\BSep of a-0, base] (a-1) {\color{red}{$nt^1$}};}
+	{\node[right=\BSep of a-0, base] (a-1) {};}
+
+\alt<3>{\node[right=\BSep of a-1, base] (a-2) {\color{red}{$nt^2$}};}
+	{\node[right=\BSep of a-1, base] (a-2) {};}
+	
+\alt<4>{\node[right=\BSep of a-2, base] (a-3) {\color{red}{$nt^3$}};}
+	{\node[right=\BSep of a-2, base] (a-3) {};}
+	
+\alt<5>{\node[right=\BSep of a-3, base] (a-4) {\color{red}{$nt^4$}};}
+	{\node[right=\BSep of a-3, base] (a-4) {};}
+
+\node[right=\BSep of a-4, base] (a-5) {};
+\node[right=\BSep of a-5, base] (a-6) {};
+\node[right=\BSep of a-6, base] (a-7) {};
+
+
+\alt<5>{\node[right=\BSep of a-7, base] (a-8) {\color{red}{$nt^8$}};}
+	{\node[right=\BSep of a-7, base] (a-8) {};}
+	
+\alt<6>{\node[right=\BSep of a-8, base] (a-9) {\color{red}{$nt^9$}};}
+	{\node[right=\BSep of a-8, base] (a-9) {};}
+	
+\alt<7>{\node[right=\BSep of a-9, base] (a-10) {\color{red}{$nt^{10}$}};}
+	{\node[right=\BSep of a-9, base] (a-10) {};}	
+
+\node[right=\BSep of a-10, base] (a-11) {};
+\node[right=\BSep of a-11, base] (a-12) {};
+\node[right=\BSep of a-12, base] (a-13) {};
+
+\alt<7>{\node[right=\BSep of a-13, base] (a-14) {\color{red}{$nt^{14}$}};}
+	{\node[right=\BSep of a-13, base] (a-14) {};}	
+	
+\alt<6>{\node[right=\BSep of a-14, base] (a-15) {\color{red}{$nt^{15}$}};}
+	{\node[right=\BSep of a-14, base] (a-15) {};}	
+
+\alt<4>{\node[right=\BSep of a-15, base] (a-16) {\color{red}{$nt^{16}$}};}
+	{\node[right=\BSep of a-15, base] (a-16) {};}
+
+\alt<3>{\node[right=\BSep of a-16, base] (a-17) {\color{red}{$nt^{17}$}};}
+	{\node[right=\BSep of a-16, base] (a-17) {};}
+
+\node[right=\BSep of a-17, basephantom] (a-18) {};
+
+
+\foreach \i in {1,...,18}{
+	\pgfmathtruncatemacro\j{\i - 1}
+	\ifthenelse{\i<18}
+	{\node[lbl,below=3pt of a-\i] (i-\i) {$\i$};}
+	{\node[lbl,below=3pt of a-\i] (i-\i) {$-$};}
+	\path[lined] (a-\j) -- (a-\i);
+}
+
+
+\alt<3>{\draw[redbp] (a-2) to (a-17);}
+	{\draw[bp] (a-2) to (a-17);}
+\alt<4>{\draw[redbp] (a-3) to (a-16);}
+	{\draw[bp] (a-3) to (a-16);}
+\alt<5>{\draw[redbp] (a-4) to (a-8);}
+	{\draw[bp] (a-4) to (a-8);}
+\alt<6>{\draw[redbp] (a-9) to (a-15);}
+	{\draw[bp] (a-9) to (a-15);}
+\alt<7>{\draw[redbp] (a-10) to (a-14);}
+	{\draw[bp] (a-10) to (a-14);}
+
+\begin{pgfonlayer}{background}	
+	\visible<1>{
+	\coordinate (northr1) at ($ (a-9.north) + (0,20pt) $);
+  \node[rectangle,inner sep=2pt,fit=(a-1.west) (northr1) (a-17.east) (i-1) (i-17)] (r1) {};
+  \path[inblock]   (r1.south west) to  (r1.south east) to (r1.north east) 		to[out=90,in=90] (r1.north west) to (r1.south west) ;
+  }
+\end{pgfonlayer}{background}
+
+\begin{pgfonlayer}{background}	
+	\visible<2>{
+	\coordinate (northr1) at ($ (a-9.north) + (0,20pt) $);
+  \node[rectangle,inner sep=2pt,fit=(a-2.west) (northr1) (a-17.east) (i-2) (i-17)] (r1) {};
+  \path[inblock]   (r1.south west) to  (r1.south east) to (r1.north east) 		to[out=90,in=90] (r1.north west) to (r1.south west) ;
+  \draw [
+    decoration={
+        brace,
+        mirror,
+        raise=20pt
+    },
+    decorate,
+    line width=1.5pt
+] (a-1.south west) -- (a-17.south east) 
+node [pos=0.5,anchor=north,yshift=-0.75cm] {\Large $\mathds{Z} =$ weight of $nt^1$};
+  }
+\end{pgfonlayer}{background}
+
+\begin{pgfonlayer}{background}	
+	\visible<3>{
+	\coordinate (northr1) at ($ (a-9.north) + (0,17pt) $);
+  \node[rectangle,inner sep=2pt,fit=(a-3.west) (northr1) (a-16.east) (i-3) (i-16)] (r1) {};
+  \path[inblock]   (r1.south west) to  (r1.south east) to (r1.north east) 		to[out=90,in=90] (r1.north west) to (r1.south west) ;
+    \draw [
+    decoration={
+        brace,
+        mirror,
+        raise=20pt
+    },
+    decorate,
+    line width=1.5pt
+] (a-2.south west) -- (a-17.south east) 
+node [pos=0.5,anchor=north,yshift=-0.75cm] {\Large $\mathds{Z} =$ weight of $nt^2\land nt^{17}$};
+}
+
+\end{pgfonlayer}{background}
+
+\begin{pgfonlayer}{background}	
+	\visible<4>{
+	\coordinate (northr1) at ($ (a-9.north) + (0,14pt) $);
+  \node[rectangle,inner sep=2pt,fit=(a-4.west) (northr1) (a-15.east) (i-4) (i-15)] (r1) {};
+  \path[inblock]   (r1.south west) to  (r1.south east) to (r1.north east) 		to[out=90,in=90] (r1.north west) to (r1.south west) ;
+      \draw [
+    decoration={
+        brace,
+        mirror,
+        raise=20pt
+    },
+    decorate,
+    line width=1.5pt
+] (a-3.south west) -- (a-16.south east) 
+node [pos=0.5,anchor=north,yshift=-0.75cm] {\Large $\mathds{Z} =$ weight of $nt^3\land nt^{16}$};
+  }
+\end{pgfonlayer}{background}
+
+\begin{pgfonlayer}{background}	
+	\visible<5>{
+	\coordinate (northr1) at ($ (a-6.north) + (0,2pt) $);
+  \node[rectangle,inner sep=2pt,fit=(a-5.west) (northr1) (a-7.east) (i-5) (i-7)] (r1) {};
+  \path[inblock]   (r1.south west) to  (r1.south east) to (r1.north east) 		to[out=90,in=90] (r1.north west) to (r1.south west) ;
+  \node[above=8pt of a-6] (m1) {\scalebox{1.7}{
+  }};
+      \draw [
+    decoration={
+        brace,
+        mirror,
+        raise=20pt
+    },
+    decorate,
+    line width=1.5pt
+] (a-4.south west) -- (a-8.south east) 
+node [pos=0.5,anchor=north,yshift=-0.75cm] {\Large $\mathds{Z} =$ weight of $nt^4\land nt^8$};
+  }
+\end{pgfonlayer}{background}
+
+\begin{pgfonlayer}{background}	
+	\visible<5>{
+	\coordinate (northr1) at ($ (a-12.north) + (0,10pt) $);
+  \node[rectangle,inner sep=2pt,fit=(a-9.west) (northr1) (a-15.east) (i-9) (i-15)] (r1) {};
+  \path[inblock]   (r1.south west) to  (r1.south east) to (r1.north east) 		to[out=90,in=90] (r1.north west) to (r1.south west) ;
+    \node[above=8pt of a-12] (m1) {\scalebox{1.7}{}};
+  }
+\end{pgfonlayer}{background}
+
+\begin{pgfonlayer}{background}	
+	\visible<6>{
+	\coordinate (northr1) at ($ (a-12.north) + (0,5pt) $);
+  \node[rectangle,inner sep=2pt,fit=(a-10.west) (northr1) (a-14.east) (i-10) (i-14)] (r1) {};
+  \path[inblock]   (r1.south west) to  (r1.south east) to (r1.north east) 		to[out=90,in=90] (r1.north west) to (r1.south west) ;
+      \draw [
+    decoration={
+        brace,
+        mirror,
+        raise=20pt
+    },
+    decorate,
+    line width=1.5pt
+] (a-9.south west) -- (a-15.south east) 
+node [pos=0.5,anchor=north,yshift=-0.75cm] {\Large $\mathds{Z} =$ weight of $nt^9\land nt^{15}$};
+  }
+\end{pgfonlayer}{background}
+
+\begin{pgfonlayer}{background}	
+	\visible<7>{
+	\coordinate (northr1) at ($ (a-12.north) + (0,5pt) $);
+  \node[rectangle,inner sep=2pt,fit=(a-11.west) (northr1) (a-13.east) (i-11) (i-13)] (r1) {};
+  \path[inblock]   (r1.south west) to  (r1.south east) to (r1.north east) 		to[out=90,in=90] (r1.north west) to (r1.south west) ;
+      \draw [
+    decoration={
+        brace,
+        mirror,
+        raise=20pt
+    },
+    decorate,
+    line width=1.5pt
+] (a-10.south west) -- (a-14.south east) 
+node [pos=0.5,anchor=north,yshift=-0.75cm] {\Large $\mathds{Z} =$ weight of $nt^{10}\land nt^{14}$};
+  }
+\end{pgfonlayer}{background}
+
+%\begin{pgfonlayer}{background}	
+%	\coordinate (northr1) at ($ (a-9.north) + (0,20pt) $);
+%  \node[rectangle,inner sep=2pt,fit=(a-1.west) (northr1) (a-17.east) (i-10) (i-14)] (r1) {};
+%  \path[inblock]   (r1.south west) to  (r1.south east) to (r1.north east) 		to[out=90,in=90] (r1.north west) to (r1.south west) ;
+%\end{pgfonlayer}{background}
+
+\end{scope}
+
+
+\end{tikzpicture}
