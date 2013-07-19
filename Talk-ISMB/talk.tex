@@ -132,7 +132,7 @@
 		\begin{figure}
 			\centering
 				\includegraphics<1>[ width=\textwidth]{Figures/energy_1.png}
-				\includegraphics<2>[ height=0.8\textheight]{Figures/energy_2.eps}
+				\includegraphics<2>[ height=0.8\textheight]{Figures/energy_2}
 		\end{figure}	
 }
 
@@ -169,6 +169,20 @@
 	\end{figure}
 	\end{minipage}
 }
+
+\frame[t]{
+	\frametitle{Affinity $\neq$ Specificity}
+	\begin{figure}[t]
+		\centering
+   \only<1>{\includegraphics[width=\textwidth]{Figures/boltz_seq_2}}%
+   \only<2>{\includegraphics[width=\textwidth]{Figures/boltz_seq_2_a}}%
+   \only<3>{\includegraphics[width=\textwidth]{Figures/boltz_seq_2_b}}%
+	\end{figure}
+  Formally, a large affinity neither {\only<2->{\color{purple}}ensures} preferential fold into a target, 
+  {\only<3->{\color{red}}nor is it a necessary condition}\ldots\\
+  In practice, viable alternative to local search/genetic algorithms {\relsize{-1}[Levin et al, NAR 2012]}
+}
+
 
 %\frame{
 %	\frametitle{Probabilistic Model\\Structure Space}
