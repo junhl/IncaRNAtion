@@ -20,6 +20,10 @@ line after snake=0pt,
   \tikzstyle{arr}=[line width=1.3pt,->]
 %
 
+\begin{scope}[yshift=420pt]
+	\node[] at (0,0) {};
+\end{scope}
+
 \begin{scope}[yshift=185pt]
   \node[] (tot) at (0,0) {\Huge Sequence:};
 	\visible<2->{

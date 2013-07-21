@@ -3,13 +3,13 @@ import sys
 import numpy as np
 from matplotlib import rc,use
 use('pgf')
-#rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 rc('text', usetex=True)
 import matplotlib.mlab as mlab
 import matplotlib.pyplot as plt
 from scipy import integrate
 
-COLORS = ['r','b','g','y','k']
+COLORS = ['r','b','g','y','c']
 
 RAW_DATA = 'dump_gc_data.txt'
 BIN_WIDTH = 0.005
@@ -48,7 +48,7 @@ def main():
     ax.vlines(0.20,0,MAX_Y,color='k',linestyles='dashed')
     #ax.get_yaxis().set_ticks([])
     total_generated = 0
-    
+    previous_number = 0 
     for i,data in enumerate(l_data):
         print i
         weight = data[0]
@@ -56,7 +56,7 @@ def main():
         sigma,mu = np.std(a),np.average(a)
         x = np.linspace(0,1,100)
         ax.plot(x,130*mlab.normpdf(x,mu,sigma),COLORS[i],
-                label= '$\Pr(G\mid C) = %0.4f$' % (2*weight),linewidth=6)
+                label= '$x^{\#GC} = %0.4f$' % (weight),linewidth=6)
         total_generated += 1000*integrate.quad(lambda x: mlab.normpdf(x,mu,sigma),
                                           0.1,0.2)[0]
         total_generated = int(total_generated)
@@ -66,8 +66,9 @@ def main():
         #linestyle='dashed',label='Tot round %s' % i)
         ax.plot([0.1,0.2],[total_generated,total_generated],'%s--' % COLORS[i],
                 linewidth=5,label='Tot round %s is %s' % ((i+1),total_generated))
-        ax.fill_between([0.1,0.2],[total_generated]*2,[0]*2,facecolor=COLORS[i],
-                       alpha=0.7)
+        ax.fill_between([0.1,0.2],[total_generated]*2,[previous_number]*2,facecolor=COLORS[i],
+                       )
+        previous_number = total_generated
         ax.legend()
         #fig.show()
         fig.savefig('dist_%s.pdf' % i, dpi=1200)

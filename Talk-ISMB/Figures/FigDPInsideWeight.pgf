@@ -45,12 +45,12 @@ line after snake=0pt,
 %\coordinate (seq_space) at ($ (r1.north west) + (-25pt, 100pt) $);
 %\node[align=left,right=0pt of seq_space] (ex_seq) {\huge Explore sequence space\\\huge Structure fixed};
 %%\node[above=0pt of ex_seq] {\huge Structure fixed};
-% \visible<5->{
+% \visible<1>{
 % 	\node[below=0pt of r1] {\huge Only $1$ case applies};
 %}
 
 
-\visible<2,5>{
+\visible<1>{
 \begin{scope}[xshift=\HSep,yshift=130pt]
   \node[base] (a-1) at (0,0) {\color{red}$a'$};
   \node[basesmall,right=\BSep of a-1] (a-1b)  {};
@@ -63,12 +63,12 @@ line after snake=0pt,
   \path[lined] (a-2) -- (a-3);
   \node[below=3pt of a-1b, inner sep=0] (c1) {$i+1$};
   \node[below=3pt of a-2, inner sep=0] (c2) {$j$};
-	\node[left=0pt of a-0] (sum_a-0) {\scalebox{1.5}{$\displaystyle\sum_{a'}\mathds{P}(a')$}};
+	\node[left=0pt of a-0] (sum_a-0) {\scalebox{1.5}{$\displaystyle\sum_{a'} x^{\#\text{GC}({\color{red}a'})}$}};
   \node[yshift=-10pt] at ($ (sum_a-0.west) + (5pt,-10pt) $) (y1) {};
 
 \begin{pgfonlayer}{background}
   \node[rectangle,inner sep=2pt,fit=(a-1b.west)(a-2.east) (c1) (c2)] (r1) {};
-  \visible<2,5>{
+  \visible<1>{
   \path[block]   (r1.south west) to  (r1.south east) to (r1.north east) to[out=90,in=90,looseness=.7] (r1.north west) to (r1.south west) ;
   \path (a-0) to node[midway,yshift=-3.5em] {\relsize{+2}[Position $i$ unpaired]} (a-3);
 	}
@@ -78,7 +78,7 @@ line after snake=0pt,
 	\draw[arr] (x) -- (y1);
 }
 
-\visible<4->{
+\visible<1>{
 \begin{scope}[xshift=\HSep,yshift=-90pt]
   \node[base] (a-1) at (0,0) {\color{red}$a'$};
   \node[base] (a-p) at (3,0) {\color{red}$b'$};
@@ -108,12 +108,12 @@ line after snake=0pt,
   \node[lbl,below=3pt of a-pa] (c4){$k+1$};
 
   \draw[bp]  (a-1) to (a-p);
- 	\node[left=0pt of a-0] (sum_a-0) {\scalebox{1.5}{$\displaystyle\sum_{a',b'}\mathds{P}(a')\mathds{P}(b')$}};
+ 	\node[left=0pt of a-0] (sum_a-0) {\scalebox{1.5}{$\displaystyle\sum_{a',b'} x^{\#\text{GC}({\color{red}a'b'})}$}};
 
   \node[yshift=-0pt,xshift=2pt] at ($ (sum_a-0.north west) + (0pt,0)$) (y2) {};
 
 \begin{pgfonlayer}{background}
-	\visible<4,5>{
+	\visible<1>{
   \node[rectangle,inner sep=2pt,fit=(a-1b.west)(a-pb.east) (c1) (c2)] (r1) {};
   \path[block]   (r1.south west) to (r1.south east) to (r1.north east) to[out=90,in=90,looseness=1.8] (r1.north west) to (r1.south west) ;
 
@@ -129,7 +129,7 @@ line after snake=0pt,
 }
 
 
-\visible<3,5>{
+\visible<1>{
 \begin{scope}[xshift=\HSep,yshift=10pt]
   \node[base] (a-1) at (0,0) {\color{red}$a'$};
   \node[base] (a-2) at (5,0) {\color{red}$b'$};
@@ -151,14 +151,14 @@ line after snake=0pt,
 
   \draw[bp,looseness=1.1]  (a-1) to (a-2);
   \draw[bp,looseness=1.1]  (a-0) to (a-3);
-   	\node[left=0pt of a-0] (sum_a-0) {\scalebox{1.5}{$\displaystyle\sum_{a',b'}\mathds{P}(a')\mathds{P}(b')$}};
+   	\node[left=0pt of a-0] (sum_a-0) {\scalebox{1.5}{$\displaystyle\sum_{a',b'}x^{\#\text{GC}({\color{red}a'b'})}$}};
   \node[xshift=0pt] at ($ (sum_a-0.west) + (0pt,0) $) (y3) {};
 
 
 
 \begin{pgfonlayer}{background}
   \node[rectangle,inner sep=2pt,fit=(a-1b.west)(a-2b.east) (c1) (c2)] (r1) {};
-  \visible<3,5->{
+  \visible<1>{
   \path[block]   (r1.south west) to  (r1.south east) to (r1.north east) to[out=90,in=90,looseness=.9] (r1.north west) to (r1.south west) ;
   \path (a-0) to node[midway,yshift=-3.5em] {\relsize{+2}[Paired ends + Stacking pairs]} (a-3);}
   \end{pgfonlayer}{background}

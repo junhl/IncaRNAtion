@@ -223,17 +223,17 @@
 
 \frame{
 	\frametitle{\texttt{GC} Bias}
-	\lred{Avg RFAM \texttt{GC} is $48.8\%$}
+%	\lred{Avg RFAM \texttt{GC} is $48.8\%$}
 	\begin{minipage}{0.49\textwidth}
 		\begin{figure}
 			\centering
-			\includegraphics[width=\textwidth]{Figures/histograme_5_gc_distribution_nornaexinv.png}
+			\includegraphics[width=1.2\textwidth]{Figures/histograme_5_gc_distribution_nornaexinv.png}
 		\end{figure}
 	\end{minipage}
 	\begin{minipage}{0.49\textwidth}
 		\begin{figure}
 			\centering
-			\includegraphics[width=\textwidth]{Figures/dist_-1.pdf}
+			\includegraphics[width=1.2\textwidth]{Figures/dist_-1.pdf}
 		\end{figure}
 	\end{minipage}
 }
@@ -249,25 +249,26 @@
 
 \frame{
 	\frametitle{Incarnation nt distribution\\Bissection scheme}
-	\lred{Cite RECOMB 2012 jerome / yann}
+%	\lred{Cite RECOMB 2012 jerome / yann}
 	%Prior distribution kept conditioned by GC to re-enter average around target
 	%Once good match, probability to get exactly at target is constant, so search for good value low weight in complexity
 	\begin{figure}
 		\centering
-		\includegraphics<1>[width=\textwidth]{Figures/dist_0.pdf}
-		\includegraphics<2>[width=\textwidth]{Figures/dist_1.pdf}
-		\includegraphics<3>[width=\textwidth]{Figures/dist_2.pdf}
-		\includegraphics<4>[width=\textwidth]{Figures/dist_3.pdf}
-		\includegraphics<5>[width=\textwidth]{Figures/dist_4.pdf}
+		\includegraphics<1>[width=0.85\textwidth]{Figures/dist_0.pdf}
+		\includegraphics<2>[width=0.85\textwidth]{Figures/dist_1.pdf}
+		\includegraphics<3>[width=0.85\textwidth]{Figures/dist_2.pdf}
+		\includegraphics<4>[width=0.85\textwidth]{Figures/dist_3.pdf}
+		\includegraphics<5>[width=0.85\textwidth]{Figures/dist_4.pdf}
 	\end{figure}
+	Levin et al. 2012
 }
 
 \frame{
 	\frametitle{Incarnation + RNAinverse Results\\Sequence identity}
-	\lred{Only keep length?}
-	\begin{figure}[t!]
+%	\lred{Only keep length?}
+	\begin{figure}[rt]
 		\centering
-		\includegraphics[width=1.1\textwidth]{Figures/identity.png}
+		\includegraphics[width=1.1\textwidth]{Figures/identity_2.pdf}
 	\end{figure}
 }
 
@@ -275,7 +276,7 @@
 	\frametitle{Incarnation + RNAinverse time}
 	\begin{figure}[t!]
 		\centering
-		\includegraphics[width=0.9\textwidth]{Figures/time.png}
+		\includegraphics[width=0.9\textwidth]{Figures/time.pdf}
 	\end{figure}
 }
 
@@ -345,6 +346,22 @@
 		\end{figure}
 		\end{minipage}
 	\end{minipage}
+}
+
+\frame{
+	\frametitle{Success Rate}
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{Figures/results_incar_rnainverse}
+	\end{figure}
+}
+
+\frame{
+	\frametitle{Sensitivity}
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{Figures/Sensitivity}
+	\end{figure}
 }
 
 %
