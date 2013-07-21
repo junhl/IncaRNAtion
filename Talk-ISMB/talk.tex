@@ -128,11 +128,11 @@
 }
 
 \frame{
-	\frametitle{Energy Landscape}
+	\frametitle{Affinity Landscape}
 		\begin{figure}
 			\centering
 				\includegraphics<1>[ width=\textwidth]{Figures/energy_1.png}
-				\includegraphics<2>[ height=0.8\textheight]{Figures/energy_2}
+			%	\includegraphics<2>[ height=0.8\textheight]{Figures/energy_2}
 		\end{figure}	
 }
 
@@ -149,7 +149,8 @@
 }
 
 \frame{
-	\frametitle{Probabilistic Model\\Sequence space}
+	\frametitle{Global Sampling}
+	%Since divide and conquer fail, lets look at everything at the same thing
 	\begin{itemize}
 		\item We can define a Boltzmann distribution
 		\item Due to additive properties of the \texttt{Stacking Energy} we can efficiently compute the partition function $\mathds{Z}$ with a 
@@ -208,8 +209,9 @@
 	\frametitle{DP Recursion\\global}
 	\begin{figure}
 		\centering
-		\resizebox{\textwidth}{!}{\input{Figures/FigDPInside.pgf}}
+		\resizebox{0.9\textwidth}{!}{\input{Figures/FigDPInside.pgf}}
 	\end{figure}
+	Reinharz et al. RECOMB, 2013
 }
 
 \frame{
@@ -223,19 +225,20 @@
 
 \frame{
 	\frametitle{\texttt{GC} Bias}
-%	\lred{Avg RFAM \texttt{GC} is $48.8\%$}
+%	Energetical bias to high GC content
 	\begin{minipage}{0.49\textwidth}
 		\begin{figure}
 			\centering
-			\includegraphics[width=1.2\textwidth]{Figures/histograme_5_gc_distribution_nornaexinv.png}
-		\end{figure}
+			\includegraphics[width=1\textwidth]{Figures/dist_-1.pdf}
+	\end{figure}
 	\end{minipage}
 	\begin{minipage}{0.49\textwidth}
 		\begin{figure}
 			\centering
-			\includegraphics[width=1.2\textwidth]{Figures/dist_-1.pdf}
+			\includegraphics[width=1\textwidth]{Figures/histograme_5_gc_distribution_nornaexinv.png}
 		\end{figure}
 	\end{minipage}
+	
 }
 
 \frame{
@@ -260,7 +263,7 @@
 		\includegraphics<4>[width=0.85\textwidth]{Figures/dist_3.pdf}
 		\includegraphics<5>[width=0.85\textwidth]{Figures/dist_4.pdf}
 	\end{figure}
-	Levin et al. 2012
+	 Waldisp\"uhl and Y. Ponty, 2012
 }
 
 \frame{
