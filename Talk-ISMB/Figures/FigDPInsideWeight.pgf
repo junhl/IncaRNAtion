@@ -63,7 +63,7 @@ line after snake=0pt,
   \path[lined] (a-2) -- (a-3);
   \node[below=3pt of a-1b, inner sep=0] (c1) {$i+1$};
   \node[below=3pt of a-2, inner sep=0] (c2) {$j$};
-	\node[left=0pt of a-0] (sum_a-0) {\scalebox{1.5}{$\displaystyle\sum_{a'} x^{\#\text{GC}({\color{red}a'})}$}};
+	\node[left=0pt of a-0] (sum_a-0) {\scalebox{1.5}{$\displaystyle\sum_{a'}{\color{HotMagenta} x^{\#\text{GC}({\color{red}a'})}}$}};
   \node[yshift=-10pt] at ($ (sum_a-0.west) + (5pt,-10pt) $) (y1) {};
 
 \begin{pgfonlayer}{background}
@@ -108,7 +108,7 @@ line after snake=0pt,
   \node[lbl,below=3pt of a-pa] (c4){$k+1$};
 
   \draw[bp]  (a-1) to (a-p);
- 	\node[left=0pt of a-0] (sum_a-0) {\scalebox{1.5}{$\displaystyle\sum_{a',b'} x^{\#\text{GC}({\color{red}a'b'})}$}};
+ 	\node[left=0pt of a-0] (sum_a-0) {\scalebox{1.5}{$\displaystyle\sum_{a',b'}{\color{HotMagenta} x^{\#\text{GC}({\color{red}a'b'})}}$}};
 
   \node[yshift=-0pt,xshift=2pt] at ($ (sum_a-0.north west) + (0pt,0)$) (y2) {};
 
@@ -151,7 +151,7 @@ line after snake=0pt,
 
   \draw[bp,looseness=1.1]  (a-1) to (a-2);
   \draw[bp,looseness=1.1]  (a-0) to (a-3);
-   	\node[left=0pt of a-0] (sum_a-0) {\scalebox{1.5}{$\displaystyle\sum_{a',b'}x^{\#\text{GC}({\color{red}a'b'})}$}};
+   	\node[left=0pt of a-0] (sum_a-0) {\scalebox{1.5}{$\displaystyle\sum_{a',b'}{\color{HotMagenta}x^{\#\text{GC}({\color{red}a'b'})}}$}};
   \node[xshift=0pt] at ($ (sum_a-0.west) + (0pt,0) $) (y3) {};
 
 
