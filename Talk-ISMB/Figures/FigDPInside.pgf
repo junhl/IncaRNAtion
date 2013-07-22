@@ -47,7 +47,7 @@ line after snake=0pt,
 \node[align=left,right=0pt of seq_space] (ex_seq) {\huge Explore sequence space\\\huge Structure fixed};
 %\node[above=0pt of ex_seq] {\huge Structure fixed};
  \visible<5->{
- 	\node[below=0pt of r1] {\huge Only $1$ case applies};
+ 	\node[below=0pt of r1] {\large(Only $1$ case applies)};
  }
 
 
