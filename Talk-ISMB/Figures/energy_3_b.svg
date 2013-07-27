@@ -17,9 +17,9 @@
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
    sodipodi:docname="energy_3_b.svg"
-   inkscape:export-filename="C:\Documents and Settings\Yawn\Mes documents\Tex\IncaRNAtion\Talk-ISMB\Figures\energy_3_a.png"
-   inkscape:export-xdpi="200"
-   inkscape:export-ydpi="200">
+   inkscape:export-filename="C:\Documents and Settings\Yawn\Mes documents\Tex\IncaRNAtion\Talk-ISMB\Figures\energy_3_b.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -289,7 +289,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
