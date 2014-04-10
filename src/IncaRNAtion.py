@@ -868,7 +868,7 @@ def help():
   print """
   Required:
     -d <file_path> 
-      A file containing the secondary structure and an optional MSA
+      A file containing the target secondary structure and an optional MSA
     -a <float> 
       The value of alpha, between 0 and 1.
       1 takes only into account the secondary structure, 0 only the MSA
