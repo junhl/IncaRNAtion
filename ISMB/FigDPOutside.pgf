@@ -1,0 +1,210 @@
+
+\begin{tikzpicture}
+  \definecolor{rougeForb}{HTML}{eb23238f}
+  \definecolor{rougeForbP}{HTML}{6d1515ff}
+
+  \newcommand{\BSep}{9pt}
+  \newcommand{\HSep}{400pt}
+  \tikzstyle{base}=[circle,draw,thick,inner sep=0,minimum width=15pt,fill=white]
+  \tikzstyle{basesmall}=[circle,draw,thick,inner sep=0,minimum width=10pt,fill=white]
+  \tikzstyle{basephantom}=[base,dashed]
+  \tikzstyle{linez}=[draw,snake=coil, segment aspect=.2,%
+line after snake=0pt, 
+        segment length=10pt,thick]
+  \tikzstyle{lined}=[linez,draw,snake=none,thick]
+  \tikzstyle{line}=[linez,draw,snake=none,thick]
+  \tikzstyle{lineh}=[line,dashed]
+  \tikzstyle{bp}=[in=90,out=90,draw,line width=1.5pt,blue,looseness=1.7]
+  \tikzstyle{blockin}=[trapezium,trapezium angle=83, fill=blue!20, draw=blue!40,line width=1.5pt, inner sep=0]
+  \tikzstyle{blockout}=[blockin,draw=red!50,fill=red!40]
+  \tikzstyle{lbl}=[inner sep=0]
+  \tikzstyle{arr}=[line width=1.3pt,->]
+
+  \begin{scope}
+  \node[basesmall] (n-beg) at (0,0) {};
+  \node[base] (a-0) at (2,0) {$s_i$};
+  \node[base] (a-3) at (6,0) {$s_j$};
+  \node[basesmall] (n-end) at (8,0) {};
+  \node[right=\BSep of a-0, basephantom] (a-1) {$a$};
+  \node[left=\BSep of a-3, basephantom] (a-2) {$b$};
+  \path[lineh] (a-1) --  node[pos=.5,above=40pt] (lbl1) {\relsize{+2}$m$}  (a-2);
+  \path[lined] (a-0) -- (a-1);
+  \path[lined] (a-2) -- (a-3);
+  \path[linez] (n-beg) -- (a-0);
+  \path[linez] (a-3) -- (n-end);
+
+  \node[right=5pt of n-end] (x) {};
+
+
+  \node[lbl,below=3pt of n-beg] (c0) {$0$};
+  \node[lbl,below=3pt of a-0] (c1) {$i$};
+  \node[lbl,below=3pt of a-3] (c2) {$j$};
+  \node[lbl,below=3pt of n-end] (c3) {$n-1$};
+
+  \begin{pgfonlayer}{background}
+  \node[rectangle,inner sep=2pt,draw,fit=(n-beg)(a-0.east)(c1) (c0)] (r1) {};
+  \node[rectangle,inner sep=2pt,draw,fit=(n-end)(a-3.west)(c2)(c3) ] (r2) {};
+  \path[blockout]   (r1.south west) to (r1.south east) to (r1.north east) to[out=90,in=90,looseness=0.8] (r2.north west) to (r2.south west) to (r2.south east) to (r2.north east) to[out=90,in=90,looseness=0.8] (r1.north west) to (r1.south west) ;
+  \end{pgfonlayer}{background}
+  \end{scope}
+
+  \begin{scope}[xshift=\HSep,yshift=150pt]
+  \node[basesmall] (n-beg) at (0,0) {};
+  \node[base] (a-0) at (2,0) {\color{red}$a'$};
+  \node[basesmall,left=\BSep of a-0] (a-0b) {};
+  \node[basesmall] (a-3) at (6,0) {};
+  \node[basesmall] (n-end) at (8,0) {};
+  \node[right=\BSep of a-0, basephantom] (a-1) {$a$};
+  \node[left=\BSep of a-3, basephantom] (a-2) {$b$};
+  \path[lineh] (a-1) --  node[pos=.5,above=40pt] (lbl1) {\relsize{+2}$m-\delta_{a',s_i}$}  (a-2);
+  \path[lined] (a-0) -- (a-1);
+  \path[lined] (a-2) -- (a-3);
+  \path[lined] (a-0) -- (a-0b);
+  \path[linez] (n-beg) -- (a-0b);
+  \path[linez] (a-3) -- (n-end);
+
+  \node[lbl,below=3pt of n-beg] (c0) {$0$};
+  \node[lbl,below=3pt of a-0b] (c1) {$i-1$};
+  \node[lbl,below=3pt of a-3] (c2) {$j$};
+  \node[lbl,below=3pt of n-end] (c3) {$n-1$};
+
+  \node[right=3em of n-end,anchor=west] {\relsize{+2}[Position $i$ unpaired]};
+
+  \node[left=5pt of n-beg] (y1) {};
+
+  \begin{pgfonlayer}{background}
+  \node[rectangle,inner sep=2pt,draw,fit=(n-beg)(a-0b.east)(c1) (c0)] (r1) {};
+  \node[rectangle,inner sep=2pt,draw,fit=(n-end)(a-3.west)(c2)(c3) ] (r2) {};
+  \path[blockout]   (r1.south west) to (r1.south east) to (r1.north east) to[out=90,in=90,looseness=0.8] (r2.north west) to (r2.south west) to (r2.south east) to (r2.north east) to[out=90,in=90,looseness=0.8] (r1.north west) to (r1.south west) ;
+  \end{pgfonlayer}{background}
+  \end{scope}
+
+  \begin{scope}[xshift=\HSep,yshift=50pt]
+  \node[basesmall] (n-beg) at (0,0) {};
+  \node[base] (a-0) at (2,0) {\color{red}$a'$};
+  \node[basesmall,left=\BSep of a-0] (a-0b) {};
+  \node[base] (a-3) at (6,0) {\color{red}$b'$};
+  \node[basesmall,right=\BSep of a-3] (a-3b) {};
+  \node[basesmall] (n-end) at (8,0) {};
+  \node[right=\BSep of a-0, basephantom] (a-1) {$a$};
+  \node[left=\BSep of a-3, basephantom] (a-2) {$b$};
+  \path[lineh] (a-1) --  node[pos=.5,above=40pt] (lbl1) {\relsize{+2}$m-\delta_{a'b',s_is_j}$}  (a-2);
+  \path[lined] (a-0) -- (a-1);
+  \path[lined] (a-2) -- (a-3);
+  \path[lined] (a-0) -- (a-0b);
+  \path[lined] (a-3b) -- (a-3);
+  \path[linez] (n-beg) -- (a-0b);
+  \path[linez] (a-3b) -- (n-end);
+  \draw[bp,looseness=.8] (a-1) to (a-2);
+  \draw[bp,looseness=.8] (a-0) to (a-3);
+
+  \node[lbl,below=3pt of n-beg] (c0) {$0$};
+  \node[lbl,below=3pt of a-0b] (c1) {$i-1$};
+  \node[lbl,below=3pt of a-3b] (c2) {$j+1$};
+  \node[lbl,below=3pt of n-end] (c3) {$n-1$};
+
+  \node[right=3em of n-end,anchor=west] {\relsize{+2}[Paired ends + Stacking pairs]};
+
+  \node[left=5pt of n-beg] (y2) {};
+
+  \begin{pgfonlayer}{background}
+  \node[rectangle,inner sep=2pt,draw,fit=(n-beg)(a-0b.east)(c1) (c0)] (r1) {};
+  \node[rectangle,inner sep=2pt,draw,fit=(n-end)(a-3b.west)(c2)(c3) ] (r2) {};
+  \path[blockout]   (r1.south west) to (r1.south east) to (r1.north east) to[out=90,in=90,looseness=0.8] (r2.north west) to (r2.south west) to (r2.south east) to (r2.north east) to[out=90,in=90,looseness=0.8] (r1.north west) to (r1.south west) ;
+  \end{pgfonlayer}{background}
+  \end{scope}
+
+  \begin{scope}[xshift=\HSep,yshift=-50pt]
+  \node[basesmall] (n-beg) at (0,0) {};
+  \node[base] (a-0) at (1.8,0) {\color{red}$a'$};
+  \node[basesmall,left=\BSep of a-0] (a-0b) {};
+  \node[base] (a-3) at (6.25,0) {\color{red}$b'$};
+  \node[basesmall] (b-1) at (4.0,0) {};
+  \node[basesmall,left=\BSep of a-3] (b-2){};
+  \node[basesmall,right=\BSep of a-3] (a-3b) {};
+  \node[basesmall] (n-end) at (8,0) {};
+  %\node[right=\BSep of a-0, basephantom] (a-1) {$a$};
+  \node[left=\BSep of b-1, basephantom] (a-2) {$b$};
+  \path[lineh] (a-0) --   (a-2);
+  \path[lined] (a-2) -- (b-1);
+  \path[linez] (b-1) -- node[pos=.5,above=8pt] (lbl1) {\relsize{+2}$m'$}  (b-2);
+  \path (n-beg) -- node[pos=.5,above=40pt] (lbl1) {\relsize{+2}$m-\delta_{a'b',s_is_k}-m'$}  (n-end);
+  \path[lined] (b-2) -- (a-3);
+  \path[lined] (a-0) -- (a-0b);
+  \path[lined] (a-3b) -- (a-3);
+  \path[linez] (n-beg) -- (a-0b);
+  \path[linez] (a-3b) -- (n-end);
+  \draw[bp,looseness=.8] (a-0) to (a-3);
+  \node[right=3em of n-end,anchor=west] {\relsize{+2}[Position $i$ paired to the right]};
+
+  \node[lbl,below=3pt of n-beg] (c0) {$0$};
+  \node[lbl,below=3pt of a-0b] (c1) {$i-1$};
+  \node[lbl,below=3pt of b-1] (c2) {$j$};
+  \node[lbl,below=3pt of b-2] (c3) {$k-1$};
+  \node[lbl,below=3pt of a-3] (c4) {$k$};
+  \node[lbl,below=3pt of a-3b] (c5) {$k+1$};
+  \node[lbl,below=3pt of n-end] (c6) {$n-1$};
+  \node[left=5pt of n-beg] (y3) {};
+
+  \begin{pgfonlayer}{background}
+  \node[rectangle,inner sep=2pt,draw,fit=(n-beg)(a-0b.east)(c1) (c0)] (r1) {};
+  \node[rectangle,inner sep=2pt,draw,fit=(n-end)(a-3b.west)(c5)(c6) ] (r2) {};
+  \path[blockout]   (r1.south west) to (r1.south east) to (r1.north east) to[out=90,in=90,looseness=0.8] (r2.north west) to (r2.south west) to (r2.south east) to (r2.north east) to[out=90,in=90,looseness=0.8] (r1.north west) to (r1.south west) ;
+
+  \node[rectangle,inner sep=2pt,draw,fit=(b-1.west)(b-2.east) (c2) (c3)] (r3) {};
+  \path[blockin]   (r3.south west) to (r3.south east) to (r3.north east) to[out=90,in=90,looseness=1.4] (r3.north west) to (r3.south west) ;
+  \end{pgfonlayer}{background}
+  \end{scope}
+
+  \begin{scope}[xshift=\HSep,yshift=-150pt]
+  \node[basesmall] (n-beg) at (0,0) {};
+  \node[base] (a-0) at (1.8,0) {\color{red}$b'$};
+  \node[basesmall,left=\BSep of a-0] (a-0b) {};
+  \node[base] (a-3) at (4.8,0) {\color{red}$a'$};
+  \node[basesmall,right=\BSep of a-0] (b-1)  {};
+  \node[basesmall,left=\BSep of a-3] (b-2){};
+  \node[basesmall] (a-3b)  at (6.75,0) {};
+  \node[basephantom,left=\BSep of a-3b] (a-3c){$b$};
+  \node[basesmall] (n-end) at (8,0) {};
+  \node[right=3em of n-end,anchor=west] {\relsize{+2}[Position $i$ paired to the left]};
+
+
+  %\node[right=\BSep of a-0, basephantom] (a-1) {$a$};
+  %\node[left=\BSep of b-1, basephantom] (a-2) {$b$};
+  \path[lined] (b-1) -- (a-0);
+  \path[linez] (b-1) -- node[pos=.5,above=8pt] (lbl1) {\relsize{+2}$m'$}  (b-2);
+  \path (n-beg) -- node[pos=.5,above=40pt] (lbl1) {\relsize{+2}$m-\delta_{a'b',s_is_k}-m'$}  (n-end);
+  \path[lined] (a-3b) -- (a-3c);
+  \path[lined] (a-0) -- (a-0b);
+  \path[lined] (b-2) -- (a-3);
+  \path[lineh] (a-3c) -- (a-3);
+  \path[linez] (n-beg) -- (a-0b);
+  \path[linez] (a-3b) -- (n-end);
+  \draw[bp,looseness=1.05] (a-0) to (a-3);
+
+  \node[lbl,below=3pt of n-beg] (c0) {$0$};
+  \node[lbl,below=3pt of a-0b] (c1) {$k-1$};
+  \node[lbl,below=3pt of a-0] (c2) {$k$};
+  \node[lbl,below=3pt of b-1] (c3) {$k+1$};
+  \node[lbl,below=3pt of b-2] (c4) {$i-1$};
+  \node[lbl,below=3pt of a-3] (c5) {$i$};
+  \node[lbl,below=3pt of a-3b] (c6) {$j$};
+  \node[lbl,below=3pt of n-end] (c7) {$n-1$};
+  \node[left=5pt of n-beg] (y4) {};
+
+  \begin{pgfonlayer}{background}
+  \node[rectangle,inner sep=2pt,draw,fit=(n-beg)(a-0b.east)(c1) (c0)] (r1) {};
+  \node[rectangle,inner sep=2pt,draw,fit=(n-end)(a-3b.west)(c6)(c7) ] (r2) {};
+  \path[blockout]   (r1.south west) to (r1.south east) to (r1.north east) to[out=90,in=90,looseness=0.8] (r2.north west) to (r2.south west) to (r2.south east) to (r2.north east) to[out=90,in=90,looseness=0.8] (r1.north west) to (r1.south west) ;
+
+  \node[rectangle,inner sep=2pt,draw,fit=(b-1.west)(b-2.east)  (c3) (c4)] (r3) {};
+  \path[blockin]   (r3.south west) to (r3.south east) to (r3.north east) to[out=90,in=90,looseness=1.4] (r3.north west) to (r3.south west) ;
+  \end{pgfonlayer}{background}
+  \end{scope}
+  \draw[arr] (x) -- (y1);
+  \draw[arr] (x) -- (y2);
+  \draw[arr] (x) -- (y3);
+  \draw[arr] (x) -- (y4);
+
+
+\end{tikzpicture}

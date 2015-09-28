@@ -1,0 +1,128 @@
+\documentclass{bioinfo}
+\copyrightyear{2013}
+\pubyear{2013}
+%\usepackage[top=1in, bottom=1in,right=1in,left=1in]{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+%\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+%\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm} %pour les newtheorem
+\usepackage{epstopdf}
+\usepackage{framed}
+\usepackage{xspace}
+%\usepackage{tcolorbox}
+\usepackage{relsize}
+%\usepackage{natbib}
+\usepackage[colorinlistoftodos]{todonotes}
+
+\usepackage{soul}
+
+\colorlet{shadecolor}{yellow!80!orange!50}
+\sethlcolor{shadecolor}
+\makeatletter
+
+\renewenvironment{snugshade}{%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed}
+
+\makeatother
+
+\newcommand{\highlight}[1]{{\begin{snugshade}{#1}\end{snugshade}}}
+
+%\usepackage{subfig} %Subfigures
+\usepackage{subcaption} %Subfigures
+
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{ifthen}
+\usepackage{relsize}
+\usepackage{multirow}
+\usepackage{cleveref}
+\usepackage{url}
+
+\usetikzlibrary{positioning}
+\usetikzlibrary{matrix}
+\usetikzlibrary{calc}
+\usetikzlibrary{shapes}
+\usetikzlibrary{arrows}
+\usetikzlibrary{fit}
+\usetikzlibrary{decorations}
+\usetikzlibrary{snakes}
+\usetikzlibrary{shadows}
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{backbackground}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{backbackground,background,main,foreground}
+
+\usepackage[noend,ruled,vlined]{algorithm2e}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{description}{Description}
+
+\crefmultiformat{equation}{Equations~(#2#1#3)}%
+{ and~(#2#1#3)}{, (#2#1#3)}{ and~(#2#1#3)}
+
+
+%\usepackage[applemac]{inputenc} %for the encoding 
+
+
+
+\input{macros}
+
+\begin{document}
+\firstpage{1}
+
+\title{A weighted sampling algorithm for the design of RNA sequences with targeted secondary structure and nucleotides distribution}
+\author{Vladimir Reinharz$^1$, Yann Ponty$^{2,*}$, J\'er\^{o}me Waldisp\"{u}hl$^{1}$\footnote{to whom correspondence should be addressed}}
+\address{$^1$ School of Computer Science, McGill University, Montreal, Canada\\ $^2$ Laboratoire d'informatique, \'Ecole Polytechnique, Palaiseau, France.}
+
+\history{Received on XXXXX; revised on XXXXX; accepted on XXXXX}
+
+\editor{Associate Editor: XXXXXXX}
+
+%\maketitle
+%\section{}
+%\subsection{}
+%\begin{abstract}
+%\section{Motivations:} The design of RNA sequences folding into predefined secondary structures is a milestone for many synthetic biology and gene therapy studies. Most of the current software uses similar local search strategies (i.e. a random seed is progressively adapted to acquire the desired folding properties) and more importantly do not allow the user to control explicitly the nucleotide distribution such as the \GCContent in their sequences. However, the latter is an important criterion for large-scale applications as it could presumably be used to design sequences with better transcription rates and/or structural plasticity.
+
+%\section{Results:}
+%In this paper, we introduce \ourprog, a novel algorithm to design RNA sequences folding into target secondary structures with a predefined nucleotide distribution.  \ourprog uses a global sampling approach and weighted sampling techniques. We show that our approach is fast (i.e. running time comparable or better than local search methods), seed-less (we remove the bias of the seed in local search heuristics), and successfully generates high-quality sequences (i.e. thermodynamically stable) for any \GCContent. To complete this study, we develop an hybrid method combining our global sampling approach with local search strategies. Remarkably, our glocal methodology overcomes both local and global approaches  for sampling sequences with a specific GC content and target structure.
+%\section{Availability:} 
+%\ourprog is available at \href{http:// csb.cs.mcgill.ca/incarnation/}{csb.cs.mcgill.ca/incarnation/}
+%\section{Contact:} \href{jeromew@cs.mcgill.ca}{jeromew@cs.mcgill.ca}, \href{yann.ponty@lix.polytechnique.fr}{yann.ponty@lix.polytechnique.fr}\\
+%\noindent
+%\textbf{Key words:} RNA, secondary structure, design, weighted sampling, GC-content.
+%\end{abstract}
+
+
+%\input{introduction_ISMB.tex}
+
+%\input{methods_ISMB.tex}
+
+%\input{results_ISMB.tex}
+
+%\input{conclusion_ISMB.tex}
+
+%\input{acknowledgments_ISMB.tex}
+
+%\bibliographystyle{natbib}
+%\bibliography{RNApyro}
+
+%\clearpage
+
+\input{supplementary_ISMB.tex}
+
+\end{document}  

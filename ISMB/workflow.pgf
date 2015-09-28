@@ -1,0 +1,33 @@
+
+\tikzstyle{decision} = [diamond, draw, inner color=blue!10, outer color=blue!20!white!80!black, inner sep = 1pt,drop shadow]
+\tikzstyle{decision answer}=[midway, color=black]
+\tikzstyle{block} = [rectangle, draw,
+outer color=gray!20,
+inner color=white,
+text width=4.5cm, minimum height=1cm,drop shadow,
+thick]
+\tikzstyle{edgeblock} = [block, rectangle split,rectangle split parts=2, rounded corners=10pt,
+outer color=white,
+inner color=white,minimum height=2cm]
+\tikzstyle{line} = [draw, very thick, color=black!50, -latex']
+\tikzstyle{cloud} = [draw, ellipse,fill=red!20]
+
+
+\begin{tikzpicture}[node distance = 2cm, auto, font=\sffamily\small,text centered,]
+    % Place nodes
+  \newcommand{\res}{Samples}
+  \newcommand{\VDist}{.6cm}
+    \node [edgeblock] (init) {{\normalsize Start}\nodepart{second}{} {$x:=1$\quad $ \res:=\varnothing$}};
+    \node [block,below=\VDist of init] (gen) {Draw sequences in\\ $x$-weighted distribution};
+    \node [block, below=\VDist of gen] (filter) {Filter on GC$\%$\\ Add suitable seqs to $\res$};
+    \node [block, right=0.6cm of filter, node distance=2.5cm] (update) {Estimate average GC\% for $x$\\ Update $x$};
+    \node [decision, below=\VDist of filter] (decide) {$|\res| \ge k$?};
+    \node [edgeblock, below=\VDist of decide] (stop) {{Stop}\nodepart{second}{}{Return $\res$}};
+    % Draw edges
+    \path [line] (init) -- (gen);
+    \path [line] (gen) -- (filter);
+    \path [line] (filter) -- (decide);
+    \path [line] (update) |- (gen);
+    \path [line] (decide) -| node[decision answer,near start,below] {no} (update);
+    \path [line] (decide) -- node[decision answer,right] {yes} (stop);
+\end{tikzpicture}
