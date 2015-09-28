@@ -63,6 +63,10 @@ IUPACBASES = {
   'H':['A','C','U'],
   'V':['A','C','G']
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 268059ffeffdca97fff7b5b11ecad10b3cf540a7
 BASES = []
 
 BOLTZMANN = 0.0019872041
