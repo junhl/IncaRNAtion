@@ -1,5 +1,5 @@
 from pprint import pprint
-
+import collections
 
 def nb_strand(nbs):
     nb = 1 
@@ -88,12 +88,12 @@ def decompose(ss):
     #a list of the bps
     bps = ss_to_bp(ss)
     #the dic needed for the forward recursion
-    dic_forward = {}
+    dic_forward = collections.OrderedDict()
     for el in dec: #for every element decomposed (a list of positions)
         el = sorted(el) #sort the elements
         if nb_strand(el) == 1: #nb strands (i.e. nb of stretch of consecutive nucleotides) if 1, must be hairpin
             dic_forward[el[0], el[-1]] = ('Hairpin', #type
-                                         [],    #bps inside that element
+                                         [(el[0],el[-1])],    #bps inside that element
                                          el)    #list of positions inside it
         elif nb_strand(el) > 2: #if more than 2 strands multiloop (we check for external at the end)
             dic_forward[el[0], el[-1]] = ('MultiLoop',
@@ -104,13 +104,13 @@ def decompose(ss):
             if (len(el) % 2 == 0 and #if we have an even number of nucleotides
                 all((el[i], el[-i-1]) in bps for i in range(len(el)/2))): #and they all form base pairs, we have a stem!
                 dic_forward[el[0], el[-1]] = ('Stem',
-                                             [], #No interest in keeping internal base pairs, we must continue with usual rec.
+                                             [(el[0], el[-1]), (el[-1+len(el)/2], el[len(el)/2])], # first bp and the last bp
                                              el)
 
             else:
                 #if not a strand, we must be an interior loop, and then we need to record the internal base pair
-                dic_forward[el[0], el[-1]] = ('InteriorLoop',
-                                             [x for x in bps if x[0] in el and x[1] in el and ((el[0], el[-1]) != x)],
+		dic_forward[el[0], el[-1]] = ('InteriorLoop',
+                                             [(el[0], el[-1])]+[x for x in bps if x[0] in el and x[1] in el and ((el[0], el[-1]) != x)],
                                              el)
 
 
@@ -124,5 +124,12 @@ def decompose(ss):
 
 if __name__ == '__main__':
     ss = '(((...(.(....).)..((....))..)))...'
-    pprint(decompose(ss))
+    d = decompose(ss)
+    pprint(d), #d.items()[0]
+    flip = d.items()
+    flip.reverse()
+    print ""
+    back_dict = collections.OrderedDict(flip)
+    pprint(back_dict)
+
     print ss, len(ss)

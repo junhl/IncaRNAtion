@@ -29,6 +29,7 @@ import random
 import math
 import sys
 import os
+import collections
 from Energy import *
 from pprint import pprint
 
@@ -110,6 +111,134 @@ class memoize_iso(dict):
   def resetCache(self):
       self.clear()
 
+################################################################################# ss_decomposition
+def nb_strand(nbs):
+    nb = 1 
+    for x in sorted(nbs)[:-1]:
+        if not x+1 in nbs:
+            nb +=1 
+    return nb
+
+
+def ss_to_bp(ss):
+    bp = []
+    l = []
+    for i, x in enumerate(ss):
+        if x == '(':
+            l.append(i)
+        elif x == ')':
+            bp.append((l.pop(), i))
+    return bp
+
+
+def make_tree(ss):
+    def make_sub_tree(start, end, bps):
+        t = []
+        x = start
+        while x <= end:
+            flag_aft_bp = False
+
+            if x in bps:
+                y, z = x, bps[x]
+                while True:
+                    if y+1 in bps and z-1 == bps[y+1]:
+                        y += 1
+                        z -= 1
+                    else:
+                        t.append((x,y,z,bps[x], make_sub_tree(y+1,z-1,bps)))
+                        x = bps[x] + 1
+                        flag_aft_bp = True
+                        break
+            if x > end:
+                break
+            if not flag_aft_bp:
+                t.append(x)
+                x += 1
+        return t
+    s = 0
+    e = len(ss)-1
+    bps = ss_to_bp(ss)
+    d_bps = {x[0]:x[1] for x in bps}
+    return [-1] + make_sub_tree(s,e,d_bps) + [len(ss)]
+
+
+def make_components(tree):
+    l_components = []
+    this_comp = set()
+    sub_comp = []
+    flag = False
+    if not tree:
+        return []
+    if tree[0] == -1:
+        flag = True
+        e = tree[-1]
+        tree = tree[1:-1]
+
+    for x in tree:
+        if isinstance(x, tuple):
+            if not flag or not (x[0] == 0 and x[3] == e-1):
+                this_comp.add(x[0])
+                this_comp.add(x[3])
+            stack = [z for z in range(x[0], x[1]+1)]
+            stack.extend(z for z in range(x[2], x[3]+1))
+            l_components.append(set(stack))
+            sub_comp.extend(make_components(x[-1]))
+            sub_comp[-1].add(x[1])
+            sub_comp[-1].add(x[2])
+        else:
+            this_comp.add(x)
+    l_components.extend(sub_comp)
+    if this_comp:
+        l_components.append(this_comp)
+    return l_components
+
+
+def decompose(ss):
+    #get the decomposition of the ss in elements
+    dec = make_components(make_tree(ss))
+    #a list of the bps
+    bps = ss_to_bp(ss)
+    #the dic needed for the forward recursion
+    dic_forward = {}
+    for el in dec: #for every element decomposed (a list of positions)
+        el = sorted(el) #sort the elements
+        if nb_strand(el) == 1: #nb strands (i.e. nb of stretch of consecutive nucleotides) if 1, must be hairpin
+            dic_forward[el[0], el[-1]] = ('Hairpin', #type
+                                         [(el[0],el[-1])],    #bps inside that element
+                                         el)    #list of positions inside it
+        elif nb_strand(el) > 2: #if more than 2 strands multiloop (we check for external at the end)
+            dic_forward[el[0], el[-1]] = ('MultiLoop',
+                                          [x for x in bps if x[0] in el and x[1] in el and ((el[0], el[-1]) != x)], #We want all base pairs inside that multiloop, except the most external one
+                                         el)
+         
+        else: #else we must have 2 strands, of a stem or an interior loop / bulge
+            if (len(el) % 2 == 0 and #if we have an even number of nucleotides
+                all((el[i], el[-i-1]) in bps for i in range(len(el)/2))): #and they all form base pairs, we have a stem!
+                dic_forward[el[0], el[-1]] = ('Stem',
+                                             [(el[0], el[-1]), (el[-1+len(el)/2], el[len(el)/2])], # first bp and the last bp
+                                             el)
+
+            else:
+                #if not a strand, we must be an interior loop, and then we need to record the internal base pair
+		dic_forward[el[0], el[-1]] = ('InteriorLoop',
+                                             [(el[0], el[-1])]+[x for x in bps if x[0] in el and x[1] in el and ((el[0], el[-1]) != x)],
+                                             el)
+
+
+        #We finally check for the external element, if their is one. The only ambiguous case is if it is a stem.
+        if 0 in el and len(ss)-1 in el and dic_forward[el[0], el[-1]][0] != 'Stem':
+            dic_forward[el[0], el[-1]] = ('External',
+                                         [x for x in bps if x[0] in el and x[1] in el and ((el[0], el[-1]) != x)],
+                                         el
+                                        )
+    return dic_forward
+
+##ss = '(((...(.(....).)..((....))..)))...' # hard-coded at the moment to leave the original inputs as it is to compile and to test. After forward is checked, it would take from the user-provided txt file
+ss = '(((...(.(....).)..((....))..)))...'
+dic = decompose(ss)
+
+################################################################# end of ss_decomposition
+
 def stacking_energy((a,b),(a2,b2),alpha): # now called stacking energy
   #stacking energy of base pair (a,b) around base pair (a2,b2)
   E = STACKING_ENERGY[a,a2,b2,b]
@@ -142,7 +271,7 @@ def bulge_energy(size, alpha):
 	if (size < 1) or (size > 30):
 		print "The bulge size has to be between 1 ~ 30"
 		sys.exit(1)
-	E = BULGE_ENERGY[size-1]
+	E = BULGE_INITIATION[size-1]
 	return  math.exp(-(alpha*E)/(BOLTZMANN*T))
 
 def internal_loop_1x1_energy(a,b,c,d,e,f, alpha):
@@ -183,81 +312,234 @@ def isostericity(ref_seq,(i,j),(a,b), alpha):
   #iso = mpf(iso_mut-iso_start)/len(ref_seq)
   return  math.exp(-((1-alpha)*iso)/(BOLTZMANN*T))
 
+forward_dict = dic
 @memoize
-def forward(profile,ref_seq,struct,(i,j),(a1,b1),alpha): # keeping the inputs as it is, but this version doesn't really use it. Just left it as it is to compile.
+def forward(profile,ref_seq,struct,(i,j),(a,b),alpha): # currently only using i,j
   #alpha gives the weight energy vs isostericity
   result = 0.
-  ss = '(((...(.(....).)..((....))..)))...' # hard-coded at the moment to leave the original inputs as it is to compile and to test. After forward is checked, it would take from the user-provided txt file
-  forward_dict = decompose(ss)
-  if not forward_dict: # if forward_dict is empty, meaning empty structure
-    result=1.  
-  else: # when not empty structure
-    for x in forward_dict:
-	if forward_dict[x][0] == 'Hairpin': # Hairpin
-		for a in nucleotides:
-			for b in nucleotides:
-				if (a,b) in TERMINAL_MISMATCH_SHORT: # (a,b) is the loop-closing pair. So need to be paired (A:U, G:C, etc)
-					result += hairpin_energy_short((a,b), len(forward_dict[x][2])-2, alpha)
+  if i > j :
+    result=1.
+  else:
+	k = struct[i]
+	#l = struct[j]
+	if k==-1: # if not paired, meaning it is '.'
+	#pro = profile[i][a2]
+		z = 0
+		if -1 not in struct[i:len(struct)-1]:
+			for tmp in range(i, len(struct)):
+				if struct[i] != -1:
+					z = tmp
+					break
+		f = forward(profile,ref_seq,struct,
+                  (z,j), #new z goes here, where the next paired one starts
+                  (a,b),
+                  alpha)
+      		result += f#*pro
+      
+ 	else: # if paired
+	    elem = []
+	    for x in forward_dict:
+		if (i,k) == forward_dict[x][1][0]:
+			elem.append(forward_dict[x])
+	    #print "ELEMENTS", elem, i,k
+	    if elem:
+		    for x in range(len(elem)):
+			if elem[x][0] == 'Hairpin': # Hairpin
+				for a in nucleotides:
+					for b in nucleotides:
+						if (a,b) in TERMINAL_MISMATCH_SHORT: # (a,b) is the loop-closing pair. So need to be paired (A:U, G:C, etc)
+							result += hairpin_energy_short((a,b), len(elem[x][2])-2, alpha)
 
-	elif forward_dict[x][0] == 'Stem': # Stem
-		p = 0
-		q = len(forward_dict[x][2])-1
-		while ((q-p) > 1): # the list of the paired ones are in pairs by definitnion. So, multiple of 2. Index of the last paired differ by 1
-			for a in nucleotides:
-				for b in nucleotides:
-					if (a,b) in STACKING_ENERGY_SHORT:
-						result += stacking_energy_short((a,b), alpha)
-			p = p+1
-			q = q-1
+			elif elem[x][0] == 'Stem': # Stem
+				p = 0
+				q = len(elem[x][2])-1
+				while ((q-p) > 1): # the list of the paired ones are in pairs by definitnion. So, multiple of 2. Index of the last paired differ by 1
+					for a in nucleotides:
+						for b in nucleotides:
+							if (a,b) in STACKING_ENERGY_SHORT:
+								result += stacking_energy_short((a,b), alpha)
+					p = p+1
+					q = q-1
+				i1 = elem[x][1][1][0]
+				j2 = elem[x][1][1][1]
+				f = forward(profile,ref_seq,struct,(i1,j2),(a,b),alpha)
+				result += f
 
-	elif forward_dict[x][0] == 'External': # External
-		if (forward_dict[x][1][0][0] == min(forward_dict[x][2]) and forward_dict[x][1][0][1] != max(forward_dict[x][2])): # if dangling end at 3' prime side
-			for a in nucleotides:
-				for b in nucleotides:
-					if (a,b) in THREE_PRIME_DANGLING_END_SHORT:
-						result += dangling_energy_short((a,b), 0, alpha)
-		elif (forward_dict[x][1][0][0] != min(forward_dict[x][2]) and forward_dict[x][1][0][1] == max(forward_dict[x][2])): # if dangling end at 5' prime side
-			for a in nucleotides:
-				for b in nucleotides:
-					if (a,b) in FIVE_PRIME_DANGLING_END_SHORT:
-						result += dangling_energy_short((a,b), 1, alpha)
-		elif (forward_dict[x][1][0][0] != min(forward_dict[x][2]) and forward_dict[x][1][0][1] != max(forward_dict[x][2])): # if dangling end at both side, terminal mismatch 
-			for a in nucleotides:
-				for b in nucleotides:
-					if (a,b) in TERMINAL_MISMATCH_SHORT:
-						result += dangling_energy_short((a,b), 2, alpha)
-	elif forward_dict[x][0] == 'MultiLoop': # Multiloop
-		pairs_list=[]
-		unpaired_size=[]	
-		for pairs in forward_dict[x][1]:
-			pairs_list.append(pairs[0])
-			pairs_list.append(pairs[1])
-		for n in range(0, len(pairs_list)):
-			if n == 0: # if first nucleotide of the paired ones			
-				unpaired_size.append(forward_dict[x][2].index(pairs_list[n]))
-			if n == (len(pairs_list)-1): # if last nucleotide of the paired ones
-				unpaired_size.append(len(forward_dict[x][2]) - forward_dict[x][2].index(pairs_list[n]) - 1)
-			elif ((n % 2) == 1): # we want to check the gap between the second nucleotide of the pair and the first nucleotide of next pair
-				unpaired_size.append(forward_dict[x][2].index(pairs_list[n+1]) - forward_dict[x][2].index(pairs_list[n]) - 1)
-		result += multiloop_energy((float(sum(unpaired_size)) / len(unpaired_size)) , len(forward_dict[x][1])+1.0, alpha) # TODO
-	else:  #Interior loops
-		# TODO
-		1+1
-		# Not sure how to distinguish bulge and internal loops from decompoose at the moment
-		# Also, in the dictionary it makes, shouldnt it list both of closing and opening pairs of the internal loop ? (lists the most internal pair in current 'decompose')
+			elif elem[x][0] == 'External': # External
+				if (elem[x][1][0][0] == min(elem[x][2]) and elem[x][1][0][1] != max(elem[x][2])): # if dangling end at 3' prime side
+					for a in nucleotides:
+						for b in nucleotides:
+							if (a,b) in THREE_PRIME_DANGLING_END_SHORT:
+								result += dangling_energy_short((a,b), 0, alpha)
+				elif (elem[x][1][0][0] != min(elem[x][2]) and elem[x][1][0][1] == max(elem[x][2])): # if dangling end at 5' prime side
+					for a in nucleotides:
+						for b in nucleotides:
+							if (a,b) in FIVE_PRIME_DANGLING_END_SHORT:
+								result += dangling_energy_short((a,b), 1, alpha)
+				elif (elem[x][1][0][0] != min(elem[x][2]) and elem[x][1][0][1] != max(elem[x][2])): # if dangling end at both side, terminal mismatch 
+					for a in nucleotides:
+						for b in nucleotides:
+							if (a,b) in TERMINAL_MISMATCH_SHORT:
+								result += dangling_energy_short((a,b), 2, alpha)
+				f = forward(profile,ref_seq,struct,(i+1,j),(a,b),alpha)
+				result += f
+			elif elem[x][0] == 'MultiLoop': # Multiloop
+				pairs_list= elem[x][1]
+				unpaired_size=0.0
+				for n in range(len(elem[x][2])):
+					if struct[elem[x][2][n]] == -1:
+						unpaired_size += 1
+				unpaired_size = unpaired_size/len(pairs_list)
+				
+				'''for n in range(0, len(pairs_list)):
+					if n == 0: # if first nucleotide of the paired ones			
+						unpaired_size.append(elem[x][2].index(pairs_list[n]))
+					if n == (len(pairs_list)-1): # if last nucleotide of the paired ones
+						unpaired_size.append(len(elem[x][2]) - elem[x][2].index(pairs_list[n]) - 1)
+					elif ((n % 2) == 1): # we want to check the gap between the second nucleotide of the pair and the first nucleotide of next pair
+						unpaired_size.append(elem[x][2].index(pairs_list[n+1]) - elem[x][2].index(pairs_list[n]) - 1)'''
+				
+				for m in range(len(pairs_list)):
+					i1 = pairs_list[m][0]
+					j1 = pairs_list[m][1]
+					f = forward(profile,ref_seq,struct,(i1+1,j1+1),(a,b),alpha)
+					result += f
+				result += multiloop_energy(unpaired_size , len(elem[x][1])+1.0, alpha)
+			elif elem[x][0] == 'InteriorLoop':  #Interior loops
+				start_first = elem[x][1][0][0]
+				start_second = elem[x][1][0][1]
+				end_first = elem[x][1][1][0]
+				end_second = elem[x][1][1][1]
+				n1 = end_first - start_first -1
+				n2 = end_second - start_second -1
+				if (n1 > 0 and n2 > 0): # internal loop
+					e = 0.6*abs(n1-n2)*internal_loop_energy((n1+n2),alpha) # TODO
+				else: # bulges
+					e = bulge_energy(max(n1,n2),alpha)
+				f = forward(profile,ref_seq,struct,(end_first,end_second),(a,b),alpha)
+				#back = backward()			
+				result += e+f
   return result
+
+flip = dic.items()
+flip.reverse()
+back_dict = collections.OrderedDict(flip)
 
 @memoize
 def backward(profile,ref_seq,struct,(i,j),(a,b),alpha):
+  #print i,j,a,b, "backward"
   result = 0.
-  if i<0:
+  if i<0: # same as before, may be adjusted when the input parameters are modified
     result=forward(profile,ref_seq,struct,
                    (j,len(struct)-1),
                    ('X','X'),
                    alpha)
-  else:
+  else: 
     k = struct[i]
     if k==-1:
+	back = backward(profile,ref_seq,struct,
+                        (i-1,j),
+                        (a,b),
+                        alpha)
+	result += back
+
+    else:
+	elem = []
+	for x in back_dict:
+		if (i,k) == back_dict[x][1][-1]:
+			elem.append(back_dict[x])
+	print "YEEEEEEEEEESSSSSSSS", elem
+	if elem:
+		for x in range(len(elem)):
+			if elem[x][0] == 'Hairpin': # Hairpin
+				f = 0.
+				for a in nucleotides:
+					for b in nucleotides:
+						if (a,b) in TERMINAL_MISMATCH_SHORT: # (a,b) is the loop-closing pair. So need to be paired (A:U, G:C, etc)
+							f += hairpin_energy_short((a,b), len(elem[x][2])-2, alpha)
+				back = backward(profile,ref_seq,struct,(i-1,j+1),(a,b),alpha)
+				result += back
+			elif elem[x][0] == 'Stem': # Stem
+				e = 0				
+				p = 0
+				q = len(elem[x][2])-1
+				while ((q-p) > 1): # the list of the paired ones are in pairs by definitnion. So, multiple of 2. Index of the last paired differ by 1
+					for a in nucleotides:
+						for b in nucleotides:
+							if (a,b) in STACKING_ENERGY_SHORT:
+								e += stacking_energy_short((a,b), alpha)
+					p = p+1
+					q = q-1
+				i1 = elem[x][1][0][0]
+				j1 = elem[x][1][0][1]
+				forw = forward(profile,ref_seq,struct,(i,k),(a,b),alpha)
+				back = backward(profile,ref_seq,struct,(i1,j1),(a,b),alpha)
+				
+				result += forw+e+back
+
+			elif elem[x][0] == 'External': # External
+				e = 0
+				if (elem[x][1][0][0] == min(elem[x][2]) and elem[x][1][0][1] != max(elem[x][2])): # if dangling end at 3' prime side
+					for a in nucleotides:
+						for b in nucleotides:
+							if (a,b) in THREE_PRIME_DANGLING_END_SHORT:
+								e += dangling_energy_short((a,b), 0, alpha)
+				elif (elem[x][1][0][0] != min(elem[x][2]) and elem[x][1][0][1] == max(elem[x][2])): # if dangling end at 5' prime side
+					for a in nucleotides:
+						for b in nucleotides:
+							if (a,b) in FIVE_PRIME_DANGLING_END_SHORT:
+								e += dangling_energy_short((a,b), 1, alpha)
+				elif (elem[x][1][0][0] != min(elem[x][2]) and elem[x][1][0][1] != max(elem[x][2])): # if dangling end at both side, terminal mismatch 
+					for a in nucleotides:
+						for b in nucleotides:
+							if (a,b) in TERMINAL_MISMATCH_SHORT:
+								e += dangling_energy_short((a,b), 2, alpha)
+				forw = forward(profile,ref_seq,struct,(i+1,j-1),(a,b),alpha)
+				# no backward				
+				result += e+forw
+			elif elem[x][0] == 'MultiLoop': # Multiloop
+				pairs_list=elem[x][1]
+				print pairs_list, "JJJJJJJJJJJJ"
+				unpaired_size=[]
+				'''
+				#for pairs in elem[x][1]:
+				#	pairs_list.append(pairs)
+				for n in range(0, len(pairs_list)):
+					if n == 0: # if first nucleotide of the paired ones			
+						unpaired_size.append(elem[x][2].index(pairs_list[n]))
+					if n == (len(pairs_list)-1): # if last nucleotide of the paired ones
+						unpaired_size.append(len(elem[x][2]) - elem[x][2].index(pairs_list[n]) - 1)
+					elif ((n % 2) == 1): # we want to check the gap between the second nucleotide of the pair and the first nucleotide of next pair
+						unpaired_size.append(elem[x][2].index(pairs_list[n+1]) - elem[x][2].index(pairs_list[n]) - 1)'''
+				for m in range(len(pairs_list)):
+					i1 = pairs_list[m][0]
+					j1 = pairs_list[m][1]
+					f = forward(profile,ref_seq,struct,(i1,j1),(a,b),alpha)
+					result += f
+				back = backward(profile,ref_seq,struct,(i-1,j+1),(a,b),alpha)
+				result += back
+			elif elem[x][0] == 'InteriorLoop':  #Interior loops
+				start_first = elem[x][1][0][0]
+				start_second = elem[x][1][0][1]
+				end_first = elem[x][1][1][0]
+				end_second = elem[x][1][1][1]
+				n1 = end_first - start_first -1
+				n2 = end_second - start_second -1
+				if (n1 > 0 and n2 > 0): # internal loop
+					e = 0.6*abs(n1-n2)*internal_loop_energy((n1+n2),alpha) # TODO
+				else: # bulges
+					e = bulge_energy(max(n1,n2),alpha)
+				f = forward(profile,ref_seq,struct,(end_first,end_second),(a,b),alpha)
+				back = backward(profile,ref_seq,struct,(start_first-1,start_second+1),(a,b),alpha)		
+				result += e+f+back
+
+  return result
+
+
+"""k = struct[i]
+    
+    if k==-1: # if the current nucleotides it not paired, meaning it is '.'
+      print 'b'
       for a2 in BASES[i]:
         pro = profile[i][a2]
         back = backward(profile,ref_seq,struct,
@@ -267,6 +549,7 @@ def backward(profile,ref_seq,struct,(i,j),(a,b),alpha):
         result += pro*back
     #BP to the left
     elif k<i:
+      print 'c'
       for a2 in BASES[k]:
         for b2 in BASES[i]:
           pro = profile[k][a2]*profile[i][b2]
@@ -285,6 +568,7 @@ def backward(profile,ref_seq,struct,(i,j),(a,b),alpha):
           result += pro*back*forw*iso
     #BP to the right
     elif k>=j:
+      print 'd'
       for a2 in BASES[i]:
         for b2 in BASES[k]:
           pro = profile[i][a2]*profile[k][b2]
@@ -305,6 +589,7 @@ def backward(profile,ref_seq,struct,(i,j),(a,b),alpha):
             result += pro*back*forw*iso
           #Stack
           else:
+	    
             back = backward(profile,ref_seq,struct,
                          (i-1,k+1),
                          (a2,b2),
@@ -316,8 +601,7 @@ def backward(profile,ref_seq,struct,(i,j),(a,b),alpha):
                                (i,k),
                                (a2,b2),
                                alpha)
-            result += pro*back*e*iso
-  return result
+            result += pro*back*e*iso"""
 
 def parseStruct(dbn):
   p = []
@@ -336,6 +620,7 @@ def product_given_i(profile,ref_seq,struct,i,a,alpha):
   """Will compute the sum of boltzmann weights of structures 
   where the 'i-th' nucleotide is 'a'.
   """
+  print "AAAAAAAAAA", i
   n = len(struct)
   tot = forward(profile,ref_seq,struct,(0,n-1),('X', 'X'),alpha)
   k = struct[i]
@@ -343,11 +628,13 @@ def product_given_i(profile,ref_seq,struct,i,a,alpha):
   if k == -1:
     pro = profile[i][a]
     result += pro*backward(profile,ref_seq,struct,(i-1,i+1),(a,a),alpha)
+    print 'asdf'
   elif k < i:
     for c in BASES[k]:
       pro = profile[k][c]*profile[i][a]
       f = forward(profile,ref_seq,struct,(k+1,i-1),(c,a),alpha) 
       b = backward(profile,ref_seq,struct,(k-1,i+1),(c,a),alpha)
+      print 'a'
       iso = isostericity(ref_seq,(k,i),(c,a),alpha)
       result += pro*f*b*iso
   else:
@@ -357,6 +644,7 @@ def product_given_i(profile,ref_seq,struct,i,a,alpha):
       b = backward(profile,ref_seq,struct,(i-1,k+1),(a,c),alpha)
       iso = isostericity(ref_seq,(i,k),(a,c),alpha)
       result += pro*f*b*iso
+      print 'DD'
   return result
 
 def random_weighted_sampling(l_samples):
@@ -638,128 +926,7 @@ def diversity_seq(l_sequence,struct):
                                for x in l_sequence)))
   return n,n_set/n,n_struct_set/n
 
-################################################################################# ss_decomposition
-def nb_strand(nbs):
-    nb = 1 
-    for x in sorted(nbs)[:-1]:
-        if not x+1 in nbs:
-            nb +=1 
-    return nb
 
-
-def ss_to_bp(ss):
-    bp = []
-    l = []
-    for i, x in enumerate(ss):
-        if x == '(':
-            l.append(i)
-        elif x == ')':
-            bp.append((l.pop(), i))
-    return bp
-
-
-def make_tree(ss):
-    def make_sub_tree(start, end, bps):
-        t = []
-        x = start
-        while x <= end:
-            flag_aft_bp = False
-
-            if x in bps:
-                y, z = x, bps[x]
-                while True:
-                    if y+1 in bps and z-1 == bps[y+1]:
-                        y += 1
-                        z -= 1
-                    else:
-                        t.append((x,y,z,bps[x], make_sub_tree(y+1,z-1,bps)))
-                        x = bps[x] + 1
-                        flag_aft_bp = True
-                        break
-            if x > end:
-                break
-            if not flag_aft_bp:
-                t.append(x)
-                x += 1
-        return t
-    s = 0
-    e = len(ss)-1
-    bps = ss_to_bp(ss)
-    d_bps = {x[0]:x[1] for x in bps}
-    return [-1] + make_sub_tree(s,e,d_bps) + [len(ss)]
-
-
-def make_components(tree):
-    l_components = []
-    this_comp = set()
-    sub_comp = []
-    flag = False
-    if not tree:
-        return []
-    if tree[0] == -1:
-        flag = True
-        e = tree[-1]
-        tree = tree[1:-1]
-
-    for x in tree:
-        if isinstance(x, tuple):
-            if not flag or not (x[0] == 0 and x[3] == e-1):
-                this_comp.add(x[0])
-                this_comp.add(x[3])
-            stack = [z for z in range(x[0], x[1]+1)]
-            stack.extend(z for z in range(x[2], x[3]+1))
-            l_components.append(set(stack))
-            sub_comp.extend(make_components(x[-1]))
-            sub_comp[-1].add(x[1])
-            sub_comp[-1].add(x[2])
-        else:
-            this_comp.add(x)
-    l_components.extend(sub_comp)
-    if this_comp:
-        l_components.append(this_comp)
-    return l_components
-
-
-def decompose(ss):
-    #get the decomposition of the ss in elements
-    dec = make_components(make_tree(ss))
-    #a list of the bps
-    bps = ss_to_bp(ss)
-    #the dic needed for the forward recursion
-    dic_forward = {}
-    for el in dec: #for every element decomposed (a list of positions)
-        el = sorted(el) #sort the elements
-        if nb_strand(el) == 1: #nb strands (i.e. nb of stretch of consecutive nucleotides) if 1, must be hairpin
-            dic_forward[el[0], el[-1]] = ('Hairpin', #type
-                                         [],    #bps inside that element
-                                         el)    #list of positions inside it
-        elif nb_strand(el) > 2: #if more than 2 strands multiloop (we check for external at the end)
-            dic_forward[el[0], el[-1]] = ('MultiLoop',
-                                          [x for x in bps if x[0] in el and x[1] in el and ((el[0], el[-1]) != x)], #We want all base pairs inside that multiloop, except the most external one
-                                         el)
-         
-        else: #else we must have 2 strands, of a stem or an interior loop / bulge
-            if (len(el) % 2 == 0 and #if we have an even number of nucleotides
-                all((el[i], el[-i-1]) in bps for i in range(len(el)/2))): #and they all form base pairs, we have a stem!
-                dic_forward[el[0], el[-1]] = ('Stem',
-                                             [], #No interest in keeping internal base pairs, we must continue with usual rec.
-                                             el)
-
-            else:
-                #if not a strand, we must be an interior loop, and then we need to record the internal base pair
-                dic_forward[el[0], el[-1]] = ('InteriorLoop',
-                                             [x for x in bps if x[0] in el and x[1] in el and ((el[0], el[-1]) != x)],
-                                             el)
-
-
-        #We finally check for the external element, if their is one. The only ambiguous case is if it is a stem.
-        if 0 in el and len(ss)-1 in el and dic_forward[el[0], el[-1]][0] != 'Stem':
-            dic_forward[el[0], el[-1]] = ('External',
-                                         [x for x in bps if x[0] in el and x[1] in el and ((el[0], el[-1]) != x)],
-                                         el
-                                        )
-    return dic_forward
-################################################################# end of ss_decomposition
 
 def help():
   print """

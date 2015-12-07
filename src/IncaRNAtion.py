@@ -46,6 +46,7 @@ except ImportError:
 
 sys.setrecursionlimit(10000)
 
+
 IUPACBASES = {
   'A':['A'],
   'C':['C'],
@@ -61,12 +62,8 @@ IUPACBASES = {
   'B':['C','G','U'],
   'D':['A','G','U'],
   'H':['A','C','U'],
-  'V':['A','C','G']
-  }
-<<<<<<< HEAD
-=======
+  'V':['A','C','G']}
 
->>>>>>> 268059ffeffdca97fff7b5b11ecad10b3cf540a7
 BASES = []
 
 BOLTZMANN = 0.0019872041
@@ -414,7 +411,7 @@ class memoize_iso(dict):
 def energy((a,b),(a2,b2),alpha):
   #stacking energy of base pair (a,b) around base pair (a2,b2)
   E = STACKING_ENERGY[a,a2,b2,b]
-  return  math.exp(-(alpha*E)/(BOLTZMANN*T))
+  return E # math.exp(-(alpha*E)/(BOLTZMANN*T))
 
 @memoize_iso
 def isostericity(ref_seq,(i,j),(a,b), alpha):
@@ -479,6 +476,7 @@ def forward(profile,ref_seq,struct,(i,j),(a,b),alpha):
 
 @memoize
 def backward(profile,ref_seq,struct,(i,j),(a,b),alpha):
+  print i,j,a,b
   result = 0.
   if i<0:
     result=forward(profile,ref_seq,struct,
@@ -547,6 +545,7 @@ def backward(profile,ref_seq,struct,(i,j),(a,b),alpha):
                                (a2,b2),
                                alpha)
             result += pro*back*e*iso
+  
   return result
 
 def parseStruct(dbn):
