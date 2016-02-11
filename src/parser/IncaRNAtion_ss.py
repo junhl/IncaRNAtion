@@ -448,7 +448,6 @@ def backward(profile,ref_seq,struct,(i,j),(a,b),alpha):
 	for x in back_dict:
 		if (i,k) == back_dict[x][1][-1]:
 			elem.append(back_dict[x])
-	print "YEEEEEEEEEESSSSSSSS", elem
 	if elem:
 		for x in range(len(elem)):
 			if elem[x][0] == 'Hairpin': # Hairpin
@@ -499,7 +498,7 @@ def backward(profile,ref_seq,struct,(i,j),(a,b),alpha):
 				result += e+forw
 			elif elem[x][0] == 'MultiLoop': # Multiloop
 				pairs_list=elem[x][1]
-				print pairs_list, "JJJJJJJJJJJJ"
+				print pairs_list, " is the pair list"
 				unpaired_size=[]
 				'''
 				#for pairs in elem[x][1]:
@@ -620,7 +619,7 @@ def product_given_i(profile,ref_seq,struct,i,a,alpha):
   """Will compute the sum of boltzmann weights of structures 
   where the 'i-th' nucleotide is 'a'.
   """
-  print "AAAAAAAAAA", i
+  print "i is : ", i
   n = len(struct)
   tot = forward(profile,ref_seq,struct,(0,n-1),('X', 'X'),alpha)
   k = struct[i]
@@ -628,13 +627,13 @@ def product_given_i(profile,ref_seq,struct,i,a,alpha):
   if k == -1:
     pro = profile[i][a]
     result += pro*backward(profile,ref_seq,struct,(i-1,i+1),(a,a),alpha)
-    print 'asdf'
   elif k < i:
     for c in BASES[k]:
       pro = profile[k][c]*profile[i][a]
+	  
       f = forward(profile,ref_seq,struct,(k+1,i-1),(c,a),alpha) 
       b = backward(profile,ref_seq,struct,(k-1,i+1),(c,a),alpha)
-      print 'a'
+      
       iso = isostericity(ref_seq,(k,i),(c,a),alpha)
       result += pro*f*b*iso
   else:
@@ -644,7 +643,6 @@ def product_given_i(profile,ref_seq,struct,i,a,alpha):
       b = backward(profile,ref_seq,struct,(i-1,k+1),(a,c),alpha)
       iso = isostericity(ref_seq,(i,k),(a,c),alpha)
       result += pro*f*b*iso
-      print 'DD'
   return result
 
 def random_weighted_sampling(l_samples):
